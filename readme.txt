@@ -1,5 +1,5 @@
 === Plugin Name ===
-Contributors: richardwgabriel
+Contributors: richardgabriel
 Tags: facebook, facebook feed, facebook embed
 Requires at least: 3.0.1
 Tested up to: 3.4.2
