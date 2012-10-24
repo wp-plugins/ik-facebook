@@ -37,9 +37,6 @@ class ikFacebook
 
 		//register sidebar widgets
 		wp_register_sidebar_widget('custom_widget_right', __('IK Facebook Feed'), array($this, 'widget_ik_fb_feed'));
-
-		//do stuff
-		add_action( 'after_setup_theme', array($this, 'ik_fb_setup'));
 	}
 
 	//add Basic CSS to header
@@ -51,13 +48,7 @@ class ikFacebook
 	//add Custom CSS to header
 	//load theme options
 	function ik_fb_setup_custom_css() {
-		//output custom css
-		//wp_enqueue_css
 		echo '<style type="text/css" media="screen">' . get_option('ik_fb_custom_css') . "</style>";
-	}
-
-	//perform basic setup for plugin
-	function ik_fb_setup(){	
 	}
 
 	//facebook feed
@@ -66,8 +57,11 @@ class ikFacebook
 		extract( shortcode_atts( array(
 		), $atts ) );
 		
-		//load fb feed
-		$feed = $this->loadFacebook();
+		//load facebook data
+		$fbData = $this->loadFacebook();
+		
+		$feed = $fbData['feed'];
+		$page_data = $fbData['page_data'];
 		
 		//something went wrong!
 		if(count($feed)<1){
@@ -79,11 +73,11 @@ class ikFacebook
 		
 		//outputs the profile picture and Like button for the profile
 		$output .= '<div class="ik_fb_profile_picture">
-						<img src="//graph.facebook.com/'.get_option('ik_fb_page_id').'/picture" height="50" width="50" />
-						<a target="_blank" href="'.get_option('ik_fb_page_link').'"><span class="ik_fb_name">'.get_option('ik_fb_page_name').'</span> on Facebook</a>
+						<img src="//graph.facebook.com/'.$page_data->username.'/picture" height="50" width="50" />
+						<a target="_blank" href="'.$page_data->link.'"><span class="ik_fb_name">'.$page_data->name.'</span> on Facebook</a>
 					</div>';			
 
-		$output .= '<iframe src="//www.facebook.com/plugins/like.php?href='.urlencode(get_option('ik_fb_page_link')).'&amp;layout=standard&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;height=45" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:99%; height:45px; margin-left:4px;" allowTransparency="true"></iframe>';//add facebook like button
+		$output .= '<iframe src="//www.facebook.com/plugins/like.php?href='.urlencode($page_data->link).'&amp;layout=standard&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;height=45" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:99%; height:45px; margin-left:4px;" allowTransparency="true"></iframe>';//add facebook like button
 		$output .= '<ul class="ik_fb_feed_window">';//start of the feed		
 
 		if(count($feed)>0){//check to see if feed data is set
@@ -95,7 +89,7 @@ class ikFacebook
 				}				
 
 				if(isset($item->picture)){ //output the item photo
-					//die($item->picture);
+				
 					$output .= '<p class="ik_fb_facebook_image"><img src="'.$item->picture.'" /></p>';	
 					if(isset($item->description)){//adds the text for photo description
 						$output .= '<p class="ik_fb_facebook_description">'.$item->description.'</p>';
@@ -162,9 +156,13 @@ class ikFacebook
 			
 			$authToken = $this->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
 			$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/feed?{$authToken}", true);//the feed data
+			$page_data = $this->fetchUrl("https://graph.facebook.com/{$profile_id}", true);//the page data
 			
 			if(isset($feed->data)){//check to see if feed data is set				
-				$retData = $feed->data;
+				$retData['feed'] = $feed->data;
+			}
+			if(isset($page_data)){//check to see if page data is set
+				$retData['page_data'] = $page_data;
 			}
 		}
 

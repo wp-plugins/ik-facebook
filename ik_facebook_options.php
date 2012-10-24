@@ -39,8 +39,6 @@ class ikFacebookOptions
 		//register our settings
 		register_setting( 'ik-fb-settings-group', 'ik_fb_page_id' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_app_id' );
-		register_setting( 'ik-fb-settings-group', 'ik_fb_page_link' );
-		register_setting( 'ik-fb-settings-group', 'ik_fb_page_name' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_secret_key' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_custom_css' );
 	}
@@ -61,20 +59,6 @@ class ikFacebookOptions
 				<tr valign="top">
 					<th scope="row">Page ID</th>
 					<td><input type="text" name="ik_fb_page_id" value="<?php echo get_option('ik_fb_page_id'); ?>"  style="width: 250px" /></td>
-				</tr>
-			</table>
-			
-			<table class="form-table">
-				<tr valign="top">
-					<th scope="row">Page Link</th>
-					<td><input type="text" name="ik_fb_page_link" value="<?php echo get_option('ik_fb_page_link'); ?>"  style="width: 250px" /></td>
-				</tr>
-			</table>
-			
-			<table class="form-table">
-				<tr valign="top">
-					<th scope="row">Page Name</th>
-					<td><input type="text" name="ik_fb_page_name" value="<?php echo get_option('ik_fb_page_name'); ?>"  style="width: 250px" /></td>
 				</tr>
 			</table>
 
