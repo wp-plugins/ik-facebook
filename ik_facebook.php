@@ -4,7 +4,7 @@ Plugin Name: IK Facebook
 Plugin URI: http://illuminatikarate.com/ik-facebook-plugin
 Description: IK Facebook - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 1.0.3
+Version: 1.0.4
 Author URI: http://illuminatikarate.com
 
 This file is part of IK Facebook.
@@ -79,11 +79,11 @@ class ikFacebook
 		
 		//outputs the profile picture and Like button for the profile
 		$output .= '<div class="ik_fb_profile_picture">
-						<img src="http://graph.facebook.com/'.get_option('ik_fb_page_id').'/picture" height="50" width="50" />
+						<img src="//graph.facebook.com/'.get_option('ik_fb_page_id').'/picture" height="50" width="50" />
 						<a target="_blank" href="'.get_option('ik_fb_page_link').'"><span class="ik_fb_name">'.get_option('ik_fb_page_name').'</span> on Facebook</a>
 					</div>';			
 
-		$output .= '<iframe src="http://www.facebook.com/plugins/like.php?href='.urlencode(get_option('ik_fb_page_link')).'&amp;layout=standard&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;height=45" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:99%; height:45px; margin-left:4px;" allowTransparency="true"></iframe>';//add facebook like button
+		$output .= '<iframe src="//www.facebook.com/plugins/like.php?href='.urlencode(get_option('ik_fb_page_link')).'&amp;layout=standard&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;height=45" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:99%; height:45px; margin-left:4px;" allowTransparency="true"></iframe>';//add facebook like button
 		$output .= '<ul class="ik_fb_feed_window">';//start of the feed		
 
 		if(count($feed)>0){//check to see if feed data is set
@@ -95,6 +95,7 @@ class ikFacebook
 				}				
 
 				if(isset($item->picture)){ //output the item photo
+					die($item->picture);
 					$output .= '<p class="ik_fb_facebook_image"><img src="'.$item->picture.'" /></p>';	
 					if(isset($item->description)){//adds the text for photo description
 						$output .= '<p class="ik_fb_facebook_description">'.$item->description.'</p>';
