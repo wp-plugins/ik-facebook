@@ -95,7 +95,7 @@ class ikFacebook
 				}				
 
 				if(isset($item->picture)){ //output the item photo
-					die($item->picture);
+					//die($item->picture);
 					$output .= '<p class="ik_fb_facebook_image"><img src="'.$item->picture.'" /></p>';	
 					if(isset($item->description)){//adds the text for photo description
 						$output .= '<p class="ik_fb_facebook_description">'.$item->description.'</p>';
