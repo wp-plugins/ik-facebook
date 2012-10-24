@@ -17,7 +17,7 @@ The IK Facebook Plugin is a easy-to-use plugin that allows users to add a Facebo
 
 This section describes how to install the plugin and get it working.
 
-1. Upload the contents of `/ik_facebook/` to the `/wp-content/plugins/` directory
+1. Upload the contents of `/ik-facebook/` to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Place `[ik_fb_feed]` in the body of a post, or use the Appearance section to add the IK Facebook Widget to your Widgets area.
 4. For information on how to configure the plugin, see here: https://illuminatikarate.com/ik-facebook-plugin/#instructions
