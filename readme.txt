@@ -20,16 +20,20 @@ This section describes how to install the plugin and get it working.
 1. Upload the contents of `/ik_facebook/` to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Place `[ik_fb_feed]` in the body of a post, or use the Appearance section to add the IK Facebook Widget to your Widgets area.
+4. For information on how to configure the plugin, see here: https://illuminatikarate.com/ik-facebook-plugin/#instructions
 
 == Frequently Asked Questions ==
 
 = Help!  I need an App ID/Secret Key! =
 
-OK!  We have a great blog post with some helpful information here: https://illuminatikarate.com/blog/facebook-graph-api-requires-access-token-for-feed-access/
+OK!  We have a great blog post with some helpful information here: https://illuminatikarate.com/blog/how-to-create-a-simple-facebook-app/
 
-Follow the link on that page to Create A Simple Facebook App - you'll be guided along the way to get your App ID, Secret Key, and any other info you may need.
+Follow the information on that page to Create A Simple Facebook App - you'll be guided along the way to get your App ID, Secret Key, and any other info you may need.
 
 == Changelog ==
+
+= 1.0.2 -
+* Readme Updated.
 
 = 1.0.1 =
 * Typo fix.
