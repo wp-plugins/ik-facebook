@@ -34,6 +34,7 @@ Follow the information on that page to Create A Simple Facebook App - you'll be 
 
 = 1.0.7 =
 * Bugfix: remove double output of wrapping widget tag.
+* Feature: added option to show or hide the Like Button (hidden by default).
 
 = 1.0.6 = 
 * Cleanup Widget markup, using WordPress $before and $after markup.

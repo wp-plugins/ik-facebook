@@ -83,7 +83,11 @@ class ikFacebook
 						<a target="_blank" href="'.$page_data->link.'"><span class="ik_fb_name">'.$page_data->name.'</span> on Facebook</a>
 					</div>';			
 
-		$output .= '<iframe src="//www.facebook.com/plugins/like.php?href='.urlencode($page_data->link).'&amp;layout=standard&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;height=45" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:99%; height:45px; margin-left:4px;" allowTransparency="true"></iframe>';//add facebook like button
+		//only show like button if enabled in settings
+		if(get_option('ik_fb_show_like_button')){
+			$output .= '<iframe src="//www.facebook.com/plugins/like.php?href='.urlencode($page_data->link).'&amp;layout=standard&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;height=45" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:99%; height:45px; margin-left:4px;" allowTransparency="true"></iframe>';//add facebook like button
+		}
+		
 		$output .= '<ul class="ik_fb_feed_window">';//start of the feed		
 
 		if(count($feed)>0){//check to see if feed data is set
@@ -160,7 +164,6 @@ class ikFacebook
 				$retData['page_data'] = $page_data;
 			}
 		}
-
 		
 		return $retData;
 	}

@@ -41,6 +41,7 @@ class ikFacebookOptions
 		register_setting( 'ik-fb-settings-group', 'ik_fb_app_id' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_secret_key' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_custom_css' );
+		register_setting( 'ik-fb-settings-group', 'ik_fb_show_like_button' );
 	}
 
 	function settings_page(){
@@ -80,6 +81,13 @@ class ikFacebookOptions
 				<tr valign="top">
 					<th scope="row">Custom CSS</th>
 					<td><textarea name="ik_fb_custom_css" style="width: 250px; height: 250px;"><?php echo get_option('ik_fb_custom_css'); ?></textarea></td>
+				</tr>
+			</table>
+			
+			<table class="form-table">
+				<tr valign="top">
+					<th scope="row">Show Like Button</th>
+					<td><input type="checkbox" name="ik_fb_show_like_button" value="1" <?php if(get_option('ik_fb_show_like_button')){ ?> checked="CHECKED" <?php } ?>/></td>
 				</tr>
 			</table>
 			
