@@ -4,7 +4,7 @@ Plugin Name: IK Facebook
 Plugin URI: http://illuminatikarate.com/ik-facebook-plugin
 Description: IK Facebook - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 1.0.7
+Version: 1.0.8
 Author URI: http://illuminatikarate.com
 
 This file is part of IK Facebook.
@@ -35,6 +35,7 @@ class ikFacebook
 		//add CSS
 		add_action( 'wp_head', array($this, 'ik_fb_setup_css'));
 		add_action( 'wp_head', array($this, 'ik_fb_setup_custom_css'));
+		add_action( 'wp_head', array($this, 'ik_fb_setup_custom_theme_css'));
 
 		//register sidebar widgets
 		add_action( 'widgets_init', array($this, 'ik_fb_register_widgets' ));
@@ -45,16 +46,21 @@ class ikFacebook
 		register_widget( 'ikFacebookWidget' );
 	}
 	
-	//add Basic CSS to header
+	//add Basic CSS
 	function ik_fb_setup_css() {
 		wp_register_style( 'ik_facebook_style', plugins_url('style.css', __FILE__) );
 		wp_enqueue_style( 'ik_facebook_style' );
 	}
 
-	//add Custom CSS to header
-	//load theme options
+	//add Custom CSS
 	function ik_fb_setup_custom_css() {
 		echo '<style type="text/css" media="screen">' . get_option('ik_fb_custom_css') . "</style>";
+	}
+	
+	//add Custom CSS from Theme
+	function ik_fb_setup_custom_theme_css() {
+		wp_register_style( 'ik_facebook_custom_style', get_stylesheet_directory() . '/ik_fb_custom_style.css' );
+		wp_enqueue_style( 'ik_facebook_custom_style' );
 	}
 
 	//facebook feed

@@ -3,15 +3,17 @@ Contributors: richardgabriel
 Tags: facebook, facebook feed, facebook embed
 Requires at least: 3.0.1
 Tested up to: 3.4.2
-Stable tag: 1.0.7
-License: GPLv2 or later
+Stable tag: 1.0.8
+License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 IK Facebook is a simple plugin for adding bits of Facebook to a WordPress site.
 
 == Description ==
 
-The IK Facebook Plugin is a easy-to-use plugin that allows users to add a Facebook Feed as a Widget or via a Shortcode.  It includes options to link back to a site, title the Feed, add custom CSS, and more!
+The IK Facebook Plugin is a easy-to-use plugin that allows users to add a Facebook Feed to the sidebar, as a widget, or to embed the Feed into a Page or Post using the shortcode. 
+
+The plugin includes options to set the Title of the Widget, whether or not to show the Like Button above the Feed, and also includes the option to set your own custom CSS for styling purposes.
 
 == Installation ==
 
@@ -31,6 +33,9 @@ OK!  We have a great blog post with some helpful information here: https://illum
 Follow the information on that page to Create A Simple Facebook App - you'll be guided along the way to get your App ID, Secret Key, and any other info you may need.
 
 == Changelog ==
+
+= 1.0.8 =
+* Feature: can now create a CSS file in your theme directory titled 'ik_fb_custom_style.css' - these styles will automatically be loaded by the plugin.
 
 = 1.0.7 =
 * Bugfix: remove double output of wrapping widget tag.
