@@ -48,17 +48,11 @@ class ikFacebookWidget extends WP_Widget
 		if (!empty($title))
 			echo $before_title . $title . $after_title;;
 
-	?>
-		<div class="widget widget_ik_fb_feed">
-	<?php
 		if (!isset($ik_fb)){
 			$ik_fb = new ikFacebook();
 		}
 
 		echo $ik_fb->ik_fb_output_feed();
-	?>
-		</div>
-	<?php
 
 		echo $after_widget;
 	} 
