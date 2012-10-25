@@ -3,7 +3,7 @@ Contributors: richardgabriel
 Tags: facebook, facebook feed, facebook embed
 Requires at least: 3.0.1
 Tested up to: 3.4.2
-Stable tag: 1.0.8
+Stable tag: 1.0.9
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -41,6 +41,9 @@ It's all good!  This just means there is no feed data - this could be due to bad
 1. This is the Settings page.
 
 == Changelog ==
+
+= 1.0.9 =
+* CSS compatibility adjustment.
 
 = 1.0.8 =
 * Feature: can now create a CSS file in your theme directory titled 'ik_fb_custom_style.css' - these styles will automatically be loaded by the plugin.
