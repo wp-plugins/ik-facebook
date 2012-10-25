@@ -4,7 +4,7 @@ Plugin Name: IK Facebook
 Plugin URI: http://illuminatikarate.com/ik-facebook-plugin
 Description: IK Facebook - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 1.0.4
+Version: 1.0.5
 Author URI: http://illuminatikarate.com
 
 This file is part of IK Facebook.
@@ -22,6 +22,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with IK Facebook.  If not, see <http://www.gnu.org/licenses/>.
 */
+include('ik_facebook_widget.php');
 include('ik_facebook_options.php');
 $ik_fb_options = new ikFacebookOptions();
 
@@ -36,9 +37,14 @@ class ikFacebook
 		add_action( 'wp_head', array($this, 'ik_fb_setup_custom_css'));
 
 		//register sidebar widgets
-		wp_register_sidebar_widget('custom_widget_right', __('IK Facebook Feed'), array($this, 'widget_ik_fb_feed'));
+		add_action( 'widgets_init', array($this, 'ik_fb_register_widgets' ));
 	}
 
+	//register any widgets here
+	function ik_fb_register_widgets() {
+		register_widget( 'ikFacebookWidget' );
+	}
+	
 	//add Basic CSS to header
 	function ik_fb_setup_css() {
 		wp_register_style( 'ik_facebook_style', plugins_url('style.css', __FILE__) );
@@ -52,7 +58,7 @@ class ikFacebook
 	}
 
 	//facebook feed
-	function ik_fb_output_feed(){			
+	public function ik_fb_output_feed(){			
 		//load shortcode attributes into an array
 		extract( shortcode_atts( array(
 		), $atts ) );
@@ -115,17 +121,6 @@ class ikFacebook
 		$output .= '</div>';//end div#ik_fb_widget
 		
 		return $output;		
-	}
-
-	//sidebar widget for facebook feed
-	function widget_ik_fb_feed(){
-	?>
-		<li class="widget widget_ik_fb_feed">
-		<?php
-			echo $this->ik_fb_output_feed();
-		?>
-		</li>
-	<?php            
 	}
 	
 	//fetches an URL
