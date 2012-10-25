@@ -49,7 +49,7 @@ class ikFacebookWidget extends WP_Widget
 			echo $before_title . $title . $after_title;;
 
 	?>
-		<li class="widget widget_ik_fb_feed">
+		<div class="widget widget_ik_fb_feed">
 	<?php
 		if (!isset($ik_fb)){
 			$ik_fb = new ikFacebook();
@@ -57,7 +57,7 @@ class ikFacebookWidget extends WP_Widget
 
 		echo $ik_fb->ik_fb_output_feed();
 	?>
-		</li>
+		</div>
 	<?php
 
 		echo $after_widget;

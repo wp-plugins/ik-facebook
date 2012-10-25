@@ -3,7 +3,7 @@ Contributors: richardgabriel
 Tags: facebook, facebook feed, facebook embed
 Requires at least: 3.0.1
 Tested up to: 3.4.2
-Stable tag: 1.0.5
+Stable tag: 1.0.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,6 +31,9 @@ OK!  We have a great blog post with some helpful information here: https://illum
 Follow the information on that page to Create A Simple Facebook App - you'll be guided along the way to get your App ID, Secret Key, and any other info you may need.
 
 == Changelog ==
+
+= 1.0.6 = 
+* Cleanup Widget markup, using WordPress $before and $after markup.
 
 = 1.0.5 =
 * Adds Title Field to Widget.
