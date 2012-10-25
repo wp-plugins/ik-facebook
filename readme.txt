@@ -32,6 +32,10 @@ OK!  We have a great blog post with some helpful information here: https://illum
 
 Follow the information on that page to Create A Simple Facebook App - you'll be guided along the way to get your App ID, Secret Key, and any other info you may need.
 
+= Ack!  All I see is 'IK FB: Please check your settings.' - what do I do? =
+
+It's all good!  This just means there is no feed data - this could be due to bad settings, including a bad Page ID, App ID, or Secret Key, or it could be due to some other error such as not having cUrl installed.  Check the plugin instructions for help (or send us a message if you think it's an error.)
+
 == Screenshots ==
 
 1. This is the Settings page.
