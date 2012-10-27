@@ -66,7 +66,7 @@ class ikFacebook
 	
 	//generates the like button HTML
 	function ik_fb_like_button($url, $height = "45", $colorscheme = "light"){
-		return '<iframe src="//www.facebook.com/plugins/like.php?href='.urlencode($url).'&amp;layout=standard&amp;show_faces=false&amp;action=like&amp;colorscheme='.$colorscheme.'&amp;height=45" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:99%; height:'.$height.'px; margin-left:4px;" allowTransparency="true"></iframe>';//add facebook like button
+		return '<iframe src="//www.facebook.com/plugins/like.php?href='.urlencode($url).'&amp;layout=standard&amp;show_faces=false&amp;action=like&amp;colorscheme='.$colorscheme.'&amp;height='.$height.'" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:99%; height:'.$height.'px; margin-left:4px;" allowTransparency="true"></iframe>';//add facebook like button
 	}
 	
 	//output the like button
