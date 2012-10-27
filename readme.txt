@@ -22,7 +22,8 @@ This section describes how to install the plugin and get it working.
 1. Upload the contents of `/ik-facebook/` to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Visit this address for information on how to configure the plugin: https://illuminatikarate.com/ik-facebook-plugin/#instructions
-4. Once configured, place `[ik_fb_feed]` in the body of a post, or use the Appearance section to add the IK Facebook Widget to your Widgets area.  You can also use the function ik_fb_display_feed() to display the feed in your theme, and you can use the function ik_fb_display_like_box($url_to_like,$height_of_iframe,$colorscheme) to output a like box in your theme.
+4. To output the Feed, place `[ik_fb_feed]` in the body of a post, or use the Appearance section to add the IK Facebook Widget to your Widgets area.  You can also use the function `ik_fb_display_feed()` to display the feed in your theme.
+5. To output the Like Button, place `[ik_fb_like_button url="http://some_url" height"desired_iframe_height" colorscheme="light or dark"]` in the body of a post. You can also use the function `ik_fb_display_like_button($url_to_like,$height_of_iframe,$colorscheme)` to output a like button in your theme.
 
 == Frequently Asked Questions ==
 
@@ -43,8 +44,8 @@ It's all good!  This just means there is no feed data - this could be due to bad
 == Changelog ==
 
 = 1.1 = 
-* Feature: Adds ability to embed Like Box, without Feed
-* Feature: Adds functions to output Feed and / or Like Box in theme files
+* Feature: Adds ability to embed Like Button, without Feed
+* Feature: Adds functions to output Feed and / or Like Button in theme files
 * Clarifies installation instructions
 * Simplifies setup process
 
