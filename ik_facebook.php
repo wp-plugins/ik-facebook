@@ -22,7 +22,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with IK Facebook.  If not, see <http://www.gnu.org/licenses/>.
 */
-include('ik_facebook_widget.php');
+include('ik_facebook_feed_widget.php');
 include('ik_facebook_options.php');
 $ik_fb_options = new ikFacebookOptions();
 
@@ -31,6 +31,7 @@ class ikFacebook
 	function __construct(){
 		//create shortcodes
 		add_shortcode('ik_fb_feed', array($this, 'ik_fb_output_feed'));
+		add_shortcode('ik_fb_like_button', array($this, 'ik_fb_output_like_button'));
 
 		//add CSS
 		add_action( 'wp_head', array($this, 'ik_fb_setup_css'));
@@ -43,7 +44,7 @@ class ikFacebook
 
 	//register any widgets here
 	function ik_fb_register_widgets() {
-		register_widget( 'ikFacebookWidget' );
+		register_widget( 'ikFacebookFeedWidget' );
 	}
 	
 	//add Basic CSS
@@ -66,6 +67,18 @@ class ikFacebook
 	//generates the like button HTML
 	function ik_fb_like_button($url, $height = "45", $colorscheme = "light"){
 		return '<iframe src="//www.facebook.com/plugins/like.php?href='.urlencode($url).'&amp;layout=standard&amp;show_faces=false&amp;action=like&amp;colorscheme='.$colorscheme.'&amp;height=45" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:99%; height:'.$height.'px; margin-left:4px;" allowTransparency="true"></iframe>';//add facebook like button
+	}
+	
+	//output the like button
+	function ik_fb_output_like_button($atts){		
+		//load shortcode attributes into an array
+		extract( shortcode_atts( array(
+			'url' => site_url(),
+			'height' => '45',
+			'colorscheme' => 'light'
+		), $atts ) );
+		
+		echo $this->ik_fb_like_button($url,$height,$colorscheme);
 	}
 	
 	//facebook feed
@@ -190,7 +203,7 @@ function ik_fb_display_feed(){
 }
 
 //display like box
-function ik_fb_display_like_box($url, $height = "45", $colorscheme = "light"){
+function ik_fb_display_like_button($url, $height = "45", $colorscheme = "light"){
 	$ik_fb = new ikFacebook();
 	echo $ik_fb->ik_fb_like_button($url,$height,$colorscheme);
 }

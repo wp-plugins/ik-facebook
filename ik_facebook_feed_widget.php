@@ -18,9 +18,9 @@ along with IK Facebook.  If not, see <http://www.gnu.org/licenses/>.
 Shout out to http://www.makeuseof.com/tag/how-to-create-wordpress-widgets/ for the help
 */
 
-class ikFacebookWidget extends WP_Widget
+class ikFacebookFeedWidget extends WP_Widget
 {
-	function ikFacebookWidget(){
+	function ikFacebookFeedWidget(){
 		$widget_ops = array('classname' => 'ikFacebookWidget', 'description' => 'Displays the Facebook Feed' );
 		$this->WP_Widget('ikFacebookWidget', 'IK Facebook Feed', $widget_ops);
 	}

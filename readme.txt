@@ -44,6 +44,7 @@ It's all good!  This just means there is no feed data - this could be due to bad
 
 = 1.1 = 
 * Feature: Adds ability to embed Like Box, without Feed
+* Feature: Adds functions to output Feed and / or Like Box in theme files
 * Clarifies installation instructions
 * Simplifies setup process
 
