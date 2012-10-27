@@ -62,7 +62,12 @@ class ikFacebook
 		wp_register_style( 'ik_facebook_custom_style', get_stylesheet_directory() . '/ik_fb_custom_style.css' );
 		wp_enqueue_style( 'ik_facebook_custom_style' );
 	}
-
+	
+	//generates the like button HTML
+	function ik_fb_like_button($url, $height = "45", $colorscheme = "light"){
+		return '<iframe src="//www.facebook.com/plugins/like.php?href='.urlencode($url).'&amp;layout=standard&amp;show_faces=false&amp;action=like&amp;colorscheme='.$colorscheme.'&amp;height=45" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:99%; height:'.$height.'px; margin-left:4px;" allowTransparency="true"></iframe>';//add facebook like button
+	}
+	
 	//facebook feed
 	public function ik_fb_output_feed(){			
 		//load shortcode attributes into an array
@@ -91,9 +96,10 @@ class ikFacebook
 
 		//only show like button if enabled in settings
 		if(get_option('ik_fb_show_like_button')){
-			$output .= '<iframe src="//www.facebook.com/plugins/like.php?href='.urlencode($page_data->link).'&amp;layout=standard&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;height=45" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:99%; height:45px; margin-left:4px;" allowTransparency="true"></iframe>';//add facebook like button
+			$output .= $this->ik_fb_like_button($page_data->link);
 		}
 		
+		//hide feed if like button only		
 		$output .= '<ul class="ik_fb_feed_window">';//start of the feed		
 
 		if(count($feed)>0){//check to see if feed data is set
@@ -174,6 +180,20 @@ class ikFacebook
 		return $retData;
 	}
 }//end ikFacebook
+
+//pubicly available functions
+
+//display feed
+function ik_fb_display_feed(){
+	$ik_fb = new ikFacebook();
+	echo $ik_fb->ik_fb_output_feed();
+}
+
+//display like box
+function ik_fb_display_like_box($url, $height = "45", $colorscheme = "light"){
+	$ik_fb = new ikFacebook();
+	echo $ik_fb->ik_fb_like_button($url,$height,$colorscheme);
+}
 
 if (!isset($ik_fb)){
 	$ik_fb = new ikFacebook();
