@@ -26,12 +26,12 @@ This section describes how to install the plugin and get it working.
 3. Visit this address for information on how to configure the plugin: https://illuminatikarate.com/ik-facebook-plugin/
 
 = Outputting the Feed =
-*To output the Feed, place `[ik_fb_feed]` in the body of a post, or use the Appearance section to add the IK Facebook Widget to your Widgets area.  
-*You can also use the function `ik_fb_display_feed()` to display the feed in your theme.
+* To output the Feed, place `[ik_fb_feed]` in the body of a post, or use the Appearance section to add the IK Facebook Widget to your Widgets area.  
+* You can also use the function `ik_fb_display_feed()` to display the feed in your theme.
 
 = Outputting the Like Button = 
-*To output the Like Button, place `[ik_fb_like_button url="http://some_url" height"desired_iframe_height" colorscheme="light or dark"]` in the body of a post.
-*You can also use the function `ik_fb_display_like_button($url_to_like,$height_of_iframe,$colorscheme)` to output a like button in your theme.
+* To output the Like Button, place `[ik_fb_like_button url="http://some_url" height"desired_iframe_height" colorscheme="light or dark"]` in the body of a post.
+* You can also use the function `ik_fb_display_like_button($url_to_like,$height_of_iframe,$colorscheme)` to output a like button in your theme.
 
 == Frequently Asked Questions ==
 
@@ -94,3 +94,8 @@ It's all good!  This just means there is no feed data - this could be due to bad
 
 = 1.0 =
 * Released!
+
+== Upgrade Notice ==
+
+= 1.1.2 =
+New Features and bug fixes available!
