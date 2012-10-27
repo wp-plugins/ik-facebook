@@ -3,7 +3,7 @@ Contributors: richardgabriel
 Tags: facebook, facebook feed, facebook embed
 Requires at least: 3.0.1
 Tested up to: 3.4.2
-Stable tag: 1.0.9
+Stable tag: 1.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -21,8 +21,8 @@ This section describes how to install the plugin and get it working.
 
 1. Upload the contents of `/ik-facebook/` to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Place `[ik_fb_feed]` in the body of a post, or use the Appearance section to add the IK Facebook Widget to your Widgets area.
-4. For information on how to configure the plugin, see here: https://illuminatikarate.com/ik-facebook-plugin/#instructions
+3. Visit this address for information on how to configure the plugin: https://illuminatikarate.com/ik-facebook-plugin/#instructions
+4. Once configured, place `[ik_fb_feed]` in the body of a post, or use the Appearance section to add the IK Facebook Widget to your Widgets area.
 
 == Frequently Asked Questions ==
 
@@ -41,6 +41,11 @@ It's all good!  This just means there is no feed data - this could be due to bad
 1. This is the Settings page.
 
 == Changelog ==
+
+= 1.1 = 
+* Feature: Adds ability to embed Like Box, without Feed
+* Clarifies installation instructions
+* Simplifies setup process
 
 = 1.0.9 =
 * CSS compatibility adjustment.
