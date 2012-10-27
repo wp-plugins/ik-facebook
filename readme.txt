@@ -3,7 +3,7 @@ Contributors: richardgabriel
 Tags: facebook, facebook feed, facebook embed
 Requires at least: 3.0.1
 Tested up to: 3.4.2
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -11,11 +11,11 @@ IK Facebook is a simple plugin for adding bits of Facebook to a WordPress site.
 
 == Description ==
 
-The IK Facebook Plugin is a easy-to-use plugin that allows users to add a Facebook Feed or Like Button to the sidebar, as a widget, or to embed the Feed into a Page or Post using the shortcode. 
+IK Facebook is an easy-to-use plugin that allows users to add a Facebook Feed to the sidebar, as a widget, or to embed the Feed into a Page or Post using the shortcode.  IK Facebook also allows you to insert a Like Button into the Page, Post, or theme
 
-IK Facebook includes options to set the Title of the Widget, whether or not to show the Like Button above the Feed, whether or not to show the Profile Picture, and also includes the option to set your own custom CSS for styling purposes.  If you prefer, IK Facebook allows you to include a custom style sheet in your theme directory.
+IK Facebook includes options to set the Title of the Widget, whether or not to show the Like Button above the Feed, and whether or not to show the Profile Picture.
 
-IK Facebook also allows you to insert a Like Button into the Page, Post, or theme.
+IK Facebook includes the option to set your own custom CSS for styling purposes or, if you prefer, IK Facebook allows you to include a custom style sheet in your theme directory. Gone are the days of fighting with the Facebook Social Plugin!
 
 == Installation ==
 
@@ -24,8 +24,14 @@ This section describes how to install the plugin and get it working.
 1. Upload the contents of `/ik-facebook/` to the `/wp-content/plugins/` directory
 2. Activate IK Facebook through the 'Plugins' menu in WordPress
 3. Visit this address for information on how to configure the plugin: https://illuminatikarate.com/ik-facebook-plugin/
-4. To output the Feed, place `[ik_fb_feed]` in the body of a post, or use the Appearance section to add the IK Facebook Widget to your Widgets area.  You can also use the function `ik_fb_display_feed()` to display the feed in your theme.
-5. To output the Like Button, place `[ik_fb_like_button url="http://some_url" height"desired_iframe_height" colorscheme="light or dark"]` in the body of a post. You can also use the function `ik_fb_display_like_button($url_to_like,$height_of_iframe,$colorscheme)` to output a like button in your theme.
+
+= Outputting the Feed =
+*To output the Feed, place `[ik_fb_feed]` in the body of a post, or use the Appearance section to add the IK Facebook Widget to your Widgets area.  
+*You can also use the function `ik_fb_display_feed()` to display the feed in your theme.
+
+= Outputting the Like Button = 
+*To output the Like Button, place `[ik_fb_like_button url="http://some_url" height"desired_iframe_height" colorscheme="light or dark"]` in the body of a post.
+*You can also use the function `ik_fb_display_like_button($url_to_like,$height_of_iframe,$colorscheme)` to output a like button in your theme.
 
 == Frequently Asked Questions ==
 
@@ -45,14 +51,17 @@ It's all good!  This just means there is no feed data - this could be due to bad
 
 == Changelog ==
 
+= 1.1.2 =
+* Only load custom style sheet if one exists.
+
 = 1.1.1 =
-* Adds Option to Show / Hide Profile Picture
+* Adds Option to Show / Hide Profile Picture.
 
 = 1.1 = 
-* Feature: Adds ability to embed Like Button, without Feed
-* Feature: Adds functions to output Feed and / or Like Button in theme files
-* Clarifies installation instructions
-* Simplifies setup process
+* Feature: Adds ability to embed Like Button, without Feed.
+* Feature: Adds functions to output Feed and / or Like Button in theme files.
+* Clarifies installation instructions.
+* Simplifies setup process.
 
 = 1.0.9 =
 * CSS compatibility adjustment.
