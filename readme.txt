@@ -11,9 +11,11 @@ IK Facebook is a simple plugin for adding bits of Facebook to a WordPress site.
 
 == Description ==
 
-The IK Facebook Plugin is a easy-to-use plugin that allows users to add a Facebook Feed to the sidebar, as a widget, or to embed the Feed into a Page or Post using the shortcode. 
+The IK Facebook Plugin is a easy-to-use plugin that allows users to add a Facebook Feed or Like Button to the sidebar, as a widget, or to embed the Feed into a Page or Post using the shortcode. 
 
 The plugin includes options to set the Title of the Widget, whether or not to show the Like Button above the Feed, and also includes the option to set your own custom CSS for styling purposes.
+
+NEW: You can now insert a Like Button into the Page, Post, or theme using the new version of the plugin.  Read the instructions for more informatoin.
 
 == Installation ==
 
