@@ -42,6 +42,7 @@ class ikFacebookOptions
 		register_setting( 'ik-fb-settings-group', 'ik_fb_secret_key' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_custom_css' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_show_like_button' );
+		register_setting( 'ik-fb-settings-group', 'ik_fb_show_profile_picture' );
 	}
 
 	function settings_page(){
@@ -94,6 +95,14 @@ class ikFacebookOptions
 					<th scope="row"><label for="ik_fb_show_like_button">Show Like Button</label></th>
 					<td><input type="checkbox" name="ik_fb_show_like_button" id="ik_fb_show_like_button" value="1" <?php if(get_option('ik_fb_show_like_button')){ ?> checked="CHECKED" <?php } ?>/>
 					<p class="description">If checked, the Like Button and number of people who like your page will be displayed above the Feed.</p></td>
+				</tr>
+			</table>
+			
+			<table class="form-table">
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_show_profile_picture">Show Profile Picture</label></th>
+					<td><input type="checkbox" name="ik_fb_show_profile_picture" id="ik_fb_show_profile_picture" value="1" <?php if(get_option('ik_fb_show_profile_picture')){ ?> checked="CHECKED" <?php } ?>/>
+					<p class="description">If checked, the Profile Picture will be shown next to the Title of the feed.</p></td>
 				</tr>
 			</table>
 			
