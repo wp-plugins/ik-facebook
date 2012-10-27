@@ -59,35 +59,41 @@ class ikFacebookOptions
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row"><label for="ik_fb_page_id">Page ID</label></th>
-					<td><input type="text" name="ik_fb_page_id" id="ik_fb_page_id" value="<?php echo get_option('ik_fb_page_id'); ?>"  style="width: 250px" /></td>
+					<td><input type="text" name="ik_fb_page_id" id="ik_fb_page_id" value="<?php echo get_option('ik_fb_page_id'); ?>"  style="width: 250px" />
+					<p class="description">This is your Username or Page ID.  For example, ours is IlluminatiKarate (the end of our Facebook Page URL), but some people's maybe an Integer (such as 199789123).  It depends on if you have a username.</p>
+					</td>
 				</tr>
 			</table>
 
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row"><label for="ik_fb_app_id">Facebook App ID</label></th>
-					<td><input type="text" name="ik_fb_app_id" id="ik_fb_app_id" value="<?php echo get_option('ik_fb_app_id'); ?>" style="width: 250px" /></td>
+					<td><input type="text" name="ik_fb_app_id" id="ik_fb_app_id" value="<?php echo get_option('ik_fb_app_id'); ?>" style="width: 250px" />
+					<p class="description">This is the App ID you acquired when you <a href="https://illuminatikarate.com/blog/how-to-create-a-simple-facebook-app/" target="_blank" title="How To Create A Simple Facebook App">setup your Facebook app</a>.</p></td>
 				</tr>
 			</table>
 			
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row"><label for="ik_fb_secret_key">Facebook Secret Key</label></th>
-					<td><input type="text" name="ik_fb_secret_key" id="ik_fb_secret_key" value="<?php echo get_option('ik_fb_secret_key'); ?>" style="width: 250px" /></td>
+					<td><input type="text" name="ik_fb_secret_key" id="ik_fb_secret_key" value="<?php echo get_option('ik_fb_secret_key'); ?>" style="width: 250px" />
+					<p class="description">This is the App Secret you acquired when you <a href="https://illuminatikarate.com/blog/how-to-create-a-simple-facebook-app/" target="_blank" title="How To Create A Simple Facebook App">setup your Facebook app</a>.</p></td>
 				</tr>
 			</table>
 			
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row"><label for="ik_fb_custom_css">Custom CSS</a></th>
-					<td><textarea name="ik_fb_custom_css" id="ik_fb_custom_css" style="width: 250px; height: 250px;"><?php echo get_option('ik_fb_custom_css'); ?></textarea></td>
+					<td><textarea name="ik_fb_custom_css" id="ik_fb_custom_css" style="width: 250px; height: 250px;"><?php echo get_option('ik_fb_custom_css'); ?></textarea>
+					<p class="description">Input any Custom CSS you want to use here.  You can also include a file in your theme's folder called 'ik_fb_custom_style.css' - any styles in that file will be loaded with the plugin.  The plugin will work without you placing anything here - this is useful in case you need to edit any styles for it to work with your theme, though.</td>
 				</tr>
 			</table>
 			
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row"><label for="ik_fb_show_like_button">Show Like Button</label></th>
-					<td><input type="checkbox" name="ik_fb_show_like_button" id="ik_fb_show_like_button" value="1" <?php if(get_option('ik_fb_show_like_button')){ ?> checked="CHECKED" <?php } ?>/></td>
+					<td><input type="checkbox" name="ik_fb_show_like_button" id="ik_fb_show_like_button" value="1" <?php if(get_option('ik_fb_show_like_button')){ ?> checked="CHECKED" <?php } ?>/>
+					<p class="description">If checked, the Like Button and number of people who like your page will be displayed above the Feed.</p></td>
 				</tr>
 			</table>
 			
