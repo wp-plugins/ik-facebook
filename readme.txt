@@ -22,7 +22,7 @@ This section describes how to install the plugin and get it working.
 1. Upload the contents of `/ik-facebook/` to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Visit this address for information on how to configure the plugin: https://illuminatikarate.com/ik-facebook-plugin/#instructions
-4. Once configured, place `[ik_fb_feed]` in the body of a post, or use the Appearance section to add the IK Facebook Widget to your Widgets area.
+4. Once configured, place `[ik_fb_feed]` in the body of a post, or use the Appearance section to add the IK Facebook Widget to your Widgets area.  You can also use the function ik_fb_display_feed() to display the feed in your theme, and you can use the function ik_fb_display_like_box($url_to_like,$height_of_iframe,$colorscheme) to output a like box in your theme.
 
 == Frequently Asked Questions ==
 
