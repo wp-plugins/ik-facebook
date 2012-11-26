@@ -26,16 +26,19 @@ class ikFacebookFeedWidget extends WP_Widget
 	}
 
 	function form($instance){
-		$instance = wp_parse_args( (array) $instance, array( 'title' => '' ) );
+		$instance = wp_parse_args( (array) $instance, array( 'title' => '', 'use_thumb' => true, 'image_width' => '', 'colorscheme' => false ) );
 		$title = $instance['title'];
-	?>
-		<p><label for="<?php echo $this->get_field_id('title'); ?>">Title: <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo attribute_escape($title); ?>" /></label></p>
-	<?php
+		$colorscheme = $instance['colorscheme'];
+		?>
+			<p><label for="<?php echo $this->get_field_id('title'); ?>">Title: <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo attribute_escape($title); ?>" /></label></p>
+			<p><label for="<?php echo $this->get_field_id('colorscheme'); ?>">Color Scheme (light or dark): <input class="widefat" id="<?php echo $this->get_field_id('colorscheme'); ?>" name="<?php echo $this->get_field_name('colorscheme'); ?>" type="text" value="<?php echo attribute_escape($colorscheme); ?>" /></label></p>
+		<?php
 	}
 
 	function update($new_instance, $old_instance){
 		$instance = $old_instance;
 		$instance['title'] = $new_instance['title'];
+		$instance['colorscheme'] = strip_tags( $new_instance['colorscheme'] );
 		return $instance;
 	}
 
@@ -44,6 +47,7 @@ class ikFacebookFeedWidget extends WP_Widget
 
 		echo $before_widget;
 		$title = empty($instance['title']) ? ' ' : apply_filters('widget_title', $instance['title']);
+		$colorscheme = empty($instance['colorscheme']) ? 'light' : $instance['colorscheme'];
 
 		if (!empty($title))
 			echo $before_title . $title . $after_title;;
@@ -52,7 +56,7 @@ class ikFacebookFeedWidget extends WP_Widget
 			$ik_fb = new ikFacebook();
 		}
 
-		echo $ik_fb->ik_fb_output_feed();
+		echo $ik_fb->ik_fb_output_feed($colorscheme);
 
 		echo $after_widget;
 	} 

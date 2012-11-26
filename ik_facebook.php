@@ -4,7 +4,7 @@ Plugin Name: IK Facebook
 Plugin URI: http://illuminatikarate.com/ik-facebook-plugin
 Description: IK Facebook - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 1.1.2
+Version: 1.2
 Author URI: http://illuminatikarate.com
 
 This file is part of IK Facebook.
@@ -28,9 +28,11 @@ $ik_fb_options = new ikFacebookOptions();
 
 class ikFacebook
 {
+	var $authToken;
+
 	function __construct(){
 		//create shortcodes
-		add_shortcode('ik_fb_feed', array($this, 'ik_fb_output_feed'));
+		add_shortcode('ik_fb_feed', array($this, 'ik_fb_output_feed_shortcode'));
 		add_shortcode('ik_fb_like_button', array($this, 'ik_fb_output_like_button'));
 
 		//add CSS
@@ -84,12 +86,20 @@ class ikFacebook
 		echo $this->ik_fb_like_button($url,$height,$colorscheme);
 	}
 	
-	//facebook feed
-	public function ik_fb_output_feed(){			
+	function ik_fb_output_feed_shortcode($atts){			
 		//load shortcode attributes into an array
 		extract( shortcode_atts( array(
+			//TBD: make colorscheme available as a global option
+			'colorscheme' => 'light',
+			'width' => get_option('ik_fb_feed_image_width'),
+			'use_thumb' => !get_option('ik_fb_fix_feed_image_width')
 		), $atts ) );
 		
+		echo $this->ik_fb_output_feed($colorscheme, $use_thumb, $width);				
+	}
+	
+	//facebook feed
+	public function ik_fb_output_feed($colorscheme = "light", $use_thumb = true, $width = ""){		
 		//load facebook data
 		$fbData = $this->loadFacebook();
 		
@@ -117,7 +127,7 @@ class ikFacebook
 
 		//only show like button if enabled in settings
 		if(get_option('ik_fb_show_like_button')){
-			$output .= $this->ik_fb_like_button($page_data->link);
+			$output .= $this->ik_fb_like_button($page_data->link, "45", $colorscheme);
 		}
 		
 		//hide feed if like button only		
@@ -127,14 +137,36 @@ class ikFacebook
 			foreach($feed as $item){//$item is the feed object
 				$output .= '<li class="ik_fb_feed_item">';
 				
-				if(isset($item->message)){ //output the item message
+				//output the item message
+				if(isset($item->message)){ 
 					$output .= '<p>'.$item->message.'</p>';
 				}				
 
-				if(isset($item->picture)){ //output the item photo
-				
-					$output .= '<p class="ik_fb_facebook_image"><img src="'.$item->picture.'" /></p>';	
-					if(isset($item->description)){//adds the text for photo description
+				//output the item photo
+				if(isset($item->picture)){ 						
+					//output the images
+					//if set, load the custom image width from the options page
+					if(!$use_thumb){						
+						//load fullsized image	
+						//start with an authtoken, if needed
+						if(!isset($this->authToken)){
+							$this->authToken = $this->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
+						}
+						
+						//get the item id
+						$item_id = $item->object_id;
+						
+						//load the photo from the open graph
+						$photo = $this->fetchUrl("https://graph.facebook.com/{$item_id}/picture?{$this->authToken}&redirect=0", true);		
+						//if using custom width, output fullsized image
+						$output .= '<p class="ik_fb_facebook_image"><img width="'.$width.'" src="'.$photo->data->url.'" /></p>';
+					} else {
+						//otherwise, use thumbnail
+						$output .= '<p class="ik_fb_facebook_image"><img src="'.$item->picture.'" /></p>';
+					}
+					
+					//add the text for photo description
+					if(isset($item->description)){
 						$output .= '<p class="ik_fb_facebook_description">'.$item->description.'</p>';
 					}
 				}		
@@ -186,8 +218,11 @@ class ikFacebook
 			$app_id = get_option('ik_fb_app_id');
 			$app_secret = get_option('ik_fb_secret_key');
 			
-			$authToken = $this->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
-			$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/feed?{$authToken}", true);//the feed data
+			if(!isset($this->authToken)){
+				$this->authToken = $this->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
+			}
+			
+			$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/feed?{$this->authToken}", true);//the feed data
 			$page_data = $this->fetchUrl("https://graph.facebook.com/{$profile_id}", true);//the page data
 			
 			if(isset($feed->data)){//check to see if feed data is set				

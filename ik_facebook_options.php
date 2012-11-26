@@ -43,6 +43,8 @@ class ikFacebookOptions
 		register_setting( 'ik-fb-settings-group', 'ik_fb_custom_css' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_show_like_button' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_show_profile_picture' );
+		register_setting( 'ik-fb-settings-group', 'ik_fb_fix_feed_image_width' );
+		register_setting( 'ik-fb-settings-group', 'ik_fb_feed_image_width' );
 	}
 
 	function settings_page(){
@@ -103,6 +105,22 @@ class ikFacebookOptions
 					<th scope="row"><label for="ik_fb_show_profile_picture">Show Profile Picture</label></th>
 					<td><input type="checkbox" name="ik_fb_show_profile_picture" id="ik_fb_show_profile_picture" value="1" <?php if(get_option('ik_fb_show_profile_picture')){ ?> checked="CHECKED" <?php } ?>/>
 					<p class="description">If checked, the Profile Picture will be shown next to the Title of the feed.</p></td>
+				</tr>
+			</table>
+			
+			<table class="form-table">
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_fix_feed_image_width">Fix Feed Image Width</label></th>
+					<td><input type="checkbox" name="ik_fb_fix_feed_image_width" id="ik_fb_fix_feed_image_width" value="1" <?php if(get_option('ik_fb_fix_feed_image_width')){ ?> checked="CHECKED" <?php } ?>/>
+					<p class="description">If checked, images inside the feed will all be displayed at the width set below.  If unchecked, feed will display image thumbnails.</p></td>
+				</tr>
+			</table>
+			
+			<table class="form-table">
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_feed_image_width">Feed Image Width</label></th>
+					<td><input type="text" name="ik_fb_feed_image_width" id="ik_fb_feed_image_width" value="<?php echo get_option('ik_fb_feed_image_width'); ?>" style="width: 250px" />
+					<p class="description">If 'Fix Feed Image Width' is checked, the images will be set to this width (integer only.)</p></td>
 				</tr>
 			</table>
 			

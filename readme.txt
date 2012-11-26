@@ -3,7 +3,7 @@ Contributors: richardgabriel
 Tags: facebook, facebook feed, facebook embed
 Requires at least: 3.0.1
 Tested up to: 3.4.2
-Stable tag: 1.1.2
+Stable tag: 1.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -13,7 +13,7 @@ IK Facebook is a simple plugin for adding bits of Facebook to a WordPress site.
 
 IK Facebook is an easy-to-use plugin that allows users to add a Facebook Feed to the sidebar, as a widget, or to embed the Feed into a Page or Post using the shortcode.  IK Facebook also allows you to insert a Like Button into the Page, Post, or theme
 
-IK Facebook includes options to set the Title of the Widget, whether or not to show the Like Button above the Feed, and whether or not to show the Profile Picture.
+IK Facebook includes options to set the Title of the Widget, whether or not to show the Like Button above the Feed, and whether or not to show the Profile Picture.  IK Facebook supports both the Light and Dark color schemes for the Like Button.
 
 IK Facebook includes the option to set your own custom CSS for styling purposes or, if you prefer, IK Facebook allows you to include a custom style sheet in your theme directory. Gone are the days of fighting with the Facebook Social Plugin!
 
@@ -26,8 +26,8 @@ This section describes how to install the plugin and get it working.
 3. Visit this address for information on how to configure the plugin: https://illuminatikarate.com/ik-facebook-plugin/
 
 = Outputting the Feed =
-* To output the Feed, place `[ik_fb_feed]` in the body of a post, or use the Appearance section to add the IK Facebook Widget to your Widgets area.  
-* You can also use the function `ik_fb_display_feed()` to display the feed in your theme.
+* To output the Feed, place `[ik_fb_feed colorscheme="light or dark" use_thumb="true or false" width="250"]` in the body of a post, or use the Appearance section to add the IK Facebook Widget to your Widgets area.  If 'use_thumb' is set to true, the value of 'width' will be ignored.  If 'use_thumb' or 'width' are not set, the values from the Options page will be used.
+* You can also use the function `ik_fb_display_feed($colorscheme,$use_thumb,$width)` to display the feed in your theme.
 
 = Outputting the Like Button = 
 * To output the Like Button, place `[ik_fb_like_button url="http://some_url" height"desired_iframe_height" colorscheme="light or dark"]` in the body of a post.
@@ -45,11 +45,19 @@ Follow the information on that page to Create A Simple Facebook App - you'll be 
 
 It's all good!  This just means there is no feed data - this could be due to bad settings, including a bad Page ID, App ID, or Secret Key, or it could be due to some other error such as not having cUrl installed.  Check the plugin instructions for help (or send us a message if you think it's an error.)
 
+= I've set an image width on the options page, but it isn't working! =
+
+No worries!  Did you include any non-integer characters?  Be sure the width is just something like "250" (ignore the quotes) - you don't need to include "px".
+
 == Screenshots ==
 
 1. This is the Settings page.
 
 == Changelog ==
+
+= 1.2 =
+* Feature: Adds option to set width of images displayed in feed.  Will use high-res images if this option is enabled, otherwise outputs thumbnails.
+* Feature: Adds ability to output the Dark or Light color scheme for the Like Button, both in the Feed, Widget and the standalone Like Button.
 
 = 1.1.2 =
 * Only load custom style sheet if one exists.
@@ -97,5 +105,5 @@ It's all good!  This just means there is no feed data - this could be due to bad
 
 == Upgrade Notice ==
 
-= 1.1.2 =
-New Features and bug fixes available!
+= 1.2 =
+New Features available!
