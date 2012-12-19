@@ -4,7 +4,7 @@ Plugin Name: IK Facebook
 Plugin URI: http://illuminatikarate.com/ik-facebook-plugin
 Description: IK Facebook - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 1.2
+Version: 1.2.1
 Author URI: http://illuminatikarate.com
 
 This file is part of IK Facebook.
@@ -119,7 +119,12 @@ class ikFacebook
 		
 		//only display photo if option is set
 		if(get_option('ik_fb_show_profile_picture')){
-			$output .= '<img src="//graph.facebook.com/'.$page_data->username.'/picture" height="50" width="50" />';
+			//use the username if available, otherwise fallback to page ID
+			if(isset($page_data->username)){
+				$output .= '<img src="//graph.facebook.com/'.$page_data->username.'/picture" height="50" width="50" />';
+			} else {
+				$output .= '<img src="//graph.facebook.com/'.$page_data->id.'/picture" height="50" width="50" />';
+			}
 		}
 		
 		$output .= '	<a target="_blank" href="'.$page_data->link.'"><span class="ik_fb_name">'.$page_data->name.'</span> on Facebook</a>

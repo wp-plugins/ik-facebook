@@ -2,8 +2,8 @@
 Contributors: richardgabriel
 Tags: facebook, facebook feed, facebook embed
 Requires at least: 3.0.1
-Tested up to: 3.4.2
-Stable tag: 1.2
+Tested up to: 3.5
+Stable tag: 1.2.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -55,6 +55,9 @@ No worries!  Did you include any non-integer characters?  Be sure the width is j
 
 == Changelog ==
 
+= 1.2.1 =
+* Fix: Fix issue that was causing Profile Photo to not load for some Facebook Profiles.
+
 = 1.2 =
 * Feature: Adds option to set width of images displayed in feed.  Will use high-res images if this option is enabled, otherwise outputs thumbnails.
 * Feature: Adds ability to output the Dark or Light color scheme for the Like Button, both in the Feed, Widget and the standalone Like Button.
@@ -105,5 +108,5 @@ No worries!  Did you include any non-integer characters?  Be sure the width is j
 
 == Upgrade Notice ==
 
-= 1.2 =
-New Features available!
+= 1.2.1 =
+Bug fix available!
