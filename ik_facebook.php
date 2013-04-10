@@ -159,8 +159,10 @@ class ikFacebook
 		$add_feed_item = false;
 		
 		if($page_owner_only && IK_FACEBOOK_PRO){
-			if(function_exists("ik_fb_pro_is_page_owner"){
+			if(function_exists("ik_fb_pro_is_page_owner")){
 				$add_feed_item = ik_fb_pro_is_page_owner($item,$page_data);
+			} else {
+				$add_feed_item = true;
 			}
 		} else {
 			$add_feed_item = true;
