@@ -279,4 +279,3 @@ function ik_fb_display_like_button($url, $height = "45", $colorscheme = "light")
 if (!isset($ik_fb)){
 	$ik_fb = new ikFacebook();
 }
-?>
