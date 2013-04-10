@@ -3,7 +3,7 @@ Contributors: richardgabriel
 Tags: facebook, facebook feed, facebook embed
 Requires at least: 3.0.1
 Tested up to: 3.5.1
-Stable tag: 1.3.3
+Stable tag: 1.3.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -58,6 +58,9 @@ Visit our website to find out about premium options that are availablw: http://i
 1. This is the Settings page.
 
 == Changelog ==
+
+= 1.3.4 -
+* Fix: output already started error.
 
 = 1.3.3 =
 * Fix: fix shortcode output always appearing at the top of the_content()
