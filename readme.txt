@@ -59,7 +59,7 @@ Visit our website to find out about premium options that are availablw: http://i
 
 == Changelog ==
 
-= 1.3.4 -
+= 1.3.4 =
 * Fix: output already started error.
 
 = 1.3.3 =
