@@ -4,7 +4,7 @@ Plugin Name: IK Facebook
 Plugin URI: http://illuminatikarate.com/ik-facebook-plugin
 Description: IK Facebook - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 1.3.1
+Version: 1.3.2
 Author URI: http://illuminatikarate.com
 
 This file is part of IK Facebook.
@@ -159,7 +159,9 @@ class ikFacebook
 		$add_feed_item = false;
 		
 		if($page_owner_only && IK_FACEBOOK_PRO){
-			$add_feed_item = ik_fb_pro_is_page_owner($item,$page_data);
+			if(function_exists("ik_fb_pro_is_page_owner"){
+				$add_feed_item = ik_fb_pro_is_page_owner($item,$page_data);
+			}
 		} else {
 			$add_feed_item = true;
 		}
