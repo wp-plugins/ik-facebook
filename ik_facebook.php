@@ -4,7 +4,7 @@ Plugin Name: IK Facebook
 Plugin URI: http://illuminatikarate.com/ik-facebook-plugin
 Description: IK Facebook - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 1.2.1
+Version: 1.3
 Author URI: http://illuminatikarate.com
 
 This file is part of IK Facebook.
@@ -140,53 +140,9 @@ class ikFacebook
 
 		if(count($feed)>0){//check to see if feed data is set
 			foreach($feed as $item){//$item is the feed object
-				$output .= '<li class="ik_fb_feed_item">';
-				
-				//output the item message
-				if(isset($item->message)){ 
-					$output .= '<p>'.$item->message.'</p>';
-				}				
-
-				//output the item photo
-				if(isset($item->picture)){ 						
-					//output the images
-					//if set, load the custom image width from the options page
-					if(!$use_thumb){						
-						//load fullsized image	
-						//start with an authtoken, if needed
-						if(!isset($this->authToken)){
-							$this->authToken = $this->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
-						}
-						
-						//get the item id
-						$item_id = $item->object_id;
-						
-						//load the photo from the open graph
-						$photo = $this->fetchUrl("https://graph.facebook.com/{$item_id}/picture?{$this->authToken}&redirect=0", true);		
-						//if using custom width, output fullsized image
-						$output .= '<p class="ik_fb_facebook_image"><img width="'.$width.'" src="'.$photo->data->url.'" /></p>';
-					} else {
-						//otherwise, use thumbnail
-						$output .= '<p class="ik_fb_facebook_image"><img src="'.$item->picture.'" /></p>';
-					}
-					
-					//add the text for photo description
-					if(isset($item->description)){
-						$output .= '<p class="ik_fb_facebook_description">'.$item->description.'</p>';
-					}
-				}		
-
-				if(isset($item->link)){ //output the item link
-					if(isset($item->caption)){
-						$link_text = $item->caption; //some items have a caption
-					} else {
-						$link_text = $item->name;  //others might just have a name
-					}
-
-					$output .= '<p class="ik_fb_facebook_link"><a href="'.$item->link.'" target="_blank">'.$link_text.'</a></p>';	
-				}				
-				
-				$output .= '</li>';//end li.feed_item
+				//if allow only page owner is enabled, filter list here
+				$page_owner_only = true;
+				$output .= $this->buildFeedLineItem($item, $use_thumb, $width, $page_owner_only, $page_data);
 			}
 		}			
 
@@ -195,6 +151,70 @@ class ikFacebook
 		$output .= '</div>';//end div#ik_fb_widget
 		
 		return $output;		
+	}
+	
+	//passed a FB Feed Item, builds the appropriate HTML
+	function buildFeedLineItem($item, $use_thumb, $width, $page_owner_only = false, $page_data){
+		$output = "";
+		$add_feed_item = false;
+		
+		if($page_owner_only && IK_FACEBOOK_PRO){
+			$add_feed_item = ik_fb_pro_is_page_owner($item,$page_data);
+		} else {
+			$add_feed_item = true;
+		}
+		
+		if($add_feed_item){
+			$output .= '<li class="ik_fb_feed_item">';
+
+			//output the item message
+			if(isset($item->message)){ 
+			$output .= '<p>'.$item->message.'</p>';
+			}				
+
+			//output the item photo
+			if(isset($item->picture)){ 						
+			//output the images
+			//if set, load the custom image width from the options page
+			if(!$use_thumb){						
+				//load fullsized image	
+				//start with an authtoken, if needed
+				if(!isset($this->authToken)){
+					$this->authToken = $this->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
+				}
+				
+				//get the item id
+				$item_id = $item->object_id;
+				
+				//load the photo from the open graph
+				$photo = $this->fetchUrl("https://graph.facebook.com/{$item_id}/picture?{$this->authToken}&redirect=0", true);		
+				//if using custom width, output fullsized image
+				$output .= '<p class="ik_fb_facebook_image"><img width="'.$width.'" src="'.$photo->data->url.'" /></p>';
+			} else {
+				//otherwise, use thumbnail
+				$output .= '<p class="ik_fb_facebook_image"><img src="'.$item->picture.'" /></p>';
+			}
+
+			//add the text for photo description
+			if(isset($item->description)){
+				$output .= '<p class="ik_fb_facebook_description">'.$item->description.'</p>';
+			}
+			}		
+
+			if(isset($item->link)){ //output the item link
+			if(isset($item->caption)){
+				$link_text = $item->caption; //some items have a caption
+			} else {
+				$link_text = $item->name;  //others might just have a name
+			}
+
+			$output .= '<p class="ik_fb_facebook_link"><a href="'.$item->link.'" target="_blank">'.$link_text.'</a></p>';	
+			}				
+
+			$output .= '</li>';//end li.feed_item
+		}
+		
+		return $output;
 	}
 	
 	//fetches an URL

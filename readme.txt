@@ -2,8 +2,8 @@
 Contributors: richardgabriel
 Tags: facebook, facebook feed, facebook embed
 Requires at least: 3.0.1
-Tested up to: 3.5
-Stable tag: 1.2.1
+Tested up to: 3.5.1
+Stable tag: 1.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -54,6 +54,10 @@ No worries!  Did you include any non-integer characters?  Be sure the width is j
 1. This is the Settings page.
 
 == Changelog ==
+
+= 1.3 =
+* Feature: Introduces support for IK Facebook Pro, a premium enhancement plugin that provides additional useful features.
+* Updates plugin to be compatible with WordPress 3.5.1.
 
 = 1.2.1 =
 * Fix: Fix issue that was causing Profile Photo to not load for some Facebook Profiles.
