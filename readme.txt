@@ -3,7 +3,7 @@ Contributors: richardgabriel
 Tags: facebook, facebook feed, facebook embed
 Requires at least: 3.0.1
 Tested up to: 3.5.1
-Stable tag: 1.3
+Stable tag: 1.3.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -49,11 +49,18 @@ It's all good!  This just means there is no feed data - this could be due to bad
 
 No worries!  Did you include any non-integer characters?  Be sure the width is just something like "250" (ignore the quotes) - you don't need to include "px".
 
+= Other people's posts are showing up on my wall!  How do I stop it? =
+
+Visit our website to find out about premium options that are availablw: http://illuminatikarate.com/ik-facebook-plugin/
+
 == Screenshots ==
 
 1. This is the Settings page.
 
 == Changelog ==
+
+= 1.3.1 =
+* Readme Update
 
 = 1.3 =
 * Feature: Introduces support for IK Facebook Pro, a premium enhancement plugin that provides additional useful features.
@@ -112,5 +119,5 @@ No worries!  Did you include any non-integer characters?  Be sure the width is j
 
 == Upgrade Notice ==
 
-= 1.2.1 =
-Bug fix available!
+= 1.3.1 =
+Update available!
