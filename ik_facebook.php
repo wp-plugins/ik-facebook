@@ -140,9 +140,7 @@ class ikFacebook
 
 		if(count($feed)>0){//check to see if feed data is set
 			foreach($feed as $item){//$item is the feed object
-				//if allow only page owner is enabled, filter list here
-				$page_owner_only = true;
-				$output .= $this->buildFeedLineItem($item, $use_thumb, $width, $page_owner_only, $page_data);
+				$output .= $this->buildFeedLineItem($item, $use_thumb, $width, $page_data);
 			}
 		}			
 
@@ -154,11 +152,11 @@ class ikFacebook
 	}
 	
 	//passed a FB Feed Item, builds the appropriate HTML
-	function buildFeedLineItem($item, $use_thumb, $width, $page_owner_only = false, $page_data){
+	function buildFeedLineItem($item, $use_thumb, $width, $page_data){
 		$output = "";
 		$add_feed_item = false;
 		
-		if($page_owner_only && IK_FACEBOOK_PRO){
+		if(IK_FACEBOOK_PRO){
 			if(function_exists("ik_fb_pro_is_page_owner")){
 				$add_feed_item = ik_fb_pro_is_page_owner($item,$page_data);
 			} else {
