@@ -1,10 +1,11 @@
+
 <?php
 /*
 Plugin Name: IK Facebook
 Plugin URI: http://illuminatikarate.com/ik-facebook-plugin
 Description: IK Facebook - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 1.3.2
+Version: 1.3.3
 Author URI: http://illuminatikarate.com
 
 This file is part of IK Facebook.
@@ -83,7 +84,7 @@ class ikFacebook
 			'colorscheme' => 'light'
 		), $atts ) );
 		
-		echo $this->ik_fb_like_button($url,$height,$colorscheme);
+		return $this->ik_fb_like_button($url,$height,$colorscheme);
 	}
 	
 	function ik_fb_output_feed_shortcode($atts){			
@@ -95,7 +96,7 @@ class ikFacebook
 			'use_thumb' => !get_option('ik_fb_fix_feed_image_width')
 		), $atts ) );
 		
-		echo $this->ik_fb_output_feed($colorscheme, $use_thumb, $width);				
+		return $this->ik_fb_output_feed($colorscheme, $use_thumb, $width);				
 	}
 	
 	//facebook feed
