@@ -27,8 +27,14 @@ class ikFacebookOptions
 	}
 	
 	function add_admin_menu_item(){
+		if(get_option('ik_fb_unbranded') && function_exists("ik_fb_pro_register_settings")){
+			$title = "FB Settings";
+		} else {
+			$title = "IK FB Settings";
+		}
+		
 		//create new top-level menu
-		add_menu_page('IK Facebook Plugin Settings', 'IK FB Settings', 'administrator', __FILE__, array($this, 'settings_page'));
+		add_menu_page('IK Facebook Plugin Settings', $title, 'administrator', __FILE__, array($this, 'settings_page'));
 
 		//call register settings function
 		add_action( 'admin_init', array($this, 'register_settings'));	
@@ -45,12 +51,24 @@ class ikFacebookOptions
 		register_setting( 'ik-fb-settings-group', 'ik_fb_show_profile_picture' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_fix_feed_image_width' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_feed_image_width' );
+		
+		//register any pro settings
+		if(IK_FACEBOOK_PRO){
+			if(function_exists("ik_fb_pro_register_settings")){
+				ik_fb_pro_register_settings();
+			}
+		}
 	}
 
 	function settings_page(){
+		if(get_option('ik_fb_unbranded') && function_exists("ik_fb_pro_register_settings")){
+			$title = "Facebook Settings";
+		} else {
+			$title = "IK Facebook Settings";
+		}
 	?>
 	<div class="wrap">
-		<h2>IK Facebook Settings</h2>
+		<h2><?php echo $title; ?></h2>
 		
 		<?php if (isset($_GET['settings-updated']) && $_GET['settings-updated'] == 'true') : ?>
 		<div id="message" class="updated fade"><p>IK Facebook settings updated</p></div>
@@ -123,6 +141,14 @@ class ikFacebookOptions
 					<p class="description">If 'Fix Feed Image Width' is checked, the images will be set to this width (integer only.)</p></td>
 				</tr>
 			</table>
+			
+			<?php
+				if(IK_FACEBOOK_PRO){
+					if(function_exists("ik_fb_pro_output_settings")){
+						ik_fb_pro_output_settings();
+					}
+				}
+			?>
 			
 			<p class="submit">
 				<input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
