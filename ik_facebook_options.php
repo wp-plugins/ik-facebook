@@ -1,19 +1,19 @@
 <?php
 /*
-This file is part of IK Facebook.
+This file is part of The IK Facebook Plugin .
 
-IK Facebook is free software: you can redistribute it and/or modify
+The IK Facebook Plugin  is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-IK Facebook is distributed in the hope that it will be useful,
+The IK Facebook Plugin  is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with IK Facebook.  If not, see <http://www.gnu.org/licenses/>.
+along with The IK Facebook Plugin.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 class ikFacebookOptions
@@ -28,7 +28,7 @@ class ikFacebookOptions
 	
 	function add_admin_menu_item(){
 		if(get_option('ik_fb_unbranded') && function_exists("ik_fb_pro_register_settings")){
-			$title = "FB Settings";
+			$title = "Social Settings";
 		} else {
 			$title = "IK FB Settings";
 		}
@@ -63,15 +63,17 @@ class ikFacebookOptions
 	function settings_page(){
 		if(get_option('ik_fb_unbranded') && function_exists("ik_fb_pro_register_settings")){
 			$title = "Facebook Settings";
+			$message = "Facebook Settings Updated.";
 		} else {
-			$title = "IK Facebook Settings";
+			$title = "IK Facebook Plugin Settings";
+			$message = "IK Facebook Plugin Settings Updated.";
 		}
 	?>
 	<div class="wrap">
 		<h2><?php echo $title; ?></h2>
 		
 		<?php if (isset($_GET['settings-updated']) && $_GET['settings-updated'] == 'true') : ?>
-		<div id="message" class="updated fade"><p>IK Facebook settings updated</p></div>
+		<div id="message" class="updated fade"><p><?php echo $message; ?></p></div>
 		<?php endif; ?>	
 		
 		<form method="post" action="options.php">

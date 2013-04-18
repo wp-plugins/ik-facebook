@@ -3,30 +3,30 @@ Contributors: richardgabriel
 Tags: facebook, facebook feed, facebook embed
 Requires at least: 3.0.1
 Tested up to: 3.5.1
-Stable tag: 1.4
+Stable tag: 1.5
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-IK Facebook is a simple plugin for adding bits of Facebook to a WordPress site.
+The IK Facebook Plugin is a simple plugin for adding bits of Facebook to a WordPress site.
 
 == Description ==
 
-IK Facebook is an easy-to-use plugin that allows users to add a Facebook Feed to the sidebar, as a widget, or to embed the Feed into a Page or Post using the shortcode.  IK Facebook also allows you to insert a Like Button into the Page, Post, or theme
+The IK Facebook Plugin is an easy-to-use plugin that allows users to add a Facebook Feed to the sidebar, as a widget, or to embed the Feed into a Page or Post using the shortcode.  The IK Facebook Plugin also allows you to insert a Like Button into the Page, Post, or theme
 
-IK Facebook includes options to set the Title of the Widget, whether or not to show the Like Button above the Feed, and whether or not to show the Profile Picture.  IK Facebook supports both the Light and Dark color schemes for the Like Button.
+The IK Facebook Plugin includes options to set the Title of the Widget, whether or not to show the Like Button above the Feed, and whether or not to show the Profile Picture.  The IK Facebook Plugin supports both the Light and Dark color schemes for the Like Button.
 
-IK Facebook includes the option to set your own custom CSS for styling purposes or, if you prefer, IK Facebook allows you to include a custom style sheet in your theme directory. Gone are the days of fighting with the Facebook Social Plugin!
+The IK Facebook Plugin includes the option to set your own custom CSS for styling purposes or, if you prefer, the IK Facebook Plugin allows you to include a custom style sheet in your theme directory. Gone are the days of fighting with the Facebook Social Plugin!
 
 == Installation ==
 
 This section describes how to install the plugin and get it working.
 
 1. Upload the contents of `/ik-facebook/` to the `/wp-content/plugins/` directory
-2. Activate IK Facebook through the 'Plugins' menu in WordPress
+2. Activate the IK Facebook Plugin through the 'Plugins' menu in WordPress
 3. Visit this address for information on how to configure the plugin: https://illuminatikarate.com/ik-facebook-plugin/
 
 = Outputting the Feed =
-* To output the Feed, place `[ik_fb_feed colorscheme="light or dark" use_thumb="true or false" width="250"]` in the body of a post, or use the Appearance section to add the IK Facebook Widget to your Widgets area.  If 'use_thumb' is set to true, the value of 'width' will be ignored.  If 'use_thumb' or 'width' are not set, the values from the Options page will be used.
+* To output the Feed, place `[ik_fb_feed colorscheme="light or dark" use_thumb="true or false" width="250"]` in the body of a post, or use the Appearance section to add the The IK Facebook Plugin Widget to your Widgets area.  If 'use_thumb' is set to true, the value of 'width' will be ignored.  If 'use_thumb' or 'width' are not set, the values from the Options page will be used.
 * You can also use the function `ik_fb_display_feed($colorscheme,$use_thumb,$width)` to display the feed in your theme.
 
 = Outputting the Like Button = 
@@ -59,6 +59,13 @@ Visit our website to find out about premium options that are availablw: http://i
 
 == Changelog ==
 
+= 1.5 = 
+* Feature: Adds support for new Pro Feature - Custom HTML.
+* Update: remove branding from Settings Updated message.
+* Update: update method of building and outputting the feed.
+* Update: Change some wording throughout.
+* Fix: fix bad image output when URL to fullsized photo was not set.
+
 = 1.4 = 
 * Feature: Adds support for new Pro Feature - Unbranded Dashboard
 * Update: Output options more efficiently
@@ -70,13 +77,13 @@ Visit our website to find out about premium options that are availablw: http://i
 * Fix: fix shortcode output always appearing at the top of the_content()
 
 = 1.3.2 =
-* Fix: Fix issue when IK Facebook Pro package was deactivated.
+* Fix: Fix issue when The IK Facebook Plugin Pro package was deactivated.
 
 = 1.3.1 =
 * Readme Update
 
 = 1.3 =
-* Feature: Introduces support for IK Facebook Pro, a premium enhancement plugin that provides additional useful features.
+* Feature: Introduces support for the IK Social Plugin Pro, a premium enhancement plugin that provides additional useful features.
 * Updates plugin to be compatible with WordPress 3.5.1.
 
 = 1.2.1 =
@@ -132,5 +139,5 @@ Visit our website to find out about premium options that are availablw: http://i
 
 == Upgrade Notice ==
 
-= 1.4 =
+= 1.5 =
 Update available!

@@ -1,26 +1,26 @@
 <?php
 /*
-Plugin Name: IK Facebook
+Plugin Name: IK Facebook Plugin
 Plugin URI: http://illuminatikarate.com/ik-facebook-plugin
-Description: IK Facebook - A Facebook Solution for WordPress
+Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 1.4
+Version: 1.5
 Author URI: http://illuminatikarate.com
 
-This file is part of IK Facebook.
+This file is part of the IK Facebook Plugin.
 
-IK Facebook is free software: you can redistribute it and/or modify
+The IK Facebook Plugin is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-IK Facebook is distributed in the hope that it will be useful,
+The IK Facebook Plugin is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with IK Facebook.  If not, see <http://www.gnu.org/licenses/>.
+along with the IK Facebook Plugin .  If not, see <http://www.gnu.org/licenses/>.
 */
 include('ik_facebook_feed_widget.php');
 include('ik_facebook_options.php');
@@ -112,48 +112,68 @@ class ikFacebook
 			return $output;
 		}
 		
-		$output = '<div id="ik_fb_widget">';
+		$default_html = '<div id="ik_fb_widget"><div class="ik_fb_profile_picture">{ikfb:image}{ikfb:link}</div>{ikfb:like_button}<ul class="ik_fb_feed_window">{ikfb:feed}</ul></div>';
 		
-		//outputs the profile picture and Like button for the profile
-		$output .= '<div class="ik_fb_profile_picture">';
+		//load custom HTML structure from Pro Plugin, if available
+		$output = strlen(get_option('ik_fb_feed_html')) > 2 ? get_option('ik_fb_feed_html') : $default_html;		
 		
 		//only display photo if option is set
 		if(get_option('ik_fb_show_profile_picture')){
 			//use the username if available, otherwise fallback to page ID
 			if(isset($page_data->username)){
-				$output .= '<img src="//graph.facebook.com/'.$page_data->username.'/picture" height="50" width="50" />';
+				$replace = '<img src="//graph.facebook.com/'.$page_data->username.'/picture" />';
+				$output = str_replace('{ikfb:image}', $replace, $output);
 			} else {
-				$output .= '<img src="//graph.facebook.com/'.$page_data->id.'/picture" height="50" width="50" />';
+				$replace = '<img src="//graph.facebook.com/'.$page_data->id.'/picture" />';
+				$output = str_replace('{ikfb:image}', $replace, $output);
 			}
+		} else {
+			$output = str_replace('{ikfb:image}', '', $output);
 		}
 		
-		$output .= '	<a target="_blank" href="'.$page_data->link.'"><span class="ik_fb_name">'.$page_data->name.'</span> on Facebook</a>
-					</div>';			
+		$replace = '<a target="_blank" href="'.$page_data->link.'"><span class="ik_fb_name">'.$page_data->name.'</span> on Facebook</a>';	
+		$output = str_replace('{ikfb:link}', $replace, $output);		
 
 		//only show like button if enabled in settings
 		if(get_option('ik_fb_show_like_button')){
-			$output .= $this->ik_fb_like_button($page_data->link, "45", $colorscheme);
+			$replace = $this->ik_fb_like_button($page_data->link, "45", $colorscheme);
+			$output = str_replace('{ikfb:like_button}', $replace, $output);		
+		} else {
+			$output = str_replace('{ikfb:like_button}', '', $output);		
 		}
-		
-		//hide feed if like button only		
-		$output .= '<ul class="ik_fb_feed_window">';//start of the feed		
 
+		//build line items to replace with
+		$replace = '';
+		
 		if(count($feed)>0){//check to see if feed data is set
 			foreach($feed as $item){//$item is the feed object
-				$output .= $this->buildFeedLineItem($item, $use_thumb, $width, $page_data);
+				$replace .= $this->buildFeedLineItem($item, $use_thumb, $width, $page_data);
 			}
 		}			
-
-		$output .= '</ul>';//end ul.feed_window
 		
-		$output .= '</div>';//end div#ik_fb_widget
+		$output = str_replace('{ikfb:feed}', $replace, $output);		
 		
 		return $output;		
 	}
 	
 	//passed a FB Feed Item, builds the appropriate HTML
 	function buildFeedLineItem($item, $use_thumb, $width, $page_data){
-		$output = "";
+		//build default HTML structure
+		$default_feed_item_html = '<li class="ik_fb_feed_item">{ikfb:feed_item}</li>';		
+		$default_message_html = '<p>{ikfb:feed_item:message}</p>';		
+		$default_image_html = '<p class="ik_fb_facebook_image">{ikfb:feed_item:image}</p>';		
+		$default_description_html = '<p class="ik_fb_facebook_description">{ikfb:feed_item:description}</p>';		
+		$default_caption_html = '<p class="ik_fb_facebook_link">{ikfb:feed_item:link}</p>';	
+		
+		//load custom HTML structure from Pro Plugin, if available
+		$feed_item_html = strlen(get_option('ik_fb_feed_item_html')) > 2 ? get_option('ik_fb_feed_item_html') : $default_feed_item_html;
+		$message_html = strlen(get_option('ik_fb_message_html')) > 2 ? get_option('ik_fb_message_html') : $default_message_html;
+		$image_html = strlen(get_option('ik_fb_image_html')) > 2 ? get_option('ik_fb_image_html') : $default_image_html;
+		$description_html = strlen(get_option('ik_fb_description_html')) > 2 ? get_option('ik_fb_description_html') : $default_description_html;
+		$caption_html = strlen(get_option('ik_fb_caption_html')) > 2 ? get_option('ik_fb_caption_html') : $default_caption_html;
+		
+		$output = '';
+		
 		$add_feed_item = false;
 		
 		if(IK_FACEBOOK_PRO){
@@ -166,54 +186,70 @@ class ikFacebook
 			$add_feed_item = true;
 		}
 		
+		$line_item = '';
+		
 		if($add_feed_item){
-			$output .= '<li class="ik_fb_feed_item">';
-
 			//output the item message
 			if(isset($item->message)){ 
-			$output .= '<p>'.$item->message.'</p>';
+				$replace = $item->message;
+				$line_item .= str_replace('{ikfb:feed_item:message}', $replace, $message_html);		
 			}				
 
 			//output the item photo
 			if(isset($item->picture)){ 						
-			//output the images
-			//if set, load the custom image width from the options page
-			if(!$use_thumb){						
-				//load fullsized image	
-				//start with an authtoken, if needed
-				if(!isset($this->authToken)){
-					$this->authToken = $this->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
+				//output the images
+				//if set, load the custom image width from the options page
+				if(!$use_thumb){						
+					//load fullsized image	
+					//start with an authtoken, if needed
+					if(!isset($this->authToken)){
+						$this->authToken = $this->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
+					}
+					
+					//get the item id
+					$item_id = $item->object_id;
+					
+					//load the photo from the open graph
+					$photo = $this->fetchUrl("https://graph.facebook.com/{$item_id}/picture?{$this->authToken}&redirect=0", true);		
+					
+					if(isset($photo->data->url)){
+						//if using custom width, output fullsized image
+						$replace = '<img width="'.$width.'" src="'.$photo->data->url.'" />';
+						$line_item .= str_replace('{ikfb:feed_item:image}', $replace, $image_html);	
+					} else if(isset($item->picture)){
+						$replace = '<img width="'.$width.'" src="'.$item->picture.'" />';
+						$line_item .= str_replace('{ikfb:feed_item:image}', $replace, $image_html);	
+					}
+				} else {
+					//otherwise, use thumbnail
+					$replace = '<img src="'.$item->picture.'" />';
+					$line_item .= str_replace('{ikfb:feed_item:image}', $replace, $image_html);	
 				}
-				
-				//get the item id
-				$item_id = $item->object_id;
-				
-				//load the photo from the open graph
-				$photo = $this->fetchUrl("https://graph.facebook.com/{$item_id}/picture?{$this->authToken}&redirect=0", true);		
-				//if using custom width, output fullsized image
-				$output .= '<p class="ik_fb_facebook_image"><img width="'.$width.'" src="'.$photo->data->url.'" /></p>';
-			} else {
-				//otherwise, use thumbnail
-				$output .= '<p class="ik_fb_facebook_image"><img src="'.$item->picture.'" /></p>';
-			}
 
-			//add the text for photo description
-			if(isset($item->description)){
-				$output .= '<p class="ik_fb_facebook_description">'.$item->description.'</p>';
-			}
+				//add the text for photo description
+				if(isset($item->description)){
+					$replace = $item->description;
+					$line_item .= str_replace('{ikfb:feed_item:description}', $replace, $description_html);	
+				}
 			}		
 
 			if(isset($item->link)){ //output the item link
-			if(isset($item->caption)){
-				$link_text = $item->caption; //some items have a caption
-			} else {
-				$link_text = $item->name;  //others might just have a name
+				if(isset($item->caption)){
+					$link_text = $item->caption; //some items have a caption
+				} else {
+					$link_text = $item->name;  //others might just have a name
+				}
+				
+				//don't add the line item if the link text isn't set
+				if(strlen($link_text) > 1){
+					$replace = '<a href="'.$item->link.'" target="_blank">'.$link_text.'</a>';
+					$line_item .= str_replace('{ikfb:feed_item:link}', $replace, $caption_html);	
+				}
+			}	
+			
+			if(strlen($line_item)>2){
+				$output = str_replace('{ikfb:feed_item}', $line_item, $feed_item_html);	
 			}
-
-			$output .= '<p class="ik_fb_facebook_link"><a href="'.$item->link.'" target="_blank">'.$link_text.'</a></p>';	
-			}				
-
-			$output .= '</li>';//end li.feed_item
 		}
 		
 		return $output;
