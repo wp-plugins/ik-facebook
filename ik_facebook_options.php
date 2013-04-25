@@ -51,6 +51,7 @@ class ikFacebookOptions
 		register_setting( 'ik-fb-settings-group', 'ik_fb_show_profile_picture' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_fix_feed_image_width' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_feed_image_width' );
+		register_setting( 'ik-fb-settings-group', 'ik_fb_feed_theme' );
 		
 		//register any pro settings
 		if(IK_FACEBOOK_PRO){
@@ -106,9 +107,23 @@ class ikFacebookOptions
 			
 			<table class="form-table">
 				<tr valign="top">
+					<th scope="row"><label for="ik_fb_feed_theme">Feed Style</a></th>
+					<td>
+						<select name="ik_fb_feed_theme" id="ik_fb_feed_theme">							
+							<option value="no_style" <?php if(get_option('ik_fb_feed_theme') == "no_style"): echo 'selected="SELECTED"'; endif; ?>>No Style</option>
+							<option value="dark_style" <?php if(get_option('ik_fb_feed_theme') == "dark_style"): echo 'selected="SELECTED"'; endif; ?>>Dark Style</option>
+							<option value="light_style" <?php if(get_option('ik_fb_feed_theme') == "light_style"): echo 'selected="SELECTED"'; endif; ?>>Light Style</option>
+						</select>
+						<p class="description">Select which style you want to use.  If 'No Style' is selected, only your Theme's CSS, and any Custom CSS you've added, will be used.</p>
+					</td>
+				</tr>
+			</table>
+			
+			<table class="form-table">
+				<tr valign="top">
 					<th scope="row"><label for="ik_fb_custom_css">Custom CSS</a></th>
 					<td><textarea name="ik_fb_custom_css" id="ik_fb_custom_css" style="width: 250px; height: 250px;"><?php echo get_option('ik_fb_custom_css'); ?></textarea>
-					<p class="description">Input any Custom CSS you want to use here.  You can also include a file in your theme's folder called 'ik_fb_custom_style.css' - any styles in that file will be loaded with the plugin.  The plugin will work without you placing anything here - this is useful in case you need to edit any styles for it to work with your theme, though.</td>
+					<p class="description">Input any Custom CSS you want to use here.  You can also include a file in your theme's folder called 'ik_fb_custom_style.css' - any styles in that file will be loaded with the plugin.  The plugin will work without you placing anything here - this is useful in case you need to edit any styles for it to work with your theme, though.</p></td>
 				</tr>
 			</table>
 			
