@@ -154,7 +154,6 @@ class ikFacebook
 		
 		if(count($feed)>0){//check to see if feed data is set
 			foreach($feed as $item){//$item is the feed object
-				print_r($item);
 				$replace .= $this->buildFeedLineItem($item, $use_thumb, $width, $page_data);
 			}
 		}			
