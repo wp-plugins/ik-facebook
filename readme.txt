@@ -16,7 +16,7 @@ The IK Facebook Plugin is an easy-to-use plugin that allows users to add a Faceb
 
 The IK Facebook Plugin includes options to set the Title of the Widget, whether or not to show the Like Button above the Feed, and whether or not to show the Profile Picture.  The IK Facebook Plugin supports both the Light and Dark color schemes for the Like Button.
 
-The IK Facebook Plugin includes the option to set your own custom CSS for styling purposes or, if you prefer, the IK Facebook Plugin allows you to include a custom style sheet in your theme directory. Gone are the days of fighting with the Facebook Social Plugin!
+The IK Facebook Plugin includes the option to set your own custom CSS for styling purposes or, if you prefer, the IK Facebook Plugin allows you to include a custom style sheet in your theme directory. The IK Facebook Plugin also allows the user to select from a few pre-made Feed Themes.  Gone are the days of fighting with the Facebook Social Plugin!
 
 == Installation ==
 
