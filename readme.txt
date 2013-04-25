@@ -1,5 +1,6 @@
 === Plugin Name ===
 Contributors: richardgabriel
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V7HR8DP4EJSYN
 Tags: facebook, facebook feed, facebook embed
 Requires at least: 3.0.1
 Tested up to: 3.5.1
