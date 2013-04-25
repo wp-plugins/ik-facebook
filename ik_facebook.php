@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://illuminatikarate.com/ik-facebook-plugin
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 1.5
+Version: 1.5.1
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -131,12 +131,19 @@ class ikFacebook
 			$output = str_replace('{ikfb:image}', '', $output);
 		}
 		
-		$replace = '<a target="_blank" href="'.$page_data->link.'"><span class="ik_fb_name">'.$page_data->name.'</span> on Facebook</a>';	
+		//use the link if set, else fall back to /pages/name/id
+		if(isset($page_data->link)){
+			$the_link = $page_data->link;
+		} else {
+			$the_link = "https://www.facebook.com/pages/".$page_data->name."/".$page_data->id;
+		}
+		
+		$replace = '<a target="_blank" href="'.$the_link.'"><span class="ik_fb_name">'.$page_data->name.'</span> on Facebook</a>';	
 		$output = str_replace('{ikfb:link}', $replace, $output);		
 
 		//only show like button if enabled in settings
 		if(get_option('ik_fb_show_like_button')){
-			$replace = $this->ik_fb_like_button($page_data->link, "45", $colorscheme);
+			$replace = $this->ik_fb_like_button($the_link, "45", $colorscheme);
 			$output = str_replace('{ikfb:like_button}', $replace, $output);		
 		} else {
 			$output = str_replace('{ikfb:like_button}', '', $output);		
@@ -147,6 +154,7 @@ class ikFacebook
 		
 		if(count($feed)>0){//check to see if feed data is set
 			foreach($feed as $item){//$item is the feed object
+				print_r($item);
 				$replace .= $this->buildFeedLineItem($item, $use_thumb, $width, $page_data);
 			}
 		}			

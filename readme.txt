@@ -3,7 +3,7 @@ Contributors: richardgabriel
 Tags: facebook, facebook feed, facebook embed
 Requires at least: 3.0.1
 Tested up to: 3.5.1
-Stable tag: 1.5
+Stable tag: 1.5.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -49,15 +49,22 @@ It's all good!  This just means there is no feed data - this could be due to bad
 
 No worries!  Did you include any non-integer characters?  Be sure the width is just something like "250" (ignore the quotes) - you don't need to include "px".
 
+= Instead of a Like Button, all I see is "Error"! =
+
+That probably means the URL you've given the Like Button is invalid.  Sometimes this happens in the feed widget, if the URL isn't a valid Facebook Page.
+
 = Other people's posts are showing up on my wall!  How do I stop it? =
 
-Visit our website to find out about premium options that are availablw: http://illuminatikarate.com/ik-facebook-plugin/
+Visit our website to find out about premium options that are available: http://illuminatikarate.com/ik-facebook-plugin/
 
 == Screenshots ==
 
 1. This is the Settings page.
 
 == Changelog ==
+
+= 1.5.1 =
+* Fix: fix issue where the graph data didn't contain a properly formed link, leading to an Error message being output instead of the Like Button.
 
 = 1.5 = 
 * Feature: Adds support for new Pro Feature - Custom HTML.
@@ -139,5 +146,5 @@ Visit our website to find out about premium options that are availablw: http://i
 
 == Upgrade Notice ==
 
-= 1.5 =
-Update available!
+= 1.5.1 =
+Bug Fix Available!
