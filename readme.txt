@@ -3,7 +3,7 @@ Contributors: richardgabriel
 Tags: facebook, facebook feed, facebook embed
 Requires at least: 3.0.1
 Tested up to: 3.5.1
-Stable tag: 1.5.1
+Stable tag: 1.5.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -62,6 +62,10 @@ Visit our website to find out about premium options that are available: http://i
 1. This is the Settings page.
 
 == Changelog ==
+
+= 1.5.2 =
+* Fix: fix order that Custom CSS is loaded to guarantee that the custom styles are used
+* Fix: remove inline styling from Like Button and place it in CSS file, instead.
 
 = 1.5.1 =
 * Fix: fix issue where the graph data didn't contain a properly formed link, leading to an Error message being output instead of the Like Button.

@@ -99,3 +99,11 @@ p.ik_fb_error{
 #ik_fb_widget p.facebook_description {
     color: #999999;
 }
+
+#like_button{
+	border:none; 
+	overflow:hidden; 
+	width:99%; 
+	height: 45px; 
+	margin-left:4px;
+}
