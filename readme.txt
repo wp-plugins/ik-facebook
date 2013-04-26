@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, facebook feed, facebook embed
 Requires at least: 3.0.1
 Tested up to: 3.5.1
-Stable tag: 1.6.1
+Stable tag: 1.6.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -17,7 +17,7 @@ The IK Facebook Plugin is an easy-to-use plugin that allows users to add a Faceb
 The IK Facebook Plugin includes options to set the Title of the Widget, whether or not to show the Like Button above the Feed, and whether or not to show the Profile Picture.  The IK Facebook Plugin supports both the Light and Dark color schemes for the Like Button.
 
 The IK Facebook Plugin includes the option to set your own custom CSS for styling purposes or, if you prefer, the IK Facebook Plugin allows you to include a custom style sheet in your theme directory. The IK Facebook Plugin also allows the user to select from a few pre-made Feed Themes.  Gone are the days of fighting with the Facebook Social Plugin!
-
+7
 == Installation ==
 
 This section describes how to install the plugin and get it working.
@@ -63,6 +63,9 @@ Visit our website to find out about premium options that are available: http://i
 1. This is the Settings page.
 
 == Changelog ==
+
+= 1.6.2 =
+* Fix: Properly Adds Blue Style.
 
 = 1.6.1 =
 * Feature: Adds Blue Style Pre-made Theme.
@@ -157,5 +160,5 @@ Visit our website to find out about premium options that are available: http://i
 
 == Upgrade Notice ==
 
-= 1.6 =
-New Feature Available!
+= 1.6.2 =
+Bug Fix Available!
