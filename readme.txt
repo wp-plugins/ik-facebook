@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, facebook feed, facebook embed
 Requires at least: 3.0.1
 Tested up to: 3.5.1
-Stable tag: 1.6
+Stable tag: 1.6.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -63,6 +63,9 @@ Visit our website to find out about premium options that are available: http://i
 1. This is the Settings page.
 
 == Changelog ==
+
+= 1.6.1 =
+* Feature: Adds Blue Style Pre-made Theme.
 
 = 1.6 =
 * Feature: Adds Optional Pre-made Feed Themes.

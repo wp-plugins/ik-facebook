@@ -113,6 +113,7 @@ class ikFacebookOptions
 							<option value="no_style" <?php if(get_option('ik_fb_feed_theme') == "no_style"): echo 'selected="SELECTED"'; endif; ?>>No Style</option>
 							<option value="dark_style" <?php if(get_option('ik_fb_feed_theme') == "dark_style"): echo 'selected="SELECTED"'; endif; ?>>Dark Style</option>
 							<option value="light_style" <?php if(get_option('ik_fb_feed_theme') == "light_style"): echo 'selected="SELECTED"'; endif; ?>>Light Style</option>
+							<option value="blue_style" <?php if(get_option('ik_fb_feed_theme') == "blue_style"): echo 'selected="SELECTED"'; endif; ?>>Blue Style</option>
 						</select>
 						<p class="description">Select which style you want to use.  If 'No Style' is selected, only your Theme's CSS, and any Custom CSS you've added, will be used.</p>
 					</td>
@@ -160,13 +161,16 @@ class ikFacebookOptions
 			</table>
 			
 			<?php
-				if(IK_FACEBOOK_PRO){
-					if(function_exists("ik_fb_pro_output_settings")){
-						ik_fb_pro_output_settings();
-					}
+				if(IK_FACEBOOK_PRO && function_exists("ik_fb_pro_output_settings")){
+					ik_fb_pro_output_settings();
+				} else {					
+				?>
+					<div style="margin: 20px auto; text-align: center; text-decoration: none;">
+						<a href="https://illuminatikarate.com/ik-social-pro/" target="_blank" title="Learn More About IK Social Pro"><img src="<?php echo plugins_url('ik_social_pro.jpg', __FILE__); ?>" alt="IK Social Pro" /><p class="description">Click Here To Learn About IK Social Pro</p></a>
+					</div>
+				<?php
 				}
 			?>
-			
 			<p class="submit">
 				<input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
 			</p>

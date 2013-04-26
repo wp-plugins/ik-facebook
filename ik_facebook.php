@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://illuminatikarate.com/ik-facebook-plugin
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 1.6
+Version: 1.6.1
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -54,6 +54,7 @@ class ikFacebook
 		wp_register_style( 'ik_facebook_style', plugins_url('style.css', __FILE__) );
 		wp_register_style( 'ik_facebook_dark_style', plugins_url('dark_style.css', __FILE__) );
 		wp_register_style( 'ik_facebook_light_style', plugins_url('light_style.css', __FILE__) );
+		wp_register_style( 'ik_facebook_blue_style', plugins_url('blue_style.css', __FILE__) );
 		
 		switch(get_option('ik_fb_feed_theme')){
 			case 'dark_style':
@@ -61,6 +62,9 @@ class ikFacebook
 				break;
 			case 'light_style':
 				wp_enqueue_style( 'ik_facebook_light_style' );
+				break;
+			case 'blue_style':
+				wp_enqueue_style( 'ik_facebook_blue_style' );
 				break;
 			case 'no_style':
 			default:
