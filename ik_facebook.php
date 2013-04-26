@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://illuminatikarate.com/ik-facebook-plugin
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 1.6.2
+Version: 1.6.3
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -156,7 +156,7 @@ class ikFacebook
 			$the_link = "https://www.facebook.com/pages/".$page_data->name."/".$page_data->id;
 		}
 		
-		$replace = '<a target="_blank" href="'.$the_link.'"><span class="ik_fb_name">'.$page_data->name.'</span> on Facebook</a>';	
+		$replace = '<a target="_blank" href="'.$the_link.'"><span class="ik_fb_name">'.$page_data->name.'</span></a>';	
 		$output = str_replace('{ikfb:link}', $replace, $output);		
 
 		//only show like button if enabled in settings
