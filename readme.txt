@@ -163,5 +163,5 @@ Visit our website to find out about premium options that are available: http://i
 
 == Upgrade Notice ==
 
-= 1.6.2 =
-Bug Fix Available!
+= 1.6.3 =
+Minor Update Available
