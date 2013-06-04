@@ -50,6 +50,7 @@ class ikFacebookOptions
 		register_setting( 'ik-fb-settings-group', 'ik_fb_show_like_button' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_show_profile_picture' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_fix_feed_image_width' );
+		register_setting( 'ik-fb-settings-group', 'ik_fb_show_posted_by' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_feed_limit' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_feed_image_width' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_feed_theme' );
@@ -166,6 +167,14 @@ class ikFacebookOptions
 					<th scope="row"><label for="ik_fb_feed_limit">Number of Feed Items</label></th>
 					<td><input type="text" name="ik_fb_feed_limit" id="ik_fb_feed_limit" value="<?php echo get_option('ik_fb_feed_limit'); ?>" style="width: 250px" />
 					<p class="description">If set, the feed will be limited to this number of items.</p></td>
+				</tr>
+			</table>
+			
+			<table class="form-table">
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_show_posted_by">Show Posted By</label></th>
+					<td><input type="checkbox" name="ik_fb_show_posted_by" id="ik_fb_show_posted_by" value="1" <?php if(get_option('ik_fb_show_posted_by')){ ?> checked="CHECKED" <?php } ?>/>
+					<p class="description">If checked, the text Posted By PosterName will be displayed in the feed.</p></td>
 				</tr>
 			</table>
 			

@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, facebook feed, facebook embed
 Requires at least: 3.0.1
 Tested up to: 3.5.1
-Stable tag: 1.6.4
+Stable tag: 1.6.5
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -64,8 +64,11 @@ Visit our website to find out about premium options that are available: http://i
 
 == Changelog ==
 
+= 1.6.5 =
+* Feature: Adds Option to Output "Posted By Author" in the feed.
+
 = 1.6.4 =
-* Feature: Adds Option to Limit Number Of Displayed Posts
+* Feature: Adds Option to Limit Number Of Displayed Posts.
 
 = 1.6.3 =
 * Minor Update: Remove "on Facebook" hardcoded text from Feed Title.
@@ -166,5 +169,5 @@ Visit our website to find out about premium options that are available: http://i
 
 == Upgrade Notice ==
 
-= 1.6.4 =
+= 1.6.5 =
 New Feature Available
