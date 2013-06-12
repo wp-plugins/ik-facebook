@@ -33,8 +33,14 @@ class ikFacebookOptions
 			$title = "IK FB Settings";
 		}
 		
+		if(get_option('ik_fb_unbranded') && function_exists("ik_fb_pro_register_settings")){
+			$page_title = "Social Plugin Settings";
+		} else {
+			$page_title = "IK Facebook Plugin Settings";
+		}
+		
 		//create new top-level menu
-		add_menu_page('IK Facebook Plugin Settings', $title, 'administrator', __FILE__, array($this, 'settings_page'));
+		add_menu_page($page_title, $title, 'administrator', __FILE__, array($this, 'settings_page'));
 
 		//call register settings function
 		add_action( 'admin_init', array($this, 'register_settings'));	
@@ -78,7 +84,7 @@ class ikFacebookOptions
 		
 			
 	<?php if(!function_exists("ik_fb_pro_output_settings")): ?>
-		<div class="updated" id="message"><p><strong>Want More Features?</strong> Check out IK Social Pro for an undbranded admin, custom HTML, and more. Pay-What-You-Want pricing!<br /><br /><a href="http://gum.co/KEuF">Click Here To Get it Now</a></p></div>
+		<div class="updated" id="message"><p><strong>Want More Features?</strong><br/><br/> Check out IK Social Pro for an unbranded admin, custom HTML, and more. Pay-What-You-Want pricing!<br /><br /><a href="http://gum.co/KEuF">Click Here To Get it Now</a></p></div>
 	<?php endif; ?>
 	
 		<?php if (isset($_GET['settings-updated']) && $_GET['settings-updated'] == 'true') : ?>
@@ -209,6 +215,7 @@ class ikFacebookOptions
 						<ul>
 							<li><strong>Unbranded Admin screens:</strong> Remove all IK FB branding from your Wordpress admin.</li>
 							<li><strong>Hide non-page-owner posts from your feed:</strong> With this option, your feed will only show the posts from your own account.</li>
+							<li><strong>Custom Styling Options:</strong> Unfamiliar with CSS? These options will enable you to style the output of the various text, links, change the dimensions of the feed, and more!</li>
 							<li><strong>Custom HTML Output:</strong> Use any HTML tags you want for the feed. You'll be able to specify a custom HTML template for your feed.</li>
 							<li><strong>Free Updates For Life:</strong> Get IK Social Pro now, and you'll get free updates for life!</li>
 						</ul>
