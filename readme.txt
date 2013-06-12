@@ -69,6 +69,7 @@ Visit our website to find out about premium options that are available: http://i
 == Changelog ==
 
 = 1.7.1 =
+* Feature: Adds option to set the Height of images that are displayed in the Feed.
 * Fix: Change Page Title of Settings Page to 'Social Plugin Settings' instead of 'IK Facebook Plugin Settings', when unbranded option is enabled.
 * Fix: Address typo on Settings page.
 

@@ -26,7 +26,7 @@ class ikFacebookFeedWidget extends WP_Widget
 	}
 
 	function form($instance){
-		$instance = wp_parse_args( (array) $instance, array( 'title' => '', 'use_thumb' => true, 'image_width' => '', 'colorscheme' => false ) );
+		$instance = wp_parse_args( (array) $instance, array( 'title' => '', 'use_thumb' => true, 'image_width' => '', 'colorscheme' => false, 'image_height' => '' ) );
 		$title = $instance['title'];
 		$colorscheme = $instance['colorscheme'];
 		?>
@@ -56,8 +56,7 @@ class ikFacebookFeedWidget extends WP_Widget
 			$ik_fb = new ikFacebook();
 		}
 
-		//$colorscheme = "light", $use_thumb = true, $width = "", $is_sidebar_widget = false
-		echo $ik_fb->ik_fb_output_feed($colorscheme,true,'',true);
+		echo $ik_fb->ik_fb_output_feed($colorscheme,true,$width,true,$height);
 
 		echo $after_widget;
 	} 

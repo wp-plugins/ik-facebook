@@ -125,14 +125,15 @@ class ikFacebook
 			//TBD: make colorscheme available as a global option
 			'colorscheme' => 'light',
 			'width' => get_option('ik_fb_feed_image_width'),
-			'use_thumb' => !get_option('ik_fb_fix_feed_image_width')
+			'height' => get_option('ik_fb_feed_image_height'),
+			'use_thumb' => !get_option('ik_fb_fix_feed_image_width') && !get_option('ik_fb_fix_feed_image_height'),
 		), $atts ) );
 		
-		return $this->ik_fb_output_feed($colorscheme, $use_thumb, $width);				
+		return $this->ik_fb_output_feed($colorscheme, $use_thumb, $width, false, $height);				
 	}
 	
 	//facebook feed
-	public function ik_fb_output_feed($colorscheme = "light", $use_thumb = true, $width = "", $is_sidebar_widget = false){		
+	public function ik_fb_output_feed($colorscheme = "light", $use_thumb = true, $width = "", $is_sidebar_widget = false, $height){		
 		//load facebook data
 		$fbData = $this->loadFacebook();
 		
@@ -242,7 +243,7 @@ class ikFacebook
 			
 			foreach($feed as $item){//$item is the feed object
 				if($limit == -1 || $count < $limit){
-					$replace .= $this->buildFeedLineItem($item, $use_thumb, $width, $page_data);
+					$replace .= $this->buildFeedLineItem($item, $use_thumb, $width, $page_data, $height);
 					$count ++;
 				}
 			}
@@ -254,7 +255,7 @@ class ikFacebook
 	}
 	
 	//passed a FB Feed Item, builds the appropriate HTML
-	function buildFeedLineItem($item, $use_thumb, $width, $page_data){
+	function buildFeedLineItem($item, $use_thumb, $width, $page_data, $height){
 		//build default HTML structure
 		$default_feed_item_html = '<li class="ik_fb_feed_item">{ikfb:feed_item}</li>';		
 		$default_message_html = '<p>{ikfb:feed_item:message}</p>';		
@@ -314,11 +315,15 @@ class ikFacebook
 					$item_id = $item->object_id;
 					
 					//load the photo from the open graph
-					$photo = $this->fetchUrl("https://graph.facebook.com/{$item_id}/picture?{$this->authToken}&redirect=0", true);		
+					//TBD: Caching!!!
+					$photo = $this->fetchUrl("https://graph.facebook.com/{$item_id}/picture?{$this->authToken}&redirect=0", true);	
 					
-					if(isset($photo->data->url)){
-						//if using custom width, output fullsized image
-						$replace = '<img width="'.$width.'" src="'.$photo->data->url.'" />';
+					//if using custom width, output fullsized image
+					$width = get_option('ik_fb_fix_feed_image_width') ? $width : '';
+					$height = get_option('ik_fb_fix_feed_image_height') ? $height : '';	
+					
+					if(isset($photo->data->url)){						
+						$replace = '<img width="'.$width.'" height="'.$height.'" src="'.$photo->data->url.'" />';
 				
 						//add custom image styling from pro options
 						if(function_exists("ik_fb_pro_image_styling") && !get_option('ik_fb_use_custom_html')){		
@@ -327,7 +332,7 @@ class ikFacebook
 						
 						$line_item .= str_replace('{ikfb:feed_item:image}', $replace, $image_html);	
 					} else if(isset($item->picture)){
-						$replace = '<img width="'.$width.'" src="'.$item->picture.'" />';
+						$replace = '<img width="'.$width.'" height="'.$height.'" src="'.$item->picture.'" />';
 						
 						//add custom image styling from pro options
 						if(function_exists("ik_fb_pro_image_styling") && !get_option('ik_fb_use_custom_html')){		
