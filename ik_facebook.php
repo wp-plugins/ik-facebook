@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://illuminatikarate.com/ik-facebook-plugin
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 1.6.5
+Version: 1.7
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -26,6 +26,10 @@ include('ik_facebook_feed_widget.php');
 include('ik_facebook_options.php');
 $ik_fb_options = new ikFacebookOptions();
 
+//use this to track if css/powered by have been output
+global $ikfb_footer_css_output;
+global $ikfb_footer_poweredby_output;
+
 class ikFacebook
 {
 	var $authToken;
@@ -42,6 +46,9 @@ class ikFacebook
 
 		//register sidebar widgets
 		add_action( 'widgets_init', array($this, 'ik_fb_register_widgets' ));
+
+		//display "powered by"
+		add_action('wp_footer', array($this, 'ik_fb_show_powered_by' ));
 	}
 
 	//register any widgets here
@@ -75,7 +82,15 @@ class ikFacebook
 
 	//add Custom CSS
 	function ik_fb_setup_custom_css() {
-		echo '<style type="text/css" media="screen">' . get_option('ik_fb_custom_css') . "</style>";
+		//use this to track if css has been output
+		global $ikfb_footer_css_output;
+		
+		if($ikfb_footer_css_output){
+			return;
+		} else {
+			echo '<style type="text/css" media="screen">' . get_option('ik_fb_custom_css') . "</style>";
+			$ikfb_footer_css_output = true;
+		}
 	}
 	
 	//add Custom CSS from Theme
@@ -117,12 +132,24 @@ class ikFacebook
 	}
 	
 	//facebook feed
-	public function ik_fb_output_feed($colorscheme = "light", $use_thumb = true, $width = ""){		
+	public function ik_fb_output_feed($colorscheme = "light", $use_thumb = true, $width = "", $is_sidebar_widget = false){		
 		//load facebook data
 		$fbData = $this->loadFacebook();
 		
 		$feed = $fbData['feed'];
 		$page_data = $fbData['page_data'];
+		
+		$ik_fb_header_bg_color = strlen(get_option('ik_fb_header_bg_color')) > 2 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_header_bg_color') : '';
+		$ik_fb_window_bg_color = strlen(get_option('ik_fb_window_bg_color')) > 2 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_window_bg_color') : '';
+		
+		//use different heigh/width styling options, if this is the sidebar widget
+		if(!$is_sidebar_widget){
+			$ik_fb_feed_height = strlen(get_option('ik_fb_feed_window_height')) > 0 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_feed_window_height') : '';
+			$ik_fb_feed_width = strlen(get_option('ik_fb_feed_window_width')) > 0 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_feed_window_width') : '';
+		} else {
+			$ik_fb_feed_height = strlen(get_option('ik_fb_sidebar_feed_window_height')) > 0 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_sidebar_feed_window_height') : '';
+			$ik_fb_feed_width = strlen(get_option('ik_fb_sidebar_feed_window_width')) > 0 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_sidebar_feed_window_width') : '';
+		}
 		
 		//something went wrong!
 		if(count($feed)<1){
@@ -130,10 +157,44 @@ class ikFacebook
 			return $output;
 		}
 		
-		$default_html = '<div id="ik_fb_widget"><div class="ik_fb_profile_picture">{ikfb:image}{ikfb:link}</div>{ikfb:like_button}<ul class="ik_fb_feed_window">{ikfb:feed}</ul></div>';
+		//feed window width
+		$custom_styling_1 = ' style="';
+		if(function_exists("ik_fb_pro_is_page_owner")){
+			if(strlen($ik_fb_feed_width)>0){
+				$custom_styling_1 .= "width: {$ik_fb_feed_width}px;";
+			}	
+			if(strlen($ik_fb_feed_height)>0){		
+				$custom_styling_1 .= "height: auto; ";
+			}
+		}
+		$custom_styling_1 .= '"';
 		
-		//load custom HTML structure from Pro Plugin, if available
-		$output = strlen(get_option('ik_fb_feed_html')) > 2 ? get_option('ik_fb_feed_html') : $default_html;		
+		//feed window height, feed window bg color
+		$custom_styling_2 = ' style="';
+		if(function_exists("ik_fb_pro_is_page_owner")){
+			if(strlen($ik_fb_feed_height)>0){		
+				$custom_styling_2 .= "height: {$ik_fb_feed_height}px; ";
+			}
+			if(strlen($ik_fb_window_bg_color)>0){
+				$custom_styling_2 .= " background-color: {$ik_fb_window_bg_color};";
+			}
+		}		
+		
+		$custom_styling_2 .= '"';
+		
+		//feed heading bg color
+		$custom_styling_3 = ' style="';
+		if(function_exists("ik_fb_pro_is_page_owner")){
+			if(strlen($ik_fb_header_bg_color)>0){
+				$custom_styling_3 .= "background-color: {$ik_fb_header_bg_color};";
+			}
+		}
+		$custom_styling_3 .= '"';
+		
+		$default_html = '<div id="ik_fb_widget" ' . $custom_styling_1 . ' ><div id="ik_fb_widget_top" ' . $custom_styling_3 . ' ><div class="ik_fb_profile_picture">{ikfb:image}{ikfb:link}</div>{ikfb:like_button}</div><ul class="ik_fb_feed_window" ' . $custom_styling_2 . ' >{ikfb:feed}</ul></div>';
+		
+		//load custom HTML structure from Pro Plugin, if available and enabled
+		$output = strlen(get_option('ik_fb_feed_html')) > 2 && get_option('ik_fb_use_custom_html') ? get_option('ik_fb_feed_html') : $default_html;		
 		
 		//only display photo if option is set
 		if(get_option('ik_fb_show_profile_picture')){
@@ -202,11 +263,11 @@ class ikFacebook
 		$default_caption_html = '<p class="ik_fb_facebook_link">{ikfb:feed_item:link}</p>';	
 		
 		//load custom HTML structure from Pro Plugin, if available
-		$feed_item_html = strlen(get_option('ik_fb_feed_item_html')) > 2 ? get_option('ik_fb_feed_item_html') : $default_feed_item_html;
-		$message_html = strlen(get_option('ik_fb_message_html')) > 2 ? get_option('ik_fb_message_html') : $default_message_html;
-		$image_html = strlen(get_option('ik_fb_image_html')) > 2 ? get_option('ik_fb_image_html') : $default_image_html;
-		$description_html = strlen(get_option('ik_fb_description_html')) > 2 ? get_option('ik_fb_description_html') : $default_description_html;
-		$caption_html = strlen(get_option('ik_fb_caption_html')) > 2 ? get_option('ik_fb_caption_html') : $default_caption_html;
+		$feed_item_html = strlen(get_option('ik_fb_feed_item_html')) > 2 && get_option('ik_fb_use_custom_html') ? get_option('ik_fb_feed_item_html') : $default_feed_item_html;
+		$message_html = strlen(get_option('ik_fb_message_html')) > 2 && get_option('ik_fb_use_custom_html') ? get_option('ik_fb_message_html') : $default_message_html;
+		$image_html = strlen(get_option('ik_fb_image_html')) > 2 && get_option('ik_fb_use_custom_html') ? get_option('ik_fb_image_html') : $default_image_html;
+		$description_html = strlen(get_option('ik_fb_description_html')) > 2 && get_option('ik_fb_use_custom_html') ? get_option('ik_fb_description_html') : $default_description_html;
+		$caption_html = strlen(get_option('ik_fb_caption_html')) > 2 && get_option('ik_fb_use_custom_html') ? get_option('ik_fb_caption_html') : $default_caption_html;
 		
 		$output = '';
 		
@@ -228,6 +289,12 @@ class ikFacebook
 			//output the item message
 			if(isset($item->message)){ 
 				$replace = $item->message;
+				
+				//add custom message styling from pro options
+				if(function_exists("ik_fb_pro_message_styling") && !get_option('ik_fb_use_custom_html')){		
+					$message_html = ik_fb_pro_message_styling($message_html);
+				}				
+				
 				$line_item .= str_replace('{ikfb:feed_item:message}', $replace, $message_html);		
 			}				
 
@@ -239,6 +306,7 @@ class ikFacebook
 					//load fullsized image	
 					//start with an authtoken, if needed
 					if(!isset($this->authToken)){
+						//TBD: Caching!!!
 						$this->authToken = $this->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
 					}
 					
@@ -251,20 +319,44 @@ class ikFacebook
 					if(isset($photo->data->url)){
 						//if using custom width, output fullsized image
 						$replace = '<img width="'.$width.'" src="'.$photo->data->url.'" />';
+				
+						//add custom image styling from pro options
+						if(function_exists("ik_fb_pro_image_styling") && !get_option('ik_fb_use_custom_html')){		
+							$image_html = ik_fb_pro_image_styling($image_html);
+						}		
+						
 						$line_item .= str_replace('{ikfb:feed_item:image}', $replace, $image_html);	
 					} else if(isset($item->picture)){
 						$replace = '<img width="'.$width.'" src="'.$item->picture.'" />';
+						
+						//add custom image styling from pro options
+						if(function_exists("ik_fb_pro_image_styling") && !get_option('ik_fb_use_custom_html')){		
+							$image_html = ik_fb_pro_image_styling($image_html);
+						}	
+						
 						$line_item .= str_replace('{ikfb:feed_item:image}', $replace, $image_html);	
 					}
 				} else {
 					//otherwise, use thumbnail
 					$replace = '<img src="'.$item->picture.'" />';
+				
+					//add custom image styling from pro options
+					if(function_exists("ik_fb_pro_image_styling") && !get_option('ik_fb_use_custom_html')){		
+						$image_html = ik_fb_pro_image_styling($image_html);
+					}	
+					
 					$line_item .= str_replace('{ikfb:feed_item:image}', $replace, $image_html);	
 				}
 
 				//add the text for photo description
 				if(isset($item->description)){
-					$replace = $item->description;
+					$replace = $item->description;					
+				
+					//add custom image styling from pro options
+					if(function_exists("ik_fb_pro_description_styling") && !get_option('ik_fb_use_custom_html')){		
+						$description_html = ik_fb_pro_description_styling($description_html);
+					}	
+					
 					$line_item .= str_replace('{ikfb:feed_item:description}', $replace, $description_html);	
 				}
 			}		
@@ -278,8 +370,15 @@ class ikFacebook
 				
 				//don't add the line item if the link text isn't set
 				if(strlen($link_text) > 1){
-					$replace = '<a href="'.$item->link.'" target="_blank">'.$link_text.'</a>';
-					$line_item .= str_replace('{ikfb:feed_item:link}', $replace, $caption_html);	
+					$replace_front = '<a href="'.$item->link.'" target="_blank">';
+					$replace_back = $link_text.'</a>';				
+				
+					//add custom link styling from pro options
+					if(function_exists("ik_fb_pro_link_styling") && !get_option('ik_fb_use_custom_html')){		
+						$replace_front = ik_fb_pro_link_styling($item->link);
+					}	
+					
+					$line_item .= str_replace('{ikfb:feed_item:link}', $replace_front.$replace_back, $caption_html);	
 				}
 			}			
 			
@@ -294,8 +393,14 @@ class ikFacebook
 						}
 						
 						if(strlen($from_text) > 1){
-							$line_item .= '<p class="ikfb_item_author">Posted By '.$from_text.'</p>';
-							//$line_item .= str_replace('{ikfb:feed_item:link}', $replace, $caption_html);	
+							$posted_by_text = '<p class="ikfb_item_author">Posted By '.$from_text.'</p>';
+				
+							//add custom posted by styling from pro options
+							if(function_exists("ik_fb_pro_posted_by_styling") && !get_option('ik_fb_use_custom_html')){		
+								$posted_by_text = ik_fb_pro_posted_by_styling($posted_by_text);
+							}			
+							//TBD: make Custom HTML option for Posted By
+							$line_item .= $posted_by_text;
 						}
 					}
 				}
@@ -307,7 +412,31 @@ class ikFacebook
 		return $output;
 	}
 	
+	//checks settings and outputs Powered By link
+	function ik_fb_show_powered_by() {
+		//use this to track if powered by has been output
+		global $ikfb_footer_poweredby_output;
+				
+		if(get_option('ik_fb_powered_by')){			
+			if($ikfb_footer_poweredby_output){
+				return;
+			} else {			
+				$content = '<a href="https://illuminatikarate.com/ik-facebook-plugin/" target="_blank" id="ikfb_powered_by">Powered By IK Facebook Plugin</a>';			
+				
+				//add custom powered by styling from pro options
+				if(function_exists("ik_fb_pro_powered_by_styling") && !get_option('ik_fb_use_custom_html')){		
+					$content = ik_fb_pro_powered_by_styling($content);
+				}		
+				
+				echo $content;
+				
+				$ikfb_footer_poweredby_output = true;
+			}
+		}
+	}
+	
 	//fetches an URL
+	//TBD: replace this with a version that supports caching
 	function fetchUrl($url,$decode=false){
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_TIMEOUT, 10);

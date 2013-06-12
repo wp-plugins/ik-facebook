@@ -56,7 +56,8 @@ class ikFacebookFeedWidget extends WP_Widget
 			$ik_fb = new ikFacebook();
 		}
 
-		echo $ik_fb->ik_fb_output_feed($colorscheme);
+		//$colorscheme = "light", $use_thumb = true, $width = "", $is_sidebar_widget = false
+		echo $ik_fb->ik_fb_output_feed($colorscheme,true,'',true);
 
 		echo $after_widget;
 	} 

@@ -54,6 +54,7 @@ class ikFacebookOptions
 		register_setting( 'ik-fb-settings-group', 'ik_fb_feed_limit' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_feed_image_width' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_feed_theme' );
+		register_setting( 'ik-fb-settings-group', 'ik_fb_powered_by' );
 		
 		//register any pro settings
 		if(IK_FACEBOOK_PRO){
@@ -75,6 +76,11 @@ class ikFacebookOptions
 	<div class="wrap">
 		<h2><?php echo $title; ?></h2>
 		
+			
+	<?php if(!function_exists("ik_fb_pro_output_settings")): ?>
+		<div class="updated" id="message"><p><strong>Want More Features?</strong> Check out IK Social Pro for an undbranded admin, custom HTML, and more. Pay-What-You-Want pricing!<br /><br /><a href="http://gum.co/KEuF">Click Here To Get it Now</a></p></div>
+	<?php endif; ?>
+	
 		<?php if (isset($_GET['settings-updated']) && $_GET['settings-updated'] == 'true') : ?>
 		<div id="message" class="updated fade"><p><?php echo $message; ?></p></div>
 		<?php endif; ?>	
@@ -178,12 +184,40 @@ class ikFacebookOptions
 				</tr>
 			</table>
 			
+			<table class="form-table">
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_powered_by">Show "Powered By IK Facebook"</label></th>
+					<td><input type="checkbox" name="ik_fb_powered_by" id="ik_fb_powered_by" value="1" <?php if(get_option('ik_fb_powered_by')){ ?> checked="CHECKED" <?php } ?>/>
+					<p class="description">Love this plugin but are unable to donate?  Show your love by displaying our inconspicuous "Powered By IK Facebook" link in the footer of your site.</p></td>
+				</tr>
+			</table>
+			
 			<?php
 				if(IK_FACEBOOK_PRO && function_exists("ik_fb_pro_output_settings")){
 					ik_fb_pro_output_settings();
 				} else {					
 				?>
-					<div style="margin: 20px auto; text-align: center; text-decoration: none;">
+					<div style="margin: 20px auto;">
+						<h2>Want More Features?</h2>
+
+						<p><a href="https://gumroad.com/l/KEuF">Upgrade to IK Social Pro now</a> and get tons of new features and settings. </p>
+
+						<p><strong>Limited Time Offer: Pay What You Think Its Worth.</strong></p>
+
+						<h3>Pro Features Include:</h3>
+
+						<ul>
+							<li><strong>Unbranded Admin screens:</strong> Remove all IK FB branding from your Wordpress admin.</li>
+							<li><strong>Hide non-page-owner posts from your feed:</strong> With this option, your feed will only show the posts from your own account.</li>
+							<li><strong>Custom HTML Output:</strong> Use any HTML tags you want for the feed. You'll be able to specify a custom HTML template for your feed.</li>
+							<li><strong>Free Updates For Life:</strong> Get IK Social Pro now, and you'll get free updates for life!</li>
+						</ul>
+							
+						<p>More to come! IK Social Pro plugin owners get new updates automatically by email. New features land in the Pro version first, so be sure to upgrade today.</p>
+
+						<p><strong>Don't forget:</strong> <span style="color:seagreen">Pay-What-You-Want-Pricing</span> means you can choose what this plugin is worth to you. Even if you enter $0, you'll still get the plugin (though we really hope its worth more than that to you! The most common donation is $10.)</p>
+					</div>
+					<div style="margin: 20px auto; text-align: center; text-decoration: none;">					
 						<a href="https://illuminatikarate.com/ik-social-pro/" target="_blank" title="Learn More About IK Social Pro"><img src="<?php echo plugins_url('ik_social_pro.jpg', __FILE__); ?>" alt="IK Social Pro" /><p class="description">Click Here To Learn About IK Social Pro</p></a>
 					</div>
 				<?php

@@ -107,3 +107,10 @@ p.ik_fb_error{
 	height: 45px; 
 	margin-left:4px;
 }
+
+#ikfb_powered_by{
+	display: block;
+    font-size: 10px;
+    margin: 0 auto;
+    text-align: center;
+}

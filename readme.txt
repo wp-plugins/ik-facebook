@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, facebook feed, facebook embed
 Requires at least: 3.0.1
 Tested up to: 3.5.1
-Stable tag: 1.6.5
+Stable tag: 1.7
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -58,11 +58,20 @@ That probably means the URL you've given the Like Button is invalid.  Sometimes 
 
 Visit our website to find out about premium options that are available: http://illuminatikarate.com/ik-facebook-plugin/
 
+= Hey!  I need more control over the styling of my feed, but I don't know CSS! =
+
+Visit our website to find out about premium options that are available: http://illuminatikarate.com/ik-facebook-plugin/
+
 == Screenshots ==
 
 1. This is the Settings page.
 
 == Changelog ==
+
+= 1.7 =
+* Feature: Adds support for new Pro Features - Individual Font and Feed Styling Options.
+* Feature: Adds option to display "Powered By" link.
+* Fix: Adds logic to prevent outputting custom CSS multiple times in footer.
 
 = 1.6.5 =
 * Feature: Adds Option to Output "Posted By Author" in the feed.
@@ -169,5 +178,5 @@ Visit our website to find out about premium options that are available: http://i
 
 == Upgrade Notice ==
 
-= 1.6.5 =
-New Feature Available
+= 1.7 =
+New Features and Bug Fix Available
