@@ -18,9 +18,7 @@ along with The IK Facebook Plugin.  If not, see <http://www.gnu.org/licenses/>.
 
 	class CachedCurl
 	{
-		var $cache_dir;
 		var $cache_time = 900; // 900 seconds [15 minutes]
-		var $delete_expired_files = false;
 		
 		function __construct($cache_time = 900)
 		{					
