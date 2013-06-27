@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://illuminatikarate.com/ik-facebook-plugin
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 1.7.1
+Version: 1.8
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -24,6 +24,7 @@ along with the IK Facebook Plugin .  If not, see <http://www.gnu.org/licenses/>.
 */
 include('ik_facebook_feed_widget.php');
 include('ik_facebook_options.php');
+include('include/CachedCurl.php');
 $ik_fb_options = new ikFacebookOptions();
 
 //use this to track if css/powered by have been output
@@ -441,14 +442,11 @@ class ikFacebook
 	}
 	
 	//fetches an URL
-	//TBD: replace this with a version that supports caching
-	function fetchUrl($url,$decode=false){
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		$retData = curl_exec($ch);
-		curl_close($ch);
+	function fetchUrl($url,$decode=false){		
+		//caching
+		$ch = new CachedCurl();
+
+		$retData = $ch->load_url($url);
 		
 		if($decode){
 			$retData = json_decode($retData);

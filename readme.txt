@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, facebook feed, facebook embed
 Requires at least: 3.0.1
 Tested up to: 3.5.1
-Stable tag: 1.7.1
+Stable tag: 1.8
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -62,11 +62,19 @@ Visit our website to find out about premium options that are available: http://i
 
 Visit our website to find out about premium options that are available: http://illuminatikarate.com/ik-facebook-plugin/
 
+= I see this plugin uses caching. Do I need to do anything for this? =
+
+Nope!  Thanks to the WordPress Transient API, all you have to do is sit back and relax and we'll do the rest!
+
 == Screenshots ==
 
 1. This is the Settings page.
 
 == Changelog ==
+
+= 1.8 =
+* Feature: Adds Request Caching using the WordPress Transient API, significantly decreasing page load time.
+* Update some language on the settings screen, readme file, and screenshot.
 
 = 1.7.1 =
 * Feature: Adds option to set the Height of images that are displayed in the Feed.
@@ -183,5 +191,5 @@ Visit our website to find out about premium options that are available: http://i
 
 == Upgrade Notice ==
 
-= 1.7 =
-New Features and Bug Fix Available
+= 1.8 =
+Caching is now available!
