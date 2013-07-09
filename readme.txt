@@ -3,8 +3,8 @@ Contributors: richardgabriel
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V7HR8DP4EJSYN
 Tags: facebook, facebook feed, facebook embed
 Requires at least: 3.0.1
-Tested up to: 3.5.1
-Stable tag: 1.8
+Tested up to: 3.5.2
+Stable tag: 1.8.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -71,6 +71,9 @@ Nope!  Thanks to the WordPress Transient API, all you have to do is sit back and
 1. This is the Settings page.
 
 == Changelog ==
+
+= 1.8.1 =
+* Feature: Adds option to hide Facebook Page Title from the top of the feed.
 
 = 1.8 =
 * Feature: Adds Request Caching using the WordPress Transient API, significantly decreasing page load time.

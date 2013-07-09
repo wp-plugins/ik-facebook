@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://illuminatikarate.com/ik-facebook-plugin
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 1.8
+Version: 1.8.1
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -212,15 +212,28 @@ class ikFacebook
 			$output = str_replace('{ikfb:image}', '', $output);
 		}
 		
-		//use the link if set, else fall back to /pages/name/id
-		if(isset($page_data->link)){
-			$the_link = $page_data->link;
-		} else {
-			$the_link = "https://www.facebook.com/pages/".$page_data->name."/".$page_data->id;
-		}
 		
-		$replace = '<a target="_blank" href="'.$the_link.'"><span class="ik_fb_name">'.$page_data->name.'</span></a>';	
-		$output = str_replace('{ikfb:link}', $replace, $output);		
+		//only display title if option is set
+		if(get_option('ik_fb_show_page_title')){
+			//use the link if set, else fall back to /pages/name/id
+			if(isset($page_data->link)){
+				$the_link = $page_data->link;
+			} else {
+				$the_link = "https://www.facebook.com/pages/".$page_data->name."/".$page_data->id;
+			}
+			
+			$replace = '<a target="_blank" href="'.$the_link.'"><span class="ik_fb_name">'.$page_data->name.'</span></a>';	
+			$output = str_replace('{ikfb:link}', $replace, $output);	
+		} else {
+			//use the link if set, else fall back to /pages/name/id
+			if(isset($page_data->link)){
+				$the_link = $page_data->link;
+			} else {
+				$the_link = "https://www.facebook.com/pages/".$page_data->name."/".$page_data->id;
+			}
+			
+			$output = str_replace('{ikfb:link}', '', $output);	
+		}
 
 		//only show like button if enabled in settings
 		if(get_option('ik_fb_show_like_button')){

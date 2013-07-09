@@ -55,6 +55,7 @@ class ikFacebookOptions
 		register_setting( 'ik-fb-settings-group', 'ik_fb_custom_css' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_show_like_button' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_show_profile_picture' );
+		register_setting( 'ik-fb-settings-group', 'ik_fb_show_page_title' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_fix_feed_image_width' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_feed_image_width' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_fix_feed_image_height' );
@@ -157,6 +158,14 @@ class ikFacebookOptions
 					<th scope="row"><label for="ik_fb_show_profile_picture">Show Profile Picture</label></th>
 					<td><input type="checkbox" name="ik_fb_show_profile_picture" id="ik_fb_show_profile_picture" value="1" <?php if(get_option('ik_fb_show_profile_picture')){ ?> checked="CHECKED" <?php } ?>/>
 					<p class="description">If checked, the Profile Picture will be shown next to the Title of the feed.</p></td>
+				</tr>
+			</table>
+			
+			<table class="form-table">
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_show_page_title">Show Page Title</label></th>
+					<td><input type="checkbox" name="ik_fb_show_page_title" id="ik_fb_show_page_title" value="1" <?php if(get_option('ik_fb_show_page_title')){ ?> checked="CHECKED" <?php } ?>/>
+					<p class="description">If checked, the Title of the feed will be shown.</p></td>
 				</tr>
 			</table>
 			
