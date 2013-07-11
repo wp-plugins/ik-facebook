@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://illuminatikarate.com/ik-facebook-plugin
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 1.8.1
+Version: 1.8.2
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -217,7 +217,7 @@ class ikFacebook
 		if(get_option('ik_fb_show_page_title')){
 			//use the link if set, else fall back to /pages/name/id
 			if(isset($page_data->link)){
-				$the_link = $page_data->link;
+				$the_link = $this->addhttp($page_data->link);
 			} else {
 				$the_link = "https://www.facebook.com/pages/".$page_data->name."/".$page_data->id;
 			}
@@ -227,7 +227,7 @@ class ikFacebook
 		} else {
 			//use the link if set, else fall back to /pages/name/id
 			if(isset($page_data->link)){
-				$the_link = $page_data->link;
+				$the_link = $this->addhttp($page_data->link);
 			} else {
 				$the_link = "https://www.facebook.com/pages/".$page_data->name."/".$page_data->id;
 			}
@@ -266,6 +266,14 @@ class ikFacebook
 		$output = str_replace('{ikfb:feed}', $replace, $output);		
 		
 		return $output;		
+	}
+	
+	//thanks to Alix Axel, http://stackoverflow.com/questions/2762061/how-to-add-http-if-its-not-exists-in-the-url
+	function addhttp($url) {
+		if (!preg_match("~^(?:f|ht)tps?://~i", $url)) {
+			$url = "http://" . $url;
+		}
+		return $url;
 	}
 	
 	//passed a FB Feed Item, builds the appropriate HTML

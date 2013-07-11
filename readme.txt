@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, facebook feed, facebook embed
 Requires at least: 3.0.1
 Tested up to: 3.5.2
-Stable tag: 1.8.1
+Stable tag: 1.8.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -71,6 +71,9 @@ Nope!  Thanks to the WordPress Transient API, all you have to do is sit back and
 1. This is the Settings page.
 
 == Changelog ==
+
+= 1.8.2 =
+* Fix: addressed issue where some URLs were being output relative to the site URL, leading to some broken links.
 
 = 1.8.1 =
 * Feature: Adds option to hide Facebook Page Title from the top of the feed.
@@ -194,5 +197,5 @@ Nope!  Thanks to the WordPress Transient API, all you have to do is sit back and
 
 == Upgrade Notice ==
 
-= 1.8 =
-Caching is now available!
+= 1.8.2 =
+* Bugfix Available!

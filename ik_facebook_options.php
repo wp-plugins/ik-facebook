@@ -87,7 +87,7 @@ class ikFacebookOptions
 		
 			
 	<?php if(!function_exists("ik_fb_pro_output_settings")): ?>
-		<div class="updated" id="message"><p><strong>Want More Features?</strong><br/><br/> Check out IK Social Pro for an unbranded admin, custom HTML, and more. Pay-What-You-Want pricing!<br /><br /><a href="http://gum.co/KEuF">Click Here To Get it Now</a></p></div>
+		<div class="updated" id="message"><p><strong>Want More Features?</strong><br/><br/> Check out IK Social Pro for an unbranded admin, custom HTML, and more.<br /><br /><a href="http://gum.co/KEuF">Click Here To Get it Now</a></p></div>
 	<?php endif; ?>
 	
 		<?php if (isset($_GET['settings-updated']) && $_GET['settings-updated'] == 'true') : ?>
@@ -235,8 +235,6 @@ class ikFacebookOptions
 
 						<p><a href="https://gumroad.com/l/KEuF">Upgrade to IK Social Pro now</a> and get tons of new features and settings. </p>
 
-						<p><strong>Limited Time Offer: Pay What You Think Its Worth.</strong></p>
-
 						<h3>Pro Features Include:</h3>
 
 						<ul>
@@ -249,7 +247,6 @@ class ikFacebookOptions
 							
 						<p>More to come! IK Social Pro plugin owners get new updates automatically by email. New features land in the Pro version first, so be sure to upgrade today.</p>
 
-						<p><strong>Don't forget:</strong> <span style="color:seagreen">Pay-What-You-Want-Pricing</span> means you can choose what this plugin is worth to you. Even if you enter $5, you'll still get the plugin (though we really hope its worth more than that to you! The most common donation is $10.)</p>
 					</div>
 					<div style="margin: 20px auto; text-align: center; text-decoration: none;">					
 						<a href="https://illuminatikarate.com/ik-social-pro/" target="_blank" title="Learn More About IK Social Pro"><img src="<?php echo plugins_url('ik_social_pro.jpg', __FILE__); ?>" alt="IK Social Pro" /><p class="description">Click Here To Learn About IK Social Pro</p></a>
