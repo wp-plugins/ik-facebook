@@ -440,7 +440,7 @@ class ikFacebook
 			}			
 			
 			if($shortened){
-				$line_item .= ' <a href="'.$the_link.'" class="ikfb_read_more">Read More...</a>';
+				$line_item .= ' <a href="'.$the_link.'" class="ikfb_read_more" target="_blank">Read More...</a>';
 			}
 			
 			if(strlen($line_item)>2){
