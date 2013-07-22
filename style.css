@@ -114,3 +114,7 @@ p.ik_fb_error{
     margin: 0 auto;
     text-align: center;
 }
+
+#ik_fb_widget .ikfb_read_more{
+	font-size: 12px;
+}

@@ -163,3 +163,7 @@ p.ik_fb_error{
 	color: #ffffff;
     line-height: 17px;
 }
+
+#ik_fb_widget .ikfb_read_more{
+	font-size: 12px;
+}

@@ -158,3 +158,7 @@ p.ik_fb_error{
 #sidebar #ik_fb_widget .ik_fb_profile_picture a {
     line-height: 17px;
 }
+
+#ik_fb_widget .ikfb_read_more{
+	font-size: 12px;
+}

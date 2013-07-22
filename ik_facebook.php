@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://illuminatikarate.com/ik-facebook-plugin
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 1.8.3
+Version: 1.8.4
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -261,7 +261,7 @@ class ikFacebook
 			
 			foreach($feed as $item){//$item is the feed object
 				if($limit == -1 || $count < $limit){
-					$replace .= $this->buildFeedLineItem($item, $use_thumb, $width, $page_data, $height);
+					$replace .= $this->buildFeedLineItem($item, $use_thumb, $width, $page_data, $height, $the_link);
 					$count ++;
 				}
 			}
@@ -281,7 +281,7 @@ class ikFacebook
 	}
 	
 	//passed a FB Feed Item, builds the appropriate HTML
-	function buildFeedLineItem($item, $use_thumb, $width, $page_data, $height){
+	function buildFeedLineItem($item, $use_thumb, $width, $page_data, $height, $the_link = false){
 		//build default HTML structure
 		$default_feed_item_html = '<li class="ik_fb_feed_item">{ikfb:feed_item}</li>';		
 		$default_message_html = '<p>{ikfb:feed_item:message}</p>';		
@@ -311,11 +311,25 @@ class ikFacebook
 		}
 		
 		$line_item = '';
+		$shortened = false;
 		
 		if($add_feed_item){
 			//output the item message
 			if(isset($item->message)){ 
 				$replace = $item->message;
+				
+				//if a character limit is set, here is the logic to handle that
+				$limit = get_option('ik_fb_character_limit');
+				if(is_numeric($limit)){
+					//only perform changes on posts longer than the character limit
+					if(strlen($replace) > $limit){
+						//remove characters beyond limit
+						$replace = substr($replace, 0, $limit);
+						$replace .= "... ";
+						
+						$shortened = true;
+					}
+				}
 				
 				//add custom message styling from pro options
 				if(function_exists("ik_fb_pro_message_styling") && !get_option('ik_fb_use_custom_html')){		
@@ -341,7 +355,6 @@ class ikFacebook
 					$item_id = $item->object_id;
 					
 					//load the photo from the open graph
-					//TBD: Caching!!!
 					$photo = $this->fetchUrl("https://graph.facebook.com/{$item_id}/picture?{$this->authToken}&redirect=0", true);	
 					
 					//if using custom width, output fullsized image
@@ -381,7 +394,20 @@ class ikFacebook
 
 				//add the text for photo description
 				if(isset($item->description)){
-					$replace = $item->description;					
+					$replace = $item->description;	
+
+					//if a character limit is set, here is the logic to handle that
+					$limit = get_option('ik_fb_description_character_limit');
+					if(is_numeric($limit)){
+						//only perform changes on posts longer than the character limit
+						if(strlen($replace) > $limit){
+							//remove characters beyond limit
+							$replace = substr($replace, 0, $limit);
+							$replace .= "... ";
+						
+							$shortened = true;
+						}
+					}					
 				
 					//add custom image styling from pro options
 					if(function_exists("ik_fb_pro_description_styling") && !get_option('ik_fb_use_custom_html')){		
@@ -394,7 +420,7 @@ class ikFacebook
 
 			if(isset($item->link)){ //output the item link
 				if(isset($item->caption)){
-					$link_text = $item->caption; //some items have a caption
+					$link_text = $item->caption; //some items have a caption	
 				} else {
 					$link_text = $item->name;  //others might just have a name
 				}
@@ -412,6 +438,10 @@ class ikFacebook
 					$line_item .= str_replace('{ikfb:feed_item:link}', $replace_front.$replace_back, $caption_html);	
 				}
 			}			
+			
+			if($shortened){
+				$line_item .= ' <a href="'.$the_link.'" class="ikfb_read_more">Read More...</a>';
+			}
 			
 			if(strlen($line_item)>2){
 				

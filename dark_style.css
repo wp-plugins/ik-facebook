@@ -1,4 +1,4 @@
-/*
+7/*
 This file is part of IK Facebook.
 
 IK Facebook is free software: you can redistribute it and/or modify
@@ -157,4 +157,8 @@ p.ik_fb_error{
 
 #sidebar #ik_fb_widget .ik_fb_profile_picture a {
     line-height: 17px;
+}
+
+#ik_fb_widget .ikfb_read_more{
+	font-size: 12px;
 }

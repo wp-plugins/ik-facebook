@@ -64,6 +64,9 @@ class ikFacebookOptions
 		register_setting( 'ik-fb-settings-group', 'ik_fb_feed_limit' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_feed_theme' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_powered_by' );
+		register_setting( 'ik-fb-settings-group', 'ik_fb_character_limit' );
+		register_setting( 'ik-fb-settings-group', 'ik_fb_description_character_limit' );
+		register_setting( 'ik-fb-settings-group', 'ik_fb_caption_character_limit' );
 		
 		//register any pro settings
 		if(IK_FACEBOOK_PRO){
@@ -87,7 +90,7 @@ class ikFacebookOptions
 		
 			
 	<?php if(!function_exists("ik_fb_pro_output_settings")): ?>
-		<div class="updated" id="message"><p><strong>Want More Features?</strong><br/><br/> Check out IK Social Pro for an unbranded admin, custom HTML, and more.<br /><br /><a href="http://gum.co/KEuF">Click Here To Get it Now</a></p></div>
+		<div class="updated" id="message"><p><strong>Want More Features?</strong><br/><br/> Check out IK Social Pro for an unbranded admin, custom HTML, and more.<br /><br /><a href="https://gumroad.com/l/KEuF/earlyadopter/">Click Here To Get it Now</a></p></div>
 	<?php endif; ?>
 	
 		<?php if (isset($_GET['settings-updated']) && $_GET['settings-updated'] == 'true') : ?>
@@ -211,6 +214,22 @@ class ikFacebookOptions
 			
 			<table class="form-table">
 				<tr valign="top">
+					<th scope="row"><label for="ik_fb_character_limit">Feed Item Message Character Limit</label></th>
+					<td><input type="text" name="ik_fb_character_limit" id="ik_fb_character_limit" value="<?php echo get_option('ik_fb_character_limit'); ?>" style="width: 250px" />
+					<p class="description">If set, the feed item will be limited to this number of characters.  If a feed item is shortened, a Read More link will be displayed.</p></td>
+				</tr>
+			</table>
+			
+			<table class="form-table">
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_description_character_limit">Feed Item Description Character Limit</label></th>
+					<td><input type="text" name="ik_fb_description_character_limit" id="ik_fb_description_character_limit" value="<?php echo get_option('ik_fb_description_character_limit'); ?>" style="width: 250px" />
+					<p class="description">If set, the feed item will be limited to this number of characters.  If a feed item is shortened, a Read More link will be displayed.</p></td>
+				</tr>
+			</table>
+			
+			<table class="form-table">
+				<tr valign="top">
 					<th scope="row"><label for="ik_fb_show_posted_by">Show Posted By</label></th>
 					<td><input type="checkbox" name="ik_fb_show_posted_by" id="ik_fb_show_posted_by" value="1" <?php if(get_option('ik_fb_show_posted_by')){ ?> checked="CHECKED" <?php } ?>/>
 					<p class="description">If checked, the text Posted By PosterName will be displayed in the feed.</p></td>
@@ -233,7 +252,7 @@ class ikFacebookOptions
 					<div style="margin: 20px auto;">
 						<h2>Want More Features?</h2>
 
-						<p><a href="https://gumroad.com/l/KEuF">Upgrade to IK Social Pro now</a> and get tons of new features and settings. </p>
+						<p><a href="https://gumroad.com/l/KEuF/earlyadopter/">Upgrade to IK Social Pro now</a> and get tons of new features and settings. </p>
 
 						<h3>Pro Features Include:</h3>
 
@@ -248,7 +267,7 @@ class ikFacebookOptions
 						<p>More to come! IK Social Pro plugin owners get new updates automatically by email. New features land in the Pro version first, so be sure to upgrade today.</p>
 
 					</div>
-					<div style="margin: 20px auto; text-align: center; text-decoration: none;">					
+					<div style="margin: 20px auto; text-align: left; text-decoration: none;">					
 						<a href="https://illuminatikarate.com/ik-social-pro/" target="_blank" title="Learn More About IK Social Pro"><img src="<?php echo plugins_url('ik_social_pro.jpg', __FILE__); ?>" alt="IK Social Pro" /><p class="description">Click Here To Learn About IK Social Pro</p></a>
 					</div>
 				<?php
