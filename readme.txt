@@ -12,11 +12,11 @@ The IK Facebook Plugin is a simple plugin for adding bits of Facebook to a WordP
 
 == Description ==
 
-The IK Facebook Plugin is an easy-to-use plugin that allows users to add a Facebook Feed to the sidebar, as a widget, or to embed the Feed into a Page or Post using the shortcode.  The IK Facebook Plugin also allows you to insert a Like Button into the Page, Post, or theme
+The IK Facebook Plugin is an easy-to-use plugin that allows users to add a custom Facebook Feed widget to the sidebar, as a widget, or to embed the custom Facebook Feed into a Page or Post using the shortcode.  The IK Facebook Plugin also allows you to insert a Like Button into the Page, Post, or theme.
 
-The IK Facebook Plugin includes options to set the Title of the Widget, whether or not to show the Like Button above the Feed, and whether or not to show the Profile Picture.  The IK Facebook Plugin supports both the Light and Dark color schemes for the Like Button.
+The IK Facebook Plugin includes options to set the Title of the custom Facebook Feed Widget, whether or not to show the Like Button above the custom Facebook Feed Widget, and whether or not to show the Profile Picture.  The IK Facebook Plugin supports both the Light and Dark color schemes for the Like Button.
 
-The IK Facebook Plugin includes the option to set your own custom CSS for styling purposes or, if you prefer, the IK Facebook Plugin allows you to include a custom style sheet in your theme directory. The IK Facebook Plugin also allows the user to select from a few pre-made Feed Themes.  Gone are the days of fighting with the Facebook Social Plugin!
+The IK Facebook Plugin includes the option to set your own custom CSS for styling purposes or, if you prefer, the IK Facebook Plugin allows you to include a custom style sheet in your theme directory  -- either method is great for displaying a custom Facebok Feed. The IK Facebook Plugin also allows the user to select from a few pre-made Feed Themes, to help generate their custom Facebook Feed.  Gone are the days of fighting with the Facebook Social Plugin!
 
 == Installation ==
 
@@ -206,5 +206,5 @@ Nope!  Thanks to the WordPress Transient API, all you have to do is sit back and
 
 == Upgrade Notice ==
 
-= 1.8.4 =
-* Update Available!
+= 1.8.5 =
+* New Features Available!
