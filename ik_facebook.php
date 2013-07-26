@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://illuminatikarate.com/ik-facebook-plugin
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 1.8.4
+Version: 1.8.5
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -310,6 +310,13 @@ class ikFacebook
 			$add_feed_item = true;
 		}
 		
+		//parse post date for output
+		$date = "";
+		
+		if(isset($item->created_time)){
+			$date = $item->created_time;
+		}
+		
 		$line_item = '';
 		$shortened = false;
 		
@@ -465,12 +472,50 @@ class ikFacebook
 						}
 					}
 				}
+				
+				//output date, if option to display it is enabled
+				if(get_option('ik_fb_show_date')){
+					if(strtotime($date) >= strtotime('-1 day')){
+						$date = $this->humanTiming(strtotime($date)). " ago";
+					}else{
+						$date = date('F jS', strtotime($date));
+					}
+				
+					if(strlen($date)>2){
+						$date = '<p class="date">' . $date . '</p>';
+					}
+										
+					$line_item .= $date;
+				}
 			
 				$output = str_replace('{ikfb:feed_item}', $line_item, $feed_item_html);	
 			}
 		}
 		
 		return $output;
+	}
+	
+	//check to see time elapsed since given datetime
+	//credit to http://stackoverflow.com/questions/2915864/php-how-to-find-the-time-elapsed-since-a-date-time
+	function humanTiming ($time)	{
+		$time = time() - $time; // to get the time since that moment
+
+		$tokens = array (
+			31536000 => 'year',
+			2592000 => 'month',
+			604800 => 'week',
+			86400 => 'day',
+			3600 => 'hour',
+			60 => 'minute',
+			1 => 'second'
+		);
+
+		foreach ($tokens as $unit => $text) {
+			if ($time < $unit) continue;
+			$numberOfUnits = floor($time / $unit);
+			return $numberOfUnits.' '.$text.(($numberOfUnits>1)?'s':'');
+		}
+
 	}
 	
 	//checks settings and outputs Powered By link

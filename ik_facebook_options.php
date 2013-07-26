@@ -61,6 +61,7 @@ class ikFacebookOptions
 		register_setting( 'ik-fb-settings-group', 'ik_fb_fix_feed_image_height' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_feed_image_height' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_show_posted_by' );
+		register_setting( 'ik-fb-settings-group', 'ik_fb_show_date' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_feed_limit' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_feed_theme' );
 		register_setting( 'ik-fb-settings-group', 'ik_fb_powered_by' );
@@ -233,6 +234,14 @@ class ikFacebookOptions
 					<th scope="row"><label for="ik_fb_show_posted_by">Show Posted By</label></th>
 					<td><input type="checkbox" name="ik_fb_show_posted_by" id="ik_fb_show_posted_by" value="1" <?php if(get_option('ik_fb_show_posted_by')){ ?> checked="CHECKED" <?php } ?>/>
 					<p class="description">If checked, the text Posted By PosterName will be displayed in the feed.</p></td>
+				</tr>
+			</table>
+			
+			<table class="form-table">
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_show_date">Show Date</label></th>
+					<td><input type="checkbox" name="ik_fb_show_date" id="ik_fb_show_date" value="1" <?php if(get_option('ik_fb_show_date')){ ?> checked="CHECKED" <?php } ?>/>
+					<p class="description">If checked, the date of the post will be displayed in the Feed.</p></td>
 				</tr>
 			</table>
 			
