@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, facebook feed, facebook embed
 Requires at least: 3.0.1
 Tested up to: 3.5.2
-Stable tag: 1.8.5
+Stable tag: 1.8.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -12,11 +12,13 @@ The IK Facebook Plugin is a simple plugin for adding bits of Facebook to a WordP
 
 == Description ==
 
-The IK Facebook Plugin is an easy-to-use plugin that allows users to add a custom Facebook Feed widget to the sidebar, as a widget, or to embed the custom Facebook Feed into a Page or Post using the shortcode.  The IK Facebook Plugin also allows you to insert a Like Button into the Page, Post, or theme.
+The IK Facebook Plugin is an easy-to-use plugin that allows users to add a custom Facebook Feed widget to the sidebar, as a widget, or to embed the custom Facebook Feed widget into a Page or Post using the shortcode.  The IK Facebook Plugin also allows you to insert a Like Button widget into the Page, Post, or theme.
 
-The IK Facebook Plugin includes options to set the Title of the custom Facebook Feed Widget, whether or not to show the Like Button above the custom Facebook Feed Widget, and whether or not to show the Profile Picture.  The IK Facebook Plugin supports both the Light and Dark color schemes for the Like Button.
+The IK Facebook Plugin includes options to set the Title of the custom Facebook Feed Widget, whether or not to show the Like Button above the custom Facebook Feed Widget, and whether or not to show the Profile Picture.  The IK Facebook Plugin supports both the Light and Dark color schemes for the Like Button widget.
 
-The IK Facebook Plugin includes the option to set your own custom CSS for styling purposes or, if you prefer, the IK Facebook Plugin allows you to include a custom style sheet in your theme directory  -- either method is great for displaying a custom Facebok Feed. The IK Facebook Plugin also allows the user to select from a few pre-made Feed Themes, to help generate their custom Facebook Feed.  Gone are the days of fighting with the Facebook Social Plugin!
+The IK Facebook Plugin is a free version of IK Social Pro - IK Social Pro is a professionally developed WordPress plugin that integrates your Facebook Feed into your WordPress website as a custom widget.  With the IK Facebook Plugin, you can easily add Search Engine Optimization friendly content to your website without extra effort -- no iframe means the content exists on your site and is crawlable by search engines like Google!
+
+The IK Facebook Plugin includes the option to set your own custom CSS for styling purposes or, if you prefer, the IK Facebook Plugin allows you to include a custom style sheet in your theme directory  -- either method is great for displaying a custom Facebok Feed widget. The IK Facebook Plugin also allows the user to select from a few pre-made Feed Themes, to help generate their custom Facebook Feed widget.  Gone are the days of fighting with the Facebook Social Plugin!
 
 == Installation ==
 
@@ -24,7 +26,7 @@ This section describes how to install the plugin and get it working.
 
 1. Upload the contents of `/ik-facebook/` to the `/wp-content/plugins/` directory
 2. Activate the IK Facebook Plugin through the 'Plugins' menu in WordPress
-3. Visit this address for information on how to configure the plugin: https://illuminatikarate.com/ik-facebook-plugin/
+3. Visit this address for information on how to configure the plugin: http://iksocialpro.com/installation-usage-instructions/configuration-options-and-instructions/
 
 = Outputting the Feed =
 * To output the Feed, place `[ik_fb_feed colorscheme="light or dark" use_thumb="true or false" width="250"]` in the body of a post, or use the Appearance section to add the The IK Facebook Plugin Widget to your Widgets area.  If 'use_thumb' is set to true, the value of 'width' will be ignored.  If 'use_thumb' or 'width' are not set, the values from the Options page will be used.
@@ -38,7 +40,7 @@ This section describes how to install the plugin and get it working.
 
 = Help!  I need an App ID/Secret Key! =
 
-OK!  We have a great blog post with some helpful information here: https://illuminatikarate.com/blog/how-to-create-a-simple-facebook-app/
+OK!  We have a great page with some helpful information here: http://iksocialpro.com/installation-usage-instructions/how-to-get-an-app-id-and-secret-key-from-facebook/
 
 Follow the information on that page to Create A Simple Facebook App - you'll be guided along the way to get your App ID, Secret Key, and any other info you may need.
 
@@ -56,11 +58,11 @@ That probably means the URL you've given the Like Button is invalid.  Sometimes 
 
 = Other people's posts are showing up on my wall!  How do I stop it? =
 
-Visit our website to find out about premium options that are available: http://illuminatikarate.com/ik-facebook-plugin/
+Visit our website to find out about premium options that are available: http://iksocialpro.com/
 
 = Hey!  I need more control over the styling of my feed, but I don't know CSS! =
 
-Visit our website to find out about premium options that are available: http://illuminatikarate.com/ik-facebook-plugin/
+Visit our website to find out about premium options that are available: http://iksocialpro.com/
 
 = I see this plugin uses caching. Do I need to do anything for this? =
 
@@ -71,6 +73,9 @@ Nope!  Thanks to the WordPress Transient API, all you have to do is sit back and
 1. This is the Settings page.
 
 == Changelog ==
+
+= 1.8.6 =
+* Minor Change: Update some wording and buttons on the Settings screen.
 
 = 1.8.5 =
 * Feature: Adds Option to display date of post in feed.
@@ -206,5 +211,5 @@ Nope!  Thanks to the WordPress Transient API, all you have to do is sit back and
 
 == Upgrade Notice ==
 
-= 1.8.5 =
-* New Features Available!
+= 1.8.6 =
+* Minor Update Available

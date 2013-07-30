@@ -101,6 +101,10 @@ class ikFacebookOptions
 		<form method="post" action="options.php">
 			<?php settings_fields( 'ik-fb-settings-group' ); ?>
 			
+			<p class="submit">
+				<input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
+			</p>
+			
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row"><label for="ik_fb_page_id">Page ID</label></th>
@@ -114,7 +118,7 @@ class ikFacebookOptions
 				<tr valign="top">
 					<th scope="row"><label for="ik_fb_app_id">Facebook App ID</label></th>
 					<td><input type="text" name="ik_fb_app_id" id="ik_fb_app_id" value="<?php echo get_option('ik_fb_app_id'); ?>" style="width: 250px" />
-					<p class="description">This is the App ID you acquired when you <a href="https://illuminatikarate.com/blog/how-to-create-a-simple-facebook-app/" target="_blank" title="How To Create A Simple Facebook App">setup your Facebook app</a>.</p></td>
+					<p class="description">This is the App ID you acquired when you <a href="http://iksocialpro.com/installation-usage-instructions/how-to-get-an-app-id-and-secret-key-from-facebook/" target="_blank" title="How To Get An App ID and Secret Key From Facebook">setup your Facebook app</a>.</p></td>
 				</tr>
 			</table>
 			
@@ -122,7 +126,7 @@ class ikFacebookOptions
 				<tr valign="top">
 					<th scope="row"><label for="ik_fb_secret_key">Facebook Secret Key</label></th>
 					<td><input type="text" name="ik_fb_secret_key" id="ik_fb_secret_key" value="<?php echo get_option('ik_fb_secret_key'); ?>" style="width: 250px" />
-					<p class="description">This is the App Secret you acquired when you <a href="https://illuminatikarate.com/blog/how-to-create-a-simple-facebook-app/" target="_blank" title="How To Create A Simple Facebook App">setup your Facebook app</a>.</p></td>
+					<p class="description">This is the App Secret you acquired when you <a href="http://iksocialpro.com/installation-usage-instructions/how-to-get-an-app-id-and-secret-key-from-facebook/" target="_blank" title="How To Get An App ID and Secret Key From Facebook">setup your Facebook app</a>.</p></td>
 				</tr>
 			</table>
 			
@@ -239,7 +243,7 @@ class ikFacebookOptions
 			
 			<table class="form-table">
 				<tr valign="top">
-					<th scope="row"><label for="ik_fb_show_date">Show Date</label></th>
+					<th scope="row"><label for="ik_fb_show_date">Show Posted Date</label></th>
 					<td><input type="checkbox" name="ik_fb_show_date" id="ik_fb_show_date" value="1" <?php if(get_option('ik_fb_show_date')){ ?> checked="CHECKED" <?php } ?>/>
 					<p class="description">If checked, the date of the post will be displayed in the Feed.</p></td>
 				</tr>
@@ -277,7 +281,7 @@ class ikFacebookOptions
 
 					</div>
 					<div style="margin: 20px auto; text-align: left; text-decoration: none;">					
-						<a href="https://illuminatikarate.com/ik-social-pro/" target="_blank" title="Learn More About IK Social Pro"><img src="<?php echo plugins_url('ik_social_pro.jpg', __FILE__); ?>" alt="IK Social Pro" /><p class="description">Click Here To Learn About IK Social Pro</p></a>
+						<a href="http://iksocialpro.com/" target="_blank" title="Learn More About IK Social Pro"><img src="<?php echo plugins_url('ik_social_pro.jpg', __FILE__); ?>" alt="IK Social Pro" /><p class="description">Click Here To Learn About IK Social Pro</p></a>
 					</div>
 				<?php
 				}
