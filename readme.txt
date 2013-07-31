@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, facebook feed, facebook embed
 Requires at least: 3.0.1
 Tested up to: 3.5.2
-Stable tag: 1.8.7
+Stable tag: 1.8.8
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -68,11 +68,21 @@ Visit our website to find out about premium options that are available: http://i
 
 Nope!  Thanks to the WordPress Transient API, all you have to do is sit back and relax and we'll do the rest!
 
+= I Want All Of My Posts Visible -- Not Contained In A Box! =
+
+Try using the "No Style" theme -- this will output everything in a list.  You can also turn off the Like Button, Feed Title, and Profile Pic to have it look more like a list of posts.
+
 == Screenshots ==
 
 1. This is the Settings page.
 
 == Changelog ==
+
+= 1.8.8 =
+* Interface Updates
+* Feature: Images in Feed Link to Full Sized Versions
+* Feature: Updates Themes to include No Style and Default Style.  The No Style Theme includes no CSS at all -- everything fully inherits from your website.  The Default Theme includes basic styles to adjust the layout of the items of the feed - no colors are applied.
+* Fix: No longer upsize thumbnails in the feed to larger than their starting size, when the options to fix the Feed Image height or width are set.
 
 = 1.8.7 =
 * Minor Updates
@@ -214,5 +224,5 @@ Nope!  Thanks to the WordPress Transient API, all you have to do is sit back and
 
 == Upgrade Notice ==
 
-= 1.8.6 =
+= 1.8.7 =
 * Minor Update Available

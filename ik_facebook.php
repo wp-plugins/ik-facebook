@@ -1,10 +1,10 @@
 <?php
 /*
 Plugin Name: IK Facebook Plugin
-Plugin URI: http://illuminatikarate.com/ik-facebook-plugin
+Plugin URI: http://iksocialpro.com/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 1.8.7
+Version: 1.8.8
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -63,6 +63,7 @@ class ikFacebook
 		wp_register_style( 'ik_facebook_dark_style', plugins_url('dark_style.css', __FILE__) );
 		wp_register_style( 'ik_facebook_light_style', plugins_url('light_style.css', __FILE__) );
 		wp_register_style( 'ik_facebook_blue_style', plugins_url('blue_style.css', __FILE__) );
+		wp_register_style( 'ik_facebook_no_style', plugins_url('no_style.css', __FILE__) );
 		
 		switch(get_option('ik_fb_feed_theme')){
 			case 'dark_style':
@@ -75,6 +76,9 @@ class ikFacebook
 				wp_enqueue_style( 'ik_facebook_blue_style' );
 				break;
 			case 'no_style':
+				wp_enqueue_style( 'ik_facebook_no_style' );
+				break;
+			case 'default_style':
 			default:
 				wp_enqueue_style( 'ik_facebook_style' );
 				break;
@@ -347,49 +351,50 @@ class ikFacebook
 			}				
 
 			//output the item photo
-			if(isset($item->picture)){ 						
+			if(isset($item->picture)){ 		
+				if(!isset($this->authToken)){
+					$this->authToken = $this->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
+				}	
+				
+				//need info about full sized photo for linking purposes
+				//get the item id
+				$item_id = $item->object_id;
+				
+				//load the photo from the open graph
+				$photo = $this->fetchUrl("https://graph.facebook.com/{$item_id}/picture?{$this->authToken}&redirect=0", true);	
+				
+				$photo_link = $item->picture;
+				$thumbnail_photo = true;
+				
+				if(isset($photo->data->url)){
+					$photo_link = $photo->data->url;
+					$thumbnail_photo = false;
+				}
+				
 				//output the images
 				//if set, load the custom image width from the options page
-				if(!$use_thumb){						
-					//load fullsized image	
-					//start with an authtoken, if needed
-					if(!isset($this->authToken)){
-						//TBD: Caching!!!
-						$this->authToken = $this->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
-					}
-					
-					//get the item id
-					$item_id = $item->object_id;
-					
-					//load the photo from the open graph
-					$photo = $this->fetchUrl("https://graph.facebook.com/{$item_id}/picture?{$this->authToken}&redirect=0", true);	
+				if(!$use_thumb){			
+					//TBD: add some logic to not distort the images being output (if the set height/width requirements are larger than the initial photo)
 					
 					//if using custom width, output fullsized image
 					$width = get_option('ik_fb_fix_feed_image_width') ? $width : '';
 					$height = get_option('ik_fb_fix_feed_image_height') ? $height : '';	
 					
-					if(isset($photo->data->url)){						
-						$replace = '<img width="'.$width.'" height="'.$height.'" src="'.$photo->data->url.'" />';
-				
-						//add custom image styling from pro options
-						if(function_exists("ik_fb_pro_image_styling") && !get_option('ik_fb_use_custom_html')){		
-							$image_html = ik_fb_pro_image_styling($image_html);
-						}		
-						
-						$line_item .= str_replace('{ikfb:feed_item:image}', $replace, $image_html);	
-					} else if(isset($item->picture)){
-						$replace = '<img width="'.$width.'" height="'.$height.'" src="'.$item->picture.'" />';
-						
-						//add custom image styling from pro options
-						if(function_exists("ik_fb_pro_image_styling") && !get_option('ik_fb_use_custom_html')){		
-							$image_html = ik_fb_pro_image_styling($image_html);
-						}	
-						
-						$line_item .= str_replace('{ikfb:feed_item:image}', $replace, $image_html);	
+					if(!$thumbnail_photo){
+						$replace = '<a href="'.$photo_link.'" title="Click to View Fullsize Photo" target="_blank"><img width="'.$width.'" height="'.$height.'" src="'.$photo_link.'" /></a>';
+					} else {
+						$replace = '<a href="'.$photo_link.'" title="Click to View Fullsize Photo" target="_blank"><img src="'.$photo_link.'" /></a>';
 					}
-				} else {
+			
+					//add custom image styling from pro options
+					if(function_exists("ik_fb_pro_image_styling") && !get_option('ik_fb_use_custom_html')){		
+						$image_html = ik_fb_pro_image_styling($image_html);
+					}		
+					
+					$line_item .= str_replace('{ikfb:feed_item:image}', $replace, $image_html);						
+				} else {						
 					//otherwise, use thumbnail
-					$replace = '<img src="'.$item->picture.'" />';
+					$replace = '<a href="'.$photo_link.'" target="_blank"><img src="'.$item->picture.'" /></a>';
 				
 					//add custom image styling from pro options
 					if(function_exists("ik_fb_pro_image_styling") && !get_option('ik_fb_use_custom_html')){		

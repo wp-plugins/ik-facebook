@@ -91,7 +91,7 @@ class ikFacebookOptions
 		
 			
 	<?php if(!function_exists("ik_fb_pro_output_settings")): ?>
-		<div class="updated" id="message"><p><strong>Want More Features?</strong><br/><br/> Check out IK Social Pro for an unbranded admin, custom HTML, and more.<br /><br /><a href="https://gumroad.com/l/KEuF/earlyadopter/">Click Here To Get it Now</a></p></div>
+		<div class="updated" id="message"><p><strong>Want More Features?</strong><br/><br/> Check out IK Social Pro for an unbranded admin, custom HTML, and more.<br /><br /><a href="http://iksocialpro.com/purchase-ik-social-pro/">Click Here To Get it Now</a></p></div>
 	<?php endif; ?>
 	
 		<?php if (isset($_GET['settings-updated']) && $_GET['settings-updated'] == 'true') : ?>
@@ -100,10 +100,6 @@ class ikFacebookOptions
 		
 		<form method="post" action="options.php">
 			<?php settings_fields( 'ik-fb-settings-group' ); ?>
-			
-			<p class="submit">
-				<input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
-			</p>
 			
 			<table class="form-table">
 				<tr valign="top">
@@ -134,11 +130,12 @@ class ikFacebookOptions
 				<tr valign="top">
 					<th scope="row"><label for="ik_fb_feed_theme">Feed Style</a></th>
 					<td>
-						<select name="ik_fb_feed_theme" id="ik_fb_feed_theme">							
-							<option value="no_style" <?php if(get_option('ik_fb_feed_theme') == "no_style"): echo 'selected="SELECTED"'; endif; ?>>No Style</option>
+						<select name="ik_fb_feed_theme" id="ik_fb_feed_theme">	
+							<option value="default_style" <?php if(get_option('ik_fb_feed_theme') == "default_style"): echo 'selected="SELECTED"'; endif; ?>>Default Style</option>
 							<option value="dark_style" <?php if(get_option('ik_fb_feed_theme') == "dark_style"): echo 'selected="SELECTED"'; endif; ?>>Dark Style</option>
 							<option value="light_style" <?php if(get_option('ik_fb_feed_theme') == "light_style"): echo 'selected="SELECTED"'; endif; ?>>Light Style</option>
 							<option value="blue_style" <?php if(get_option('ik_fb_feed_theme') == "blue_style"): echo 'selected="SELECTED"'; endif; ?>>Blue Style</option>
+							<option value="no_style" <?php if(get_option('ik_fb_feed_theme') == "no_style"): echo 'selected="SELECTED"'; endif; ?>>No Style</option>
 						</select>
 						<p class="description">Select which style you want to use.  If 'No Style' is selected, only your Theme's CSS, and any Custom CSS you've added, will be used.</p>
 					</td>
@@ -265,7 +262,7 @@ class ikFacebookOptions
 					<div style="margin: 20px auto;">
 						<h2>Want More Features?</h2>
 
-						<p><a href="https://gumroad.com/l/KEuF/earlyadopter/">Upgrade to IK Social Pro now</a> and get tons of new features and settings. </p>
+						<p><a href="http://iksocialpro.com/purchase-ik-social-pro/">Upgrade to IK Social Pro now</a> and get tons of new features and settings. </p>
 
 						<h3>Pro Features Include:</h3>
 
