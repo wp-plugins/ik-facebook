@@ -45,29 +45,46 @@ class ikFacebookOptions
 		//call register settings function
 		add_action( 'admin_init', array($this, 'register_settings'));	
 	}
-
-
+	
+	//function to produce tabs on admin screen
+	function ikfb_admin_tabs( $current = 'homepage' ) {
+	
+		$tabs = array( 'config_options' => 'Configuration Options', 'style_options' => 'Style Options', 'display_options' => 'Display Options', 'pro_options' => 'Pro Options' );
+		echo '<div id="icon-themes" class="icon32"><br></div>';
+		echo '<h2 class="nav-tab-wrapper">';
+			foreach( $tabs as $tab => $name ){
+				$class = ( $tab == $current ) ? ' nav-tab-active' : '';
+				echo "<a class='nav-tab$class' href='?page=ik-facebook/ik_facebook_options.php&tab=$tab'>$name</a>";
+			}
+		echo '</h2>';
+	}
+	
+	//register our settings
 	function register_settings(){
-		//register our settings
-		register_setting( 'ik-fb-settings-group', 'ik_fb_page_id' );
-		register_setting( 'ik-fb-settings-group', 'ik_fb_app_id' );
-		register_setting( 'ik-fb-settings-group', 'ik_fb_secret_key' );
-		register_setting( 'ik-fb-settings-group', 'ik_fb_custom_css' );
-		register_setting( 'ik-fb-settings-group', 'ik_fb_show_like_button' );
-		register_setting( 'ik-fb-settings-group', 'ik_fb_show_profile_picture' );
-		register_setting( 'ik-fb-settings-group', 'ik_fb_show_page_title' );
-		register_setting( 'ik-fb-settings-group', 'ik_fb_fix_feed_image_width' );
-		register_setting( 'ik-fb-settings-group', 'ik_fb_feed_image_width' );
-		register_setting( 'ik-fb-settings-group', 'ik_fb_fix_feed_image_height' );
-		register_setting( 'ik-fb-settings-group', 'ik_fb_feed_image_height' );
-		register_setting( 'ik-fb-settings-group', 'ik_fb_show_posted_by' );
-		register_setting( 'ik-fb-settings-group', 'ik_fb_show_date' );
-		register_setting( 'ik-fb-settings-group', 'ik_fb_feed_limit' );
-		register_setting( 'ik-fb-settings-group', 'ik_fb_feed_theme' );
-		register_setting( 'ik-fb-settings-group', 'ik_fb_powered_by' );
-		register_setting( 'ik-fb-settings-group', 'ik_fb_character_limit' );
-		register_setting( 'ik-fb-settings-group', 'ik_fb_description_character_limit' );
-		register_setting( 'ik-fb-settings-group', 'ik_fb_caption_character_limit' );
+		//register our config settings
+		register_setting( 'ik-fb-config-settings-group', 'ik_fb_page_id' );
+		register_setting( 'ik-fb-config-settings-group', 'ik_fb_app_id' );
+		register_setting( 'ik-fb-config-settings-group', 'ik_fb_secret_key' );
+		
+		//register our style settings
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_custom_css' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_show_like_button' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_show_profile_picture' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_show_page_title' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_fix_feed_image_width' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_feed_image_width' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_fix_feed_image_height' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_feed_image_height' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_feed_theme' );
+		
+		//register our display settings
+		register_setting( 'ik-fb-display-settings-group', 'ik_fb_show_posted_by' );
+		register_setting( 'ik-fb-display-settings-group', 'ik_fb_show_date' );
+		register_setting( 'ik-fb-display-settings-group', 'ik_fb_feed_limit' );
+		register_setting( 'ik-fb-display-settings-group', 'ik_fb_powered_by' );
+		register_setting( 'ik-fb-display-settings-group', 'ik_fb_character_limit' );
+		register_setting( 'ik-fb-display-settings-group', 'ik_fb_description_character_limit' );
+		register_setting( 'ik-fb-display-settings-group', 'ik_fb_caption_character_limit' );
 		
 		//register any pro settings
 		if(IK_FACEBOOK_PRO){
@@ -78,6 +95,8 @@ class ikFacebookOptions
 	}
 
 	function settings_page(){
+		global $pagenow;
+		
 		if(get_option('ik_fb_unbranded') && function_exists("ik_fb_pro_register_settings")){
 			$title = "Facebook Settings";
 			$message = "Facebook Settings Updated.";
@@ -85,21 +104,36 @@ class ikFacebookOptions
 			$title = "IK Facebook Plugin Settings";
 			$message = "IK Facebook Plugin Settings Updated.";
 		}
+		
 	?>
 	<div class="wrap">
-		<h2><?php echo $title; ?></h2>
+		<h2><?php echo $title; ?></h2>		
 		
-			
-	<?php if(!function_exists("ik_fb_pro_output_settings")): ?>
-		<div class="updated" id="message"><p><strong>Want More Features?</strong><br/><br/> Check out IK Social Pro for an unbranded admin, custom HTML, and more.<br /><br /><a href="http://iksocialpro.com/purchase-ik-social-pro/">Click Here To Get it Now</a></p></div>
-	<?php endif; ?>
+		<?php if(!function_exists("ik_fb_pro_output_settings")): ?>
+			<div class="updated" id="message"><p><strong>Want More Features?</strong><br/><br/> Check out IK Social Pro for an unbranded admin, custom HTML, and more.<br /><br /><a href="http://iksocialpro.com/purchase-ik-social-pro/">Click Here To Get it Now</a></p></div>
+		<?php endif; ?>
 	
 		<?php if (isset($_GET['settings-updated']) && $_GET['settings-updated'] == 'true') : ?>
 		<div id="message" class="updated fade"><p><?php echo $message; ?></p></div>
 		<?php endif; ?>	
 		
+		<?php if ( isset ( $_GET['tab'] ) ) $this->ikfb_admin_tabs($_GET['tab']); else $this->ikfb_admin_tabs('config_options'); ?>
+		
 		<form method="post" action="options.php">
-			<?php settings_fields( 'ik-fb-settings-group' ); ?>
+			
+			<?php 
+				if ( $pagenow == 'admin.php' && $_GET['page'] == 'ik-facebook/ik_facebook_options.php' ){
+					if ( isset ( $_GET['tab'] ) ) $tab = $_GET['tab'];
+					else $tab = 'config_options';
+				}	
+			
+				switch ( $tab ){
+					case 'config_options' :	
+				?>
+				<?php settings_fields( 'ik-fb-config-settings-group' ); ?>
+			
+			<h3>Configuration Options</h3>
+			<p>The below options are used to configure your plugin to interact with your Facebook Page.</p>
 			
 			<table class="form-table">
 				<tr valign="top">
@@ -125,6 +159,14 @@ class ikFacebookOptions
 					<p class="description">This is the App Secret you acquired when you <a href="http://iksocialpro.com/installation-usage-instructions/how-to-get-an-app-id-and-secret-key-from-facebook/" target="_blank" title="How To Get An App ID and Secret Key From Facebook">setup your Facebook app</a>.</p></td>
 				</tr>
 			</table>
+				<?php
+					break;
+					case 'style_options' :
+				?>
+				<?php settings_fields( 'ik-fb-style-settings-group' ); ?>
+			
+			<h3>Style Options</h3>
+			<p>The below options are used to modify, or fully change, the style of your Facebook Feed displayed on your website.</p>
 			
 			<table class="form-table">
 				<tr valign="top">
@@ -205,6 +247,14 @@ class ikFacebookOptions
 					<p class="description">If 'Fix Feed Image Height' is checked, the images will be set to this width (integer only.)</p></td>
 				</tr>
 			</table>
+				<?php
+					break;
+					case 'display_options' :
+				?>
+				<?php settings_fields( 'ik-fb-display-settings-group' ); ?>
+			
+			<h3>Display Options</h3>
+			<p>The below options are used to control the type and amount of content that is displayed in your Facebook Feed.</p>
 			
 			<table class="form-table">
 				<tr valign="top">
@@ -253,11 +303,27 @@ class ikFacebookOptions
 					<p class="description">Love this plugin but are unable to donate?  Show your love by displaying our inconspicuous "Powered By IK Facebook" link in the footer of your site.</p></td>
 				</tr>
 			</table>
-			
-			<?php
-				if(IK_FACEBOOK_PRO && function_exists("ik_fb_pro_output_settings")){
-					ik_fb_pro_output_settings();
-				} else {					
+				<?php
+					break;
+					case 'pro_options' :					
+						if(IK_FACEBOOK_PRO && function_exists("ik_fb_pro_output_settings")){
+							settings_fields( 'ik-fb-settings-group' );
+							ik_fb_pro_output_settings();
+						} else {	
+				?>
+							<h3>Pro Options</h3>
+							<p><a href="http://iksocialpro.com/purchase-ik-social-pro/">Upgrade to IK Social Pro now</a> and get tons of new features and settings. </p>
+				<?php
+						}
+					break;
+					}//end switch
+				?>			
+				<p class="submit">
+					<input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
+				</p>		
+				<?php
+					if(IK_FACEBOOK_PRO && function_exists("ik_fb_pro_output_settings")){
+					} else {					
 				?>
 					<div style="margin: 20px auto;">
 						<h2>Want More Features?</h2>
@@ -283,9 +349,6 @@ class ikFacebookOptions
 				<?php
 				}
 			?>
-			<p class="submit">
-				<input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
-			</p>
 		</form>
 	</div>
 	<?php } // end settings_page function
