@@ -17,7 +17,7 @@ The IK Facebook Plugin is an **easy-to-use** plugin that allows users to add a *
 = The IK Facebook Plugin is a great plugin for many uses, including: =
 
 * Adding SEO friendly content to your website
-* Powering your blog with your Facebook Feed – avoid the need to maintain content in multiple locations!
+* Powering your blog with your Facebook Feed - avoid the need to maintain content in multiple locations!
 * Adding your Facebook Feed as a Widget to your Sidebar or Footer
 * Styling a Custom Facebook Feed
 * Adding a Facebook Like Button to your website, anywhere!
@@ -61,7 +61,7 @@ It's all good!  This just means there is no feed data - this could be due to bad
 
 OK, so here's the deal:
 
-Your Facebook Feed needs to come from a Publicly Accessible Facebook page.  If your page is Private, if its a Personal Profile and not a Page, or if you have an Age Limit set that thus requires the user to login, the plugin won't be able to display the feed data (it will instead just display the page title, like button, and profile pic – even that can be dependent upon your settings.)
+Your Facebook Feed needs to come from a Publicly Accessible Facebook page.  If your page is Private, if its a Personal Profile and not a Page, or if you have an Age Limit set that thus requires the user to login, the plugin won't be able to display the feed data (it will instead just display the page title, like button, and profile pic - even that can be dependent upon your settings.)
 
 Here's how to test if your page is Public or Private:
 
