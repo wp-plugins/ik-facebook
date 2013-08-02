@@ -21,7 +21,7 @@ The IK Facebook Plugin is an **easy-to-use** plugin that allows users to add a *
 * Adding your Facebook Feed as a Widget to your Sidebar or Footer
 * Styling a Custom Facebook Feed
 * Adding a Facebook Like Button to your website, anywhere!
-* Quality Documentation doesn’t leave you hanging!
+* Quality Documentation doesn't leave you hanging!
 
 The IK Facebook Plugin includes options to set the Title of the custom Facebook Feed Widget, whether or not to show the Like Button above the custom Facebook Feed Widget, and whether or not to show the Profile Picture.  The IK Facebook Plugin supports both the Light and Dark color schemes for the Like Button widget.
 
@@ -59,13 +59,13 @@ It's all good!  This just means there is no feed data - this could be due to bad
 
 = So what's up with this 'Publicly Accessible Page' thing? =
 
-OK, so here’s the deal:
+OK, so here's the deal:
 
-Your Facebook Feed needs to come from a Publicly Accessible Facebook page.  If your page is Private, if its a Personal Profile and not a Page, or if you have an Age Limit set that thus requires the user to login, the plugin won’t be able to display the feed data (it will instead just display the page title, like button, and profile pic – even that can be dependent upon your settings.)
+Your Facebook Feed needs to come from a Publicly Accessible Facebook page.  If your page is Private, if its a Personal Profile and not a Page, or if you have an Age Limit set that thus requires the user to login, the plugin won't be able to display the feed data (it will instead just display the page title, like button, and profile pic – even that can be dependent upon your settings.)
 
-Here’s how to test if your page is Public or Private:
+Here's how to test if your page is Public or Private:
 
-Logout of Facebook and then try to visit the Facebook Page in question.  If Facebook wants you to login to be able to view the Feed, then this page is not Publicly Accessible.  You just need to update the Page’s relevant settings so that it is.
+Logout of Facebook and then try to visit the Facebook Page in question.  If Facebook wants you to login to be able to view the Feed, then this page is not Publicly Accessible.  You just need to update the Page's relevant settings so that it is.
 
 = I've set an image width on the options page, but it isn't working! =
 
