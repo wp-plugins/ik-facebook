@@ -3,8 +3,8 @@ Contributors: richardgabriel
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V7HR8DP4EJSYN
 Tags: facebook, facebook feed, facebook embed
 Requires at least: 3.0.1
-Tested up to: 3.5.2
-Stable tag: 1.9
+Tested up to: 3.6
+Stable tag: 1.9.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -25,7 +25,7 @@ The IK Facebook Plugin is an **easy-to-use** plugin that allows users to add a *
 
 The IK Facebook Plugin includes options to set the Title of the custom Facebook Feed Widget, whether or not to show the Like Button above the custom Facebook Feed Widget, and whether or not to show the Profile Picture.  The IK Facebook Plugin supports both the Light and Dark color schemes for the Like Button widget.
 
-The IK Facebook Plugin is a free version of [IK Social Pro](http://iksocialpro.com/ "IK Social Pro") - IK Social Pro is a professionally developed WordPress plugin that integrates your Facebook Feed into your WordPress website as a custom widget.  With the IK Facebook Plugin, you can *easily add Search Engine Optimization friendly content* to your website without extra effort -- no iframe means the content exists on your site and is crawlable by search engines like Google!
+The IK Facebook Plugin is a free version of [IK Social Pro](http://iksocialpro.com/ "IK Social Pro") - IK Social Pro is a professionally developed WordPress plugin that integrates your Facebook Feed into your WordPress website as a custom widget.  With the IK Facebook Plugin, you can **easily add Search Engine Optimization friendly content** to your website without extra effort -- no iframe means the content exists on your site and is crawlable by search engines like Google!
 
 The IK Facebook Plugin includes the option to set your own custom CSS for styling purposes or, if you prefer, the IK Facebook Plugin allows you to include a custom style sheet in your theme directory  -- either method is great for displaying a custom Facebok Feed widget. The IK Facebook Plugin also allows the user to select from a few pre-made Feed Themes, to help generate their custom Facebook Feed widget.  *Gone are the days of fighting with the Facebook Social Plugin!*
 
@@ -98,6 +98,10 @@ Try using the "No Style" theme -- this will output everything in a list.  You ca
 3. This is the Display Options Settings page.
 
 == Changelog ==
+
+= 1.9.1 =
+* Update: Compatible with 3.6
+* Update: Adjust Settings Output for New Pro Options
 
 = 1.9 =
 * Update: cleans up the layout of the Settings screen

@@ -307,7 +307,6 @@ class ikFacebookOptions
 					break;
 					case 'pro_options' :					
 						if(IK_FACEBOOK_PRO && function_exists("ik_fb_pro_output_settings")){
-							settings_fields( 'ik-fb-settings-group' );
 							ik_fb_pro_output_settings();
 						} else {	
 				?>
