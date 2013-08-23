@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, facebook feed, facebook embed, facebook feed widget, facebook feed embed, like button widget
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: 1.9.1
+Stable tag: 2.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -98,6 +98,13 @@ Try using the "No Style" theme -- this will output everything in a list.  You ca
 3. This is the Display Options Settings page.  These settings help you control what content appears in your custom facebook feed.
 
 == Changelog ==
+
+= 2.0 =
+* Update: Upgraded feature set and interface to integrate IK Social Pro and IK Facebook.
+* Feature: Adds ability to display user avatars in the feed.
+* Feature: Adds ability to show number of comments in the feed.
+* Feature: Adds ability to show number of likes in the feed.
+* Minor Feature: Adds ability to disable pro styling options
 
 = 1.9.1 =
 * Update: Compatible with 3.6
@@ -253,5 +260,5 @@ Try using the "No Style" theme -- this will output everything in a list.  You ca
 
 == Upgrade Notice ==
 
-= 1.9 =
-* Update Available
+= 2.0 =
+* Major Upgrade Available
