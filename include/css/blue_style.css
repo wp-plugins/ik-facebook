@@ -165,6 +165,7 @@ p.ik_fb_error{
 }
 
 #ik_fb_widget .ikfb_read_more{
+	display: block;
 	font-size: 12px;
 }
 
