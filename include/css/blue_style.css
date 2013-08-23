@@ -121,12 +121,16 @@ p.ik_fb_error{
 }
 
 #ik_fb_widget .ik_fb_profile_picture{
-    background: none repeat scroll 0 0 lightgrey;
+    background: none repeat scroll 0 0 #3B5998;
     border-bottom: 1px solid #AAAAAA;
     height: 50px;
     margin-bottom: 7px;
     padding: 10px;
     position: relative;
+}
+
+#ik_fb_widget .ik_fb_profile_picture a{
+    color: #ffffff;
 }
 
 #ik_fb_widget .ik_fb_profile_picture img {
@@ -156,9 +160,22 @@ p.ik_fb_error{
 }
 
 #sidebar #ik_fb_widget .ik_fb_profile_picture a {
+	color: #ffffff;
     line-height: 17px;
 }
 
 #ik_fb_widget .ikfb_read_more{
 	font-size: 12px;
+}
+
+.ikfb_user_avatar,
+#ik_fb_widget .ik_fb_feed_item  .ikfb_user_avatar{
+	float: left;
+	margin: 0 5px 5px 0;
+}
+
+.ikfb_comments,
+.ikfb_likes{
+	font-size: 12px;
+	margin: 5px 5px 5px 0;
 }

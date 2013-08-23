@@ -27,13 +27,13 @@ class ikFacebookOptions
 	}
 	
 	function add_admin_menu_item(){
-		if(get_option('ik_fb_unbranded') && function_exists("ik_fb_pro_register_settings")){
+		if(get_option('ik_fb_unbranded') && is_valid_key(get_option('ik_fb_pro_key'))){
 			$title = "Social Settings";
 		} else {
 			$title = "IK FB Settings";
 		}
 		
-		if(get_option('ik_fb_unbranded') && function_exists("ik_fb_pro_register_settings")){
+		if(get_option('ik_fb_unbranded') && is_valid_key(get_option('ik_fb_pro_key'))){
 			$page_title = "Social Plugin Settings";
 		} else {
 			$page_title = "IK Facebook Plugin Settings";
@@ -47,14 +47,14 @@ class ikFacebookOptions
 	}
 	
 	//function to produce tabs on admin screen
-	function ikfb_admin_tabs( $current = 'homepage' ) {
+	function ik_fb_admin_tabs( $current = 'homepage' ) {
 	
 		$tabs = array( 'config_options' => 'Configuration Options', 'style_options' => 'Style Options', 'display_options' => 'Display Options', 'pro_options' => 'Pro Options' );
 		echo '<div id="icon-themes" class="icon32"><br></div>';
 		echo '<h2 class="nav-tab-wrapper">';
 			foreach( $tabs as $tab => $name ){
 				$class = ( $tab == $current ) ? ' nav-tab-active' : '';
-				echo "<a class='nav-tab$class' href='?page=ik-facebook/ik_facebook_options.php&tab=$tab'>$name</a>";
+				echo "<a class='nav-tab$class' href='?page=ik-facebook/include/ik_facebook_options.php&tab=$tab'>$name</a>";
 			}
 		echo '</h2>';
 	}
@@ -65,6 +65,9 @@ class ikFacebookOptions
 		register_setting( 'ik-fb-config-settings-group', 'ik_fb_page_id' );
 		register_setting( 'ik-fb-config-settings-group', 'ik_fb_app_id' );
 		register_setting( 'ik-fb-config-settings-group', 'ik_fb_secret_key' );
+		register_setting( 'ik-fb-config-settings-group', 'ik_fb_pro_key' );
+		register_setting( 'ik-fb-config-settings-group', 'ik_fb_pro_url' );
+		register_setting( 'ik-fb-config-settings-group', 'ik_fb_pro_email' );
 		
 		//register our style settings
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_custom_css' );
@@ -87,17 +90,15 @@ class ikFacebookOptions
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_caption_character_limit' );
 		
 		//register any pro settings
-		if(IK_FACEBOOK_PRO){
-			if(function_exists("ik_fb_pro_register_settings")){
-				ik_fb_pro_register_settings();
-			}
+		if(function_exists("ik_fb_pro_register_settings")){
+			ik_fb_pro_register_settings();
 		}
 	}
 
 	function settings_page(){
 		global $pagenow;
 		
-		if(get_option('ik_fb_unbranded') && function_exists("ik_fb_pro_register_settings")){
+		if(get_option('ik_fb_unbranded') && is_valid_key(get_option('ik_fb_pro_key'))){
 			$title = "Facebook Settings";
 			$message = "Facebook Settings Updated.";
 		} else {
@@ -109,20 +110,33 @@ class ikFacebookOptions
 	<div class="wrap">
 		<h2><?php echo $title; ?></h2>		
 		
-		<?php if(!function_exists("ik_fb_pro_output_settings")): ?>
-			<div class="updated" id="message"><p><strong>Want More Features?</strong><br/><br/> Check out IK Social Pro for an unbranded admin, custom HTML, and more.<br /><br /><a href="http://iksocialpro.com/purchase-ik-social-pro/">Click Here To Get it Now</a></p></div>
+		<?php if(!is_valid_key(get_option('ik_fb_pro_key') )): ?>
+			<div class="updated" id="message">
+				<h2>Want More Features?</h2>
+				<p><a href="http://iksocialpro.com/purchase-ik-social-pro/?ikfbtop">Upgrade to IK Social Pro now</a> and get tons of new features and settings. </p>
+				<h3>Pro Features Include:</h3>
+				<ul>
+					<li><strong>Unbranded Admin screens:</strong> Remove all IK FB branding from your Wordpress admin.</li>
+					<li><strong>Hide non-page-owner posts from your feed:</strong> With this option, your feed will only show the posts from your own account.</li>
+					<li><strong>Custom Styling Options:</strong> Unfamiliar with CSS? These options will enable you to style the output of the various text, links, change the dimensions of the feed, and more!</li>
+					<li><strong>Custom HTML Output:</strong> Use any HTML tags you want for the feed. You'll be able to specify a custom HTML template for your feed.</li>
+					<li><strong>Free Updates For Life:</strong> Get IK Social Pro now, and you'll get free updates for life!</li>
+				</ul>
+					
+				<p>More to come! IK Social Pro plugin owners get new updates automatically by email. New features land in the Pro version first, so be sure to upgrade today.</p>
+			</div>
 		<?php endif; ?>
 	
 		<?php if (isset($_GET['settings-updated']) && $_GET['settings-updated'] == 'true') : ?>
 		<div id="message" class="updated fade"><p><?php echo $message; ?></p></div>
 		<?php endif; ?>	
 		
-		<?php if ( isset ( $_GET['tab'] ) ) $this->ikfb_admin_tabs($_GET['tab']); else $this->ikfb_admin_tabs('config_options'); ?>
+		<?php if ( isset ( $_GET['tab'] ) ) $this->ik_fb_admin_tabs($_GET['tab']); else $this->ik_fb_admin_tabs('config_options'); ?>
 		
 		<form method="post" action="options.php">
 			
 			<?php 
-				if ( $pagenow == 'admin.php' && $_GET['page'] == 'ik-facebook/ik_facebook_options.php' ){
+				if ( $pagenow == 'admin.php' && $_GET['page'] == 'ik-facebook/include/ik_facebook_options.php' ){
 					if ( isset ( $_GET['tab'] ) ) $tab = $_GET['tab'];
 					else $tab = 'config_options';
 				}	
@@ -148,7 +162,7 @@ class ikFacebookOptions
 				<tr valign="top">
 					<th scope="row"><label for="ik_fb_app_id">Facebook App ID</label></th>
 					<td><input type="text" name="ik_fb_app_id" id="ik_fb_app_id" value="<?php echo get_option('ik_fb_app_id'); ?>" style="width: 250px" />
-					<p class="description">This is the App ID you acquired when you <a href="http://iksocialpro.com/installation-usage-instructions/how-to-get-an-app-id-and-secret-key-from-facebook/" target="_blank" title="How To Get An App ID and Secret Key From Facebook">setup your Facebook app</a>.</p></td>
+					<p class="description">This is the App ID you acquired when you <a href="http://iksocialpro.com/installation-usage-instructions/how-to-get-an-app-id-and-secret-key-from-facebook/?ikfbsettings" target="_blank" title="How To Get An App ID and Secret Key From Facebook">setup your Facebook app</a>.</p></td>
 				</tr>
 			</table>
 			
@@ -156,7 +170,7 @@ class ikFacebookOptions
 				<tr valign="top">
 					<th scope="row"><label for="ik_fb_secret_key">Facebook Secret Key</label></th>
 					<td><input type="text" name="ik_fb_secret_key" id="ik_fb_secret_key" value="<?php echo get_option('ik_fb_secret_key'); ?>" style="width: 250px" />
-					<p class="description">This is the App Secret you acquired when you <a href="http://iksocialpro.com/installation-usage-instructions/how-to-get-an-app-id-and-secret-key-from-facebook/" target="_blank" title="How To Get An App ID and Secret Key From Facebook">setup your Facebook app</a>.</p></td>
+					<p class="description">This is the App Secret you acquired when you <a href="http://iksocialpro.com/installation-usage-instructions/how-to-get-an-app-id-and-secret-key-from-facebook/?ikfbsettings" target="_blank" title="How To Get An App ID and Secret Key From Facebook">setup your Facebook app</a>.</p></td>
 				</tr>
 			</table>
 				<?php
@@ -305,15 +319,10 @@ class ikFacebookOptions
 			</table>
 				<?php
 					break;
-					case 'pro_options' :					
-						if(IK_FACEBOOK_PRO && function_exists("ik_fb_pro_output_settings")){
-							ik_fb_pro_output_settings();
-						} else {	
-				?>
-							<h3>Pro Options</h3>
-							<p><a href="http://iksocialpro.com/purchase-ik-social-pro/">Upgrade to IK Social Pro now</a> and get tons of new features and settings. </p>
-				<?php
-						}
+					case 'pro_options' :
+						global $ik_social_pro_options;
+						
+						$ik_social_pro_options->output_settings();
 					break;
 					}//end switch
 				?>			
@@ -321,33 +330,14 @@ class ikFacebookOptions
 					<input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
 				</p>		
 				<?php
-					if(IK_FACEBOOK_PRO && function_exists("ik_fb_pro_output_settings")){
-					} else {					
+					if(!is_valid_key(get_option('ik_fb_pro_key'))):					
 				?>
-					<div style="margin: 20px auto;">
-						<h2>Want More Features?</h2>
-
-						<p><a href="http://iksocialpro.com/purchase-ik-social-pro/">Upgrade to IK Social Pro now</a> and get tons of new features and settings. </p>
-
-						<h3>Pro Features Include:</h3>
-
-						<ul>
-							<li><strong>Unbranded Admin screens:</strong> Remove all IK FB branding from your Wordpress admin.</li>
-							<li><strong>Hide non-page-owner posts from your feed:</strong> With this option, your feed will only show the posts from your own account.</li>
-							<li><strong>Custom Styling Options:</strong> Unfamiliar with CSS? These options will enable you to style the output of the various text, links, change the dimensions of the feed, and more!</li>
-							<li><strong>Custom HTML Output:</strong> Use any HTML tags you want for the feed. You'll be able to specify a custom HTML template for your feed.</li>
-							<li><strong>Free Updates For Life:</strong> Get IK Social Pro now, and you'll get free updates for life!</li>
-						</ul>
-							
-						<p>More to come! IK Social Pro plugin owners get new updates automatically by email. New features land in the Pro version first, so be sure to upgrade today.</p>
-
-					</div>
-					<div style="margin: 20px auto; text-align: left; text-decoration: none;">					
-						<a href="http://iksocialpro.com/" target="_blank" title="Learn More About IK Social Pro"><img src="<?php echo plugins_url('ik_social_pro.jpg', __FILE__); ?>" alt="IK Social Pro" /><p class="description">Click Here To Learn About IK Social Pro</p></a>
-					</div>
+				<div style="margin: 20px auto; text-align: left; text-decoration: none;">					
+					<a href="http://iksocialpro.com/purchase-ik-social-pro/?ikfbbottom" target="_blank" title="Learn More About IK Social Pro"><img src="<?php echo plugins_url('/img/ik_social_pro.jpg', __FILE__); ?>" alt="IK Social Pro" /><p class="description">Click Here To Learn About IK Social Pro</p></a>
+				</div>
 				<?php
-				}
-			?>
+					endif;
+				?>
 		</form>
 	</div>
 	<?php } // end settings_page function

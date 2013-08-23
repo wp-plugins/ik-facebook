@@ -66,3 +66,11 @@ p.ik_fb_error{
 
 #ik_fb_widget .ikfb_read_more{
 }
+
+.ikfb_user_avatar,
+#ik_fb_widget .ik_fb_feed_item  .ikfb_user_avatar{
+}
+
+.ikfb_comments,
+.ikfb_likes{
+}
