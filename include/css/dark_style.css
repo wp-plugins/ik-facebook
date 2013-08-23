@@ -117,7 +117,7 @@ p.ik_fb_error{
     border-radius: 5px 5px 5px 5px;
     box-shadow: 5px 5px 13px #888888;
     margin-bottom: 30px;
-    padding: 0px;
+    padding: 0 0 9px;
 }
 
 #ik_fb_widget .ik_fb_profile_picture{
