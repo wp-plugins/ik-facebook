@@ -207,7 +207,7 @@ class ikSocialPro
 										if($comment->like_count > 1){
 											$like_string = "people like";
 										}
-										$comment_list .= '<p class="ikfb_comment_likes">' . $comment->like_count . $like_string . ' this.</p>';
+										$comment_list .= '<p class="ikfb_comment_likes">' . $comment->like_count . ' ' . $like_string . ' this.</p>';
 									}
 								}						
 								
