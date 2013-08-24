@@ -51,8 +51,6 @@ p.ik_fb_error{
 }
 #ik_fb_widget p {
 }
-#ik_fb_widget p {
-}
 #ik_fb_widget .ik_fb_facebook_image {
 }
 #ik_fb_widget p.facebook_description {
@@ -71,6 +69,33 @@ p.ik_fb_error{
 #ik_fb_widget .ik_fb_feed_item  .ikfb_user_avatar{
 }
 
+/* Comments */
+
+.ikfb_user_avatar,
+#ik_fb_widget .ik_fb_feed_item  .ikfb_user_avatar{
+}
+
 .ikfb_comments,
 .ikfb_likes{
+}
+
+.ikfb_comment_list{
+}
+
+.ikfb_comment{
+}
+
+#ik_fb_widget .ik_fb_feed_item .ikfb_user_comment_avatar{
+}
+
+.ikfb_comment_author{
+}
+
+.ikfb_comment_message{
+}
+
+.ikfb_comment_date{
+}
+
+.ikfb_clear{
 }

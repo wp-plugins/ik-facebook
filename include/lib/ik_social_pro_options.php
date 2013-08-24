@@ -8,6 +8,7 @@ class ikSocialProOptions
 		
 		register_setting( 'ik-fb-pro-display-settings-group', 'ik_fb_show_avatars' );
 		register_setting( 'ik-fb-pro-display-settings-group', 'ik_fb_show_replies' );
+		register_setting( 'ik-fb-pro-display-settings-group', 'ik_fb_show_reply_counts' );
 		register_setting( 'ik-fb-pro-display-settings-group', 'ik_fb_show_likes' );
 		
 		register_setting( 'ik-fb-html-settings-group', 'ik_fb_feed_item_html' );
@@ -232,9 +233,16 @@ class ikSocialProOptions
 				</tr>
 				
 				<tr valign="top">
+					<th scope="row"><label for="ik_fb_show_reply_counts">Show Comment Counts</label></th>
+					<td><input <?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?>disabled="disabled"<?php endif; ?>  type="checkbox" name="ik_fb_show_reply_counts" id="ik_fb_show_reply_counts" value="1" <?php if(get_option('ik_fb_show_reply_counts')){ ?> checked="CHECKED" <?php } ?>/>
+					<p class="description">If checked, user comment counts will be shown in the feed, with a link to the Facebook page.</p>
+					</td>
+				</tr>
+				
+				<tr valign="top">
 					<th scope="row"><label for="ik_fb_show_replies">Show Comments</label></th>
 					<td><input <?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?>disabled="disabled"<?php endif; ?>  type="checkbox" name="ik_fb_show_replies" id="ik_fb_show_replies" value="1" <?php if(get_option('ik_fb_show_replies')){ ?> checked="CHECKED" <?php } ?>/>
-					<p class="description">If checked, user comment counts will be shown in the feed, with a link to the Facebook page.</p>
+					<p class="description">If checked, user comments will be shown in the feed.  If Show Avatars is also checked, user avatars will be shown in the replies.  If Show Date is is also checked, the comment date will be shown in the replies. If Show Likes is also checked, the number of likes for each comment will be displayed.</p>
 					</td>
 				</tr>
 				

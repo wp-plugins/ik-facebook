@@ -29,9 +29,9 @@ p.ik_fb_error{
 #ik_fb_widget .ik_fb_feed_item {
     border-bottom: 1px dotted #DDDDDD;
     clear: both;
-	height: auto !important;
+    height: auto !important;
     margin: 0 0 5px;
-    padding: 0 0 5px;
+    padding: 0 5px;
     width: 96%;
 }
 #ik_fb_widget .ik_fb_feed_item img {
@@ -84,12 +84,9 @@ p.ik_fb_error{
 }
 #ik_fb_widget p {
     font-size: 11px;
-    padding: 0 0 4px;
-}
-#ik_fb_widget p {
-    font-size: 11px;
+    line-height: 1.5em;
     margin: 0;
-    padding: 4px 0;
+    padding: 0 0 4px;
     width: auto;
 }
 #ik_fb_widget .ik_fb_facebook_image {
@@ -170,8 +167,46 @@ p.ik_fb_error{
 	margin: 0 5px 5px 0;
 }
 
+
+/* Comments */
+
+.ikfb_user_avatar,
+#ik_fb_widget .ik_fb_feed_item  .ikfb_user_avatar{
+	float: left;
+	margin: 0 5px 5px 0;
+}
+
 .ikfb_comments,
 .ikfb_likes{
 	font-size: 12px;
 	margin: 5px 5px 5px 0;
+}
+
+.ikfb_comment_list{
+	list-style: none outside none;
+    padding: 0 0 0 10px;
+}
+
+.ikfb_comment{
+	clear: both;
+}
+
+#ik_fb_widget .ik_fb_feed_item .ikfb_user_comment_avatar{
+	float: left;
+    margin: 0 5px 5px 0;
+}
+
+.ikfb_comment_author{
+	font-weight: bold;
+}
+
+.ikfb_comment_message{
+}
+
+.ikfb_comment_date{
+}
+
+.ikfb_clear{
+	clear: both;
+	display: block;
 }

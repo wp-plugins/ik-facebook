@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://iksocialpro.com/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.0
+Version: 2.1
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -464,16 +464,6 @@ class ikFacebook
 				}
 			}	
 			
-			//add likes, if pro and enabled
-			if(is_valid_key(get_option('ik_fb_pro_key'))){		
-				$line_item .= $ik_social_pro->pro_likes($item, $the_link);
-			}
-			
-			//add comments, if pro and enabled
-			if(is_valid_key(get_option('ik_fb_pro_key'))){		
-				$line_item .= $ik_social_pro->pro_comments($item, $the_link);
-			}	
-			
 			if(strlen($line_item)>2){
 				
 				//output Posted By... text, if option is set
@@ -511,6 +501,16 @@ class ikFacebook
 										
 					$line_item .= $date;
 				}
+			
+				//add likes, if pro and enabled
+				if(is_valid_key(get_option('ik_fb_pro_key'))){		
+					$line_item .= $ik_social_pro->pro_likes($item, $the_link);
+				}
+				
+				//add comments, if pro and enabled
+				if(is_valid_key(get_option('ik_fb_pro_key'))){		
+					$line_item .= $ik_social_pro->pro_comments($item, $the_link);
+				}	
 			
 				$output = str_replace('{ikfb:feed_item}', $line_item, $feed_item_html);	
 			}
