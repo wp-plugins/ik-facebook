@@ -48,7 +48,7 @@ This section describes how to install the plugin and get it working.
 
 == Frequently Asked Questions ==
 
-= Help!  I need an App ID/Secret Key! =
+= Help!  I need a Facebook App ID / Facebook Secret Key! =
 
 OK!  We have a great page with some helpful information [here](http://iksocialpro.com/installation-usage-instructions/how-to-get-an-app-id-and-secret-key-from-facebook/ "Configuration Options and Instructions").
 
@@ -89,6 +89,20 @@ If you are using the Free version of the plugin, you'll need to [purchase IK Soc
 Nope!  Thanks to the WordPress Transient API, all you have to do is sit back and relax and we'll do the rest!
 
 = I Want All Of My Posts Visible -- Not Contained In A Box! =
+
+Try using the "No Style" theme -- this will output everything in a list.  You can also turn off the Like Button, Feed Title, and Profile Pic to have it look more like a list of posts.
+
+= I Want All To Show The Number of Likes In My Facebook Feed! =
+
+The Pro version of IK Facebook has this functionality - [purchase IK Social Pro](http://iksocialpro.com/purchase-ik-social-pro/ "Purchase IK Social Pro")
+
+= I Want All To Show Avatars In My Facebook Feed! =
+
+The Pro version of IK Facebook has this functionality - [purchase IK Social Pro](http://iksocialpro.com/purchase-ik-social-pro/ "Purchase IK Social Pro")
+
+= I Want All To Show Comments In My Facebook Feed! =
+
+The Pro version of IK Facebook has this functionality - [purchase IK Social Pro](http://iksocialpro.com/purchase-ik-social-pro/ "Purchase IK Social Pro")
 
 Try using the "No Style" theme -- this will output everything in a list.  You can also turn off the Like Button, Feed Title, and Profile Pic to have it look more like a list of posts.
 
