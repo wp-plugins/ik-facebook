@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, facebook feed, facebook embed, facebook feed widget, facebook feed embed, like button widget
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: 2.1.1
+Stable tag: 2.1.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -113,6 +113,9 @@ Try using the "No Style" theme -- this will output everything in a list.  You ca
 3. This is the Display Options Settings page.  These settings help you control what content appears in your custom facebook feed.
 
 == Changelog ==
+
+= 2.1.2 =
+* Bug Fix: addresses issue where thumbnail sized photos were always being sourced, leading to blurry photos when trying to display larger versions in the feed.
 
 = 2.1.1 =
 * Minor Fix: addresses a spacing issue in the number of likes for comments.
@@ -281,5 +284,5 @@ Try using the "No Style" theme -- this will output everything in a list.  You ca
 
 == Upgrade Notice ==
 
-= 2.1 =
-* New Pro Features Available
+= 2.1.2 =
+* Bug Fix available

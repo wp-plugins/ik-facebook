@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://iksocialpro.com/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.1.1
+Version: 2.1.2
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -370,13 +370,19 @@ class ikFacebook
 				$item_id = $item->object_id;
 				
 				//load the photo from the open graph
-				$photo = $this->fetchUrl("https://graph.facebook.com/{$item_id}/picture?{$this->authToken}&redirect=0", true);	
+				$photo = $this->fetchUrl("https://graph.facebook.com/{$item_id}/picture?{$this->authToken}&redirect=false", true);	
 				
-				$photo_link = $item->picture;
-				$thumbnail_photo = true;
+				//load arguments into array for use below
+				$parsed_url = parse_url($item->picture);
+				parse_str($parsed_url['query'], $params);		
 				
+				//not sure if relevant anymore, as I have quit receiving this data from FB
 				if(isset($photo->data->url)){
 					$photo_link = $photo->data->url;
+					$thumbnail_photo = false;
+				} else if(isset($params['url'])) { //previous method didn't work, see if we can parse the url and find a fullsized image to display
+					//default the photo link to the thumbnail, in case any of the other methods don't work out
+					$photo_link = $params['url'];
 					$thumbnail_photo = false;
 				}
 				
