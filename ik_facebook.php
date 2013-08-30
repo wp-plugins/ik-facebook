@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://iksocialpro.com/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.1.2
+Version: 2.2
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -40,6 +40,7 @@ class ikFacebook
 	function __construct(){
 		//create shortcodes
 		add_shortcode('ik_fb_feed', array($this, 'ik_fb_output_feed_shortcode'));
+		add_shortcode('ik_fb_gallery', array($this, 'ik_fb_output_gallery_shortcode'));
 		add_shortcode('ik_fb_like_button', array($this, 'ik_fb_output_like_button'));
 
 		//add CSS
@@ -52,8 +53,6 @@ class ikFacebook
 
 		//display "powered by"
 		add_action('wp_footer', array($this, 'ik_fb_show_powered_by' ));
-		
-		//add some sort of Pro check, then include the additional code if it passes
 	}
 
 	//register any widgets here
@@ -68,16 +67,20 @@ class ikFacebook
 		wp_register_style( 'ik_facebook_light_style', plugins_url('include/css/light_style.css', __FILE__) );
 		wp_register_style( 'ik_facebook_blue_style', plugins_url('include/css/blue_style.css', __FILE__) );
 		wp_register_style( 'ik_facebook_no_style', plugins_url('include/css/no_style.css', __FILE__) );
+		wp_register_style( 'ik_facebook_gallery_style', plugins_url('include/css/gallery.css', __FILE__) );
 		
 		switch(get_option('ik_fb_feed_theme')){
 			case 'dark_style':
 				wp_enqueue_style( 'ik_facebook_dark_style' );
+				wp_enqueue_style( 'ik_facebook_gallery_style' );
 				break;
 			case 'light_style':
 				wp_enqueue_style( 'ik_facebook_light_style' );
+				wp_enqueue_style( 'ik_facebook_gallery_style' );
 				break;
 			case 'blue_style':
 				wp_enqueue_style( 'ik_facebook_blue_style' );
+				wp_enqueue_style( 'ik_facebook_gallery_style' );
 				break;
 			case 'no_style':
 				wp_enqueue_style( 'ik_facebook_no_style' );
@@ -85,6 +88,7 @@ class ikFacebook
 			case 'default_style':
 			default:
 				wp_enqueue_style( 'ik_facebook_style' );
+				wp_enqueue_style( 'ik_facebook_gallery_style' );
 				break;
 		}
 	}
@@ -131,7 +135,6 @@ class ikFacebook
 	function ik_fb_output_feed_shortcode($atts){			
 		//load shortcode attributes into an array
 		extract( shortcode_atts( array(
-			//TBD: make colorscheme available as a global option
 			'colorscheme' => 'light',
 			'width' => get_option('ik_fb_feed_image_width'),
 			'height' => get_option('ik_fb_feed_image_height'),
@@ -139,6 +142,81 @@ class ikFacebook
 		), $atts ) );
 		
 		return $this->ik_fb_output_feed($colorscheme, $use_thumb, $width, false, $height);				
+	}
+	
+	function ik_fb_output_gallery_shortcode($atts){			
+		//load shortcode attributes into an array
+		extract( shortcode_atts( array(
+			'id' => '',
+			'size' => '320x180',
+			'show_name' => true,
+			'title' => null
+		), $atts ) );
+		
+		return $this->ik_fb_output_gallery($id, $size, $show_name, $title);				
+	}
+	
+	public function ik_fb_output_gallery($id = '', $size = '320x180', $show_name = true, $the_title = null){
+		$output = '';
+		
+		$app_id = get_option('ik_fb_app_id');
+		$app_secret = get_option('ik_fb_secret_key');
+		
+		$size_array = array(
+			'2048x1152' => 0,
+			'960x540' => 1,
+			'720x405' => 2,
+			'600x337' => 3,
+			'480x270' => 4,
+			'320x180' => 5,
+			'130x73' => 7
+		);
+		
+		$width_array = array (
+			'2048x1152' => '1152px',
+			'960x540' => '540px',
+			'720x405' => '405px',
+			'600x337' => '337px',
+			'480x270' => '270px',
+			'320x180' => '180px',
+			'130x73' => '73px'
+		);
+		
+		$position = $size_array[$size];
+		
+		if(!isset($this->authToken)){
+			$this->authToken = $this->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
+		}
+		
+		$gallery = $this->fetchUrl("https://graph.facebook.com/{$id}/photos?{$this->authToken}", true);//the gallery data
+		
+		ob_start();
+		
+		echo '<div class="ik_fb_gallery_standard">';
+		
+		if(isset($the_title)){
+			echo '<span class="ik_fb_gallery_standard_title">' . $the_title . '</span>';
+		}
+		
+		foreach($gallery->data as $gallery_item){
+			echo '<div class="ik_fb_gallery_item" style="width:'.$width_array[$size].';">';
+			
+				echo '<a href="'.$gallery_item->source.'" target="_blank" title="Click to View Full Sized Photo"><img class="ik_fb_standard_image" src="'.$gallery_item->images[$position]->source.'" /></a>';
+				
+				if($show_name){
+					echo '<p class="ik_fb_standard_image_name">' . $gallery_item->name . '</p>';
+				}
+			
+			echo '</div>';
+		}
+		
+		echo '</div>';
+		
+		$output = ob_get_contents();
+		
+		ob_end_clean();
+		
+		return $output;
 	}
 	
 	//facebook feed
@@ -368,22 +446,21 @@ class ikFacebook
 				//need info about full sized photo for linking purposes
 				//get the item id
 				$item_id = $item->object_id;
-				
-				//load the photo from the open graph
-				$photo = $this->fetchUrl("https://graph.facebook.com/{$item_id}/picture?{$this->authToken}&redirect=false", true);	
-				
+								
 				//load arguments into array for use below
 				$parsed_url = parse_url($item->picture);
 				parse_str($parsed_url['query'], $params);		
 				
-				//not sure if relevant anymore, as I have quit receiving this data from FB
-				if(isset($photo->data->url)){
-					$photo_link = $photo->data->url;
-					$thumbnail_photo = false;
-				} else if(isset($params['url'])) { //previous method didn't work, see if we can parse the url and find a fullsized image to display
+				if(isset($params['url'])) {
 					//default the photo link to the thumbnail, in case any of the other methods don't work out
 					$photo_link = $params['url'];
 					$thumbnail_photo = false;
+				} else {
+					//no fullsized version available, use what's on FB
+					$photo = $this->fetchUrl("https://graph.facebook.com/{$item_id}/picture?{$this->authToken}&redirect=false", true);	
+					$photo_link = $item->picture;
+					
+					$thumbnail_photo = true;
 				}
 				
 				//output the images

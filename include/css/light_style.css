@@ -22,7 +22,7 @@ p.ik_fb_error{
 }
 
 #ik_fb_widget {
-    height: 310px;
+    height: auto;
     overflow: hidden;
     width: 100%;
 }
@@ -87,7 +87,7 @@ p.ik_fb_error{
     line-height: 1.5em;
     margin: 0;
     padding: 0 0 4px;
-    width: auto;
+	width: auto !important;
 }
 #ik_fb_widget .ik_fb_facebook_image {
     margin: 0 5px 0 0;
@@ -107,7 +107,7 @@ p.ik_fb_error{
 
 /* Light Style */
 #ik_fb_widget {
-    height: 310px;
+    height: auto;
     overflow: hidden;
     width: 100%;
     border: 1px solid #444444;

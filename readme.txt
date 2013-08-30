@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, facebook feed, facebook embed, facebook feed widget, facebook feed embed, like button widget
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: 2.1.2
+Stable tag: 2.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -22,6 +22,7 @@ The IK Facebook Plugin is an **easy-to-use** plugin that allows users to add a *
 * Styling a Custom Facebook Feed
 * Adding a Facebook Like Button to your website, anywhere!
 * Showing Facebook Comments in your Custom Facebook Feed!
+* Adding a Facebook-powered Photo Gallery to your website!
 * and our quality documentation won't leave you hanging!
 
 The IK Facebook Plugin includes options to set the Title of the custom Facebook Feed widget, whether or not to show the Like Button above the custom Facebook Feed widget, and whether or not to show the Profile Picture.  The IK Facebook Plugin supports both the Light and Dark color schemes for the Like Button widget and has multiple color schemes for the custom Facebook Feed widget.
@@ -30,6 +31,9 @@ The IK Facebook Plugin is a free version of [IK Social Pro](http://iksocialpro.c
 
 The IK Facebook Plugin includes the option to set your own custom CSS for styling purposes or, if you prefer, the IK Facebook Plugin allows you to include a custom style sheet in your theme directory  -- either method is great for displaying a custom Facebok Feed widget. The IK Facebook Plugin also allows the user to select from a few pre-made Feed Themes, to help generate their custom Facebook Feed widget.  *Gone are the days of fighting with the Facebook Social Plugin!*
 
+= New Features Are On The Way! =
+
+Currently on our roadmap, we are planning on doing a lot more with the new Photo Gallery features - such as lightbox technology and other javascript options, sidebar widgets, and more!  We also have plans to add more options to the sidebar custom facebook feed widget, as well as adding the ability to display videos in your custom facebook feed.
 == Installation ==
 
 This section describes how to install the plugin and get it working.
@@ -45,6 +49,9 @@ This section describes how to install the plugin and get it working.
 = Outputting the Like Button = 
 * To output the Like Button, place `[ik_fb_like_button url="http://some_url" height"desired_iframe_height" colorscheme="light or dark"]` in the body of a post.
 * You can also use the function `ik_fb_display_like_button($url_to_like,$height_of_iframe,$colorscheme)` to output a like button in your theme.
+
+= Outputting a Photo Gallery = 
+* To output a Photo Gallery, place `[ik_fb_gallery id="539627829386059" size="130x73" title="Hello World!"]` in the body of a post.  If no size is passed, it will default to 320 x 180.  Size options are 2048x1152, 960x540, 720x405, 600x337, 480x270, 320x180, and 130x73.  The ID number is found by looking at the URL of the link to the Album on Facebook.
 
 == Frequently Asked Questions ==
 
@@ -104,7 +111,12 @@ The Pro version of IK Facebook has this functionality - [purchase IK Social Pro]
 
 The Pro version of IK Facebook has this functionality - [purchase IK Social Pro](http://iksocialpro.com/purchase-ik-social-pro/ "Purchase IK Social Pro")
 
-Try using the "No Style" theme -- this will output everything in a list.  You can also turn off the Like Button, Feed Title, and Profile Pic to have it look more like a list of posts.
+= Urk!  How to find my Album's ID for outputting a photo gallery? =
+
+OK, try this: looking at the following url, you want to grab the number that appears directly after "set=a." and before the next period -
+www.facebook.com/media/set/?set=a.**539627829386059**.148135.322657451083099&type=3
+
+In this case, the ID is '539627829386059'.
 
 == Screenshots ==
 
@@ -113,6 +125,11 @@ Try using the "No Style" theme -- this will output everything in a list.  You ca
 3. This is the Display Options Settings page.  These settings help you control what content appears in your custom facebook feed.
 
 == Changelog ==
+
+= 2.2 =
+* New Feature: Ability To Embed Facebook Photo Galleries into your Website!
+* Fix: when no fullsized photo is parsed from the feed, fallback to using the thumbnail photo.
+* Minor Fix: CSS adjustments.
 
 = 2.1.2 =
 * Bug Fix: addresses issue where thumbnail sized photos were always being sourced, leading to blurry photos when trying to display larger versions in the feed.
@@ -284,5 +301,5 @@ Try using the "No Style" theme -- this will output everything in a list.  You ca
 
 == Upgrade Notice ==
 
-= 2.1.2 =
-* Bug Fix available
+= 2.2 =
+* New Features Available!
