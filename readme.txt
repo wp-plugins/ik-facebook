@@ -113,8 +113,8 @@ The Pro version of IK Facebook has this functionality - [purchase IK Social Pro]
 
 = Urk!  How to find my Album's ID for outputting a photo gallery? =
 
-OK, try this: looking at the following url, you want to grab the number that appears directly after "set=a." and before the next period -
-www.facebook.com/media/set/?set=a.**539627829386059**.148135.322657451083099&type=3
+OK, try this: looking at the following url, you want to grab the number that appears directly after "set=a." and before the next period - 
+facebook.com/media/set/?set=a.**539627829386059**.148135.322657451083099&type=3
 
 In this case, the ID is '539627829386059'.
 
