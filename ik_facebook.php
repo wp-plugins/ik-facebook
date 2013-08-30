@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://iksocialpro.com/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.2
+Version: 2.2.1
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -139,9 +139,10 @@ class ikFacebook
 			'width' => get_option('ik_fb_feed_image_width'),
 			'height' => get_option('ik_fb_feed_image_height'),
 			'use_thumb' => !get_option('ik_fb_fix_feed_image_width') && !get_option('ik_fb_fix_feed_image_height'),
+			'num_posts' => null
 		), $atts ) );
 		
-		return $this->ik_fb_output_feed($colorscheme, $use_thumb, $width, false, $height);				
+		return $this->ik_fb_output_feed($colorscheme, $use_thumb, $width, false, $height, $num_posts);				
 	}
 	
 	function ik_fb_output_gallery_shortcode($atts){			
@@ -182,6 +183,16 @@ class ikFacebook
 			'130x73' => '73px'
 		);
 		
+		$height_array = array (
+			'2048x1152' => '2048px',
+			'960x540' => '960px',
+			'720x405' => '720px',
+			'600x337' => '600px',
+			'480x270' => '480px',
+			'320x180' => '320px',
+			'130x73' => '130px'
+		);
+		
 		$position = $size_array[$size];
 		
 		if(!isset($this->authToken)){
@@ -199,7 +210,7 @@ class ikFacebook
 		}
 		
 		foreach($gallery->data as $gallery_item){
-			echo '<div class="ik_fb_gallery_item" style="width:'.$width_array[$size].';">';
+			echo '<div class="ik_fb_gallery_item" style="width:'.$width_array[$size].';height:'.$height_array[$size].';">';
 			
 				echo '<a href="'.$gallery_item->source.'" target="_blank" title="Click to View Full Sized Photo"><img class="ik_fb_standard_image" src="'.$gallery_item->images[$position]->source.'" /></a>';
 				
@@ -220,7 +231,7 @@ class ikFacebook
 	}
 	
 	//facebook feed
-	public function ik_fb_output_feed($colorscheme = "light", $use_thumb = true, $width = "", $is_sidebar_widget = false, $height){		
+	public function ik_fb_output_feed($colorscheme = "light", $use_thumb = true, $width = "", $is_sidebar_widget = false, $height, $num_posts = null){		
 		//load facebook data
 		$fbData = $this->loadFacebook();
 		
@@ -338,7 +349,11 @@ class ikFacebook
 		
 		if(count($feed)>0){//check to see if feed data is set
 			//see if a limit is set in the options
-			$limit = get_option('ik_fb_feed_limit');
+			if(!$num_posts){
+				$limit = get_option('ik_fb_feed_limit');
+			} else {
+				$limit = $num_posts;
+			}
 			$count = 0;
 			
 			if(!is_numeric($limit)){
