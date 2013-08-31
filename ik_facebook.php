@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://iksocialpro.com/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.2.1
+Version: 2.2.2
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -139,10 +139,11 @@ class ikFacebook
 			'width' => get_option('ik_fb_feed_image_width'),
 			'height' => get_option('ik_fb_feed_image_height'),
 			'use_thumb' => !get_option('ik_fb_fix_feed_image_width') && !get_option('ik_fb_fix_feed_image_height'),
-			'num_posts' => null
+			'num_posts' => null,
+			'id' => false
 		), $atts ) );
 		
-		return $this->ik_fb_output_feed($colorscheme, $use_thumb, $width, false, $height, $num_posts);				
+		return $this->ik_fb_output_feed($colorscheme, $use_thumb, $width, false, $height, $num_posts, $id);				
 	}
 	
 	function ik_fb_output_gallery_shortcode($atts){			
@@ -231,9 +232,9 @@ class ikFacebook
 	}
 	
 	//facebook feed
-	public function ik_fb_output_feed($colorscheme = "light", $use_thumb = true, $width = "", $is_sidebar_widget = false, $height, $num_posts = null){		
+	public function ik_fb_output_feed($colorscheme = "light", $use_thumb = true, $width = "", $is_sidebar_widget = false, $height = "", $num_posts = null, $id = false){		
 		//load facebook data
-		$fbData = $this->loadFacebook();
+		$fbData = $this->loadFacebook($id);
 		
 		$feed = $fbData['feed'];
 		$page_data = $fbData['page_data'];
@@ -678,11 +679,15 @@ class ikFacebook
 	}
 	
 	//loads facebook feed based on current id
-	function loadFacebook(){
+	function loadFacebook($id = false){
 		$retData = array();
 	
-		$profile_id = get_option('ik_fb_page_id'); //id of the facebook page
-
+		if(!$id){
+			$profile_id = get_option('ik_fb_page_id'); //id of the facebook page
+		} else {
+			$profile_id = $id;
+		}
+	
 		if(isset($profile_id) && strlen($profile_id)>0){
 			$app_id = get_option('ik_fb_app_id');
 			$app_secret = get_option('ik_fb_secret_key');
@@ -706,7 +711,7 @@ class ikFacebook
 	}
 }//end ikFacebook
 
-//pubicly available functions
+//publicly available functions
 
 //display feed
 function ik_fb_display_feed(){

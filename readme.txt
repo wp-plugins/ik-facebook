@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, facebook feed, facebook embed, facebook feed widget, facebook feed embed, like button widget
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: 2.2.1
+Stable tag: 2.2.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -23,9 +23,10 @@ The IK Facebook Plugin is an **easy-to-use** plugin that allows users to add a *
 * Adding a Facebook Like Button to your website, anywhere!
 * Showing Facebook Comments in your Custom Facebook Feed!
 * Adding a Facebook-powered Photo Gallery to your website!
+* Show multiple different custom Facebook Feeds!
 * and our quality documentation won't leave you hanging!
 
-The IK Facebook Plugin includes options to set the Title of the custom Facebook Feed widget, whether or not to show the Like Button above the custom Facebook Feed widget, and whether or not to show the Profile Picture.  The IK Facebook Plugin supports both the Light and Dark color schemes for the Like Button widget and has multiple color schemes for the custom Facebook Feed widget.
+The IK Facebook Plugin includes options to set the Title of the custom Facebook Feed widget, whether or not to show the Like Button above the custom Facebook Feed widget, and whether or not to show the Profile Picture.  The IK Facebook Plugin supports both the Light and Dark color schemes for the Like Button widget and has multiple color schemes for the custom Facebook Feed widget.  The IK Facebook Plugin allows you to pass the ID of the Facebook page via the shortcode - allowing you to display the feeds from multiple accounts on one page!
 
 The IK Facebook Plugin is a free version of [IK Social Pro](http://iksocialpro.com/ "IK Social Pro") - IK Social Pro is a professionally developed WordPress plugin that integrates your Facebook Feed into your WordPress website as a custom widget.  The IK Facebook Plugin receives regular updates with new features and tweaks to the custom Facebook Feed.  With the IK Facebook Plugin, you can easily add **Search Engine Optimization friendly** content to your website without extra effort -- no iframe means the content exists on your site and is crawlable by search engines like Google!  
 
@@ -43,7 +44,7 @@ This section describes how to install the plugin and get it working.
 3. [Click here](http://iksocialpro.com/installation-usage-instructions/configuration-options-and-instructions/ "Configuration Options and Instructions") for information on how to configure the plugin.
 
 = Outputting the Feed =
-* To output the custome Facebook Feed, place `[ik_fb_feed colorscheme="light or dark" use_thumb="true or false" width="250" num_posts="5"]` in the body of a post, or use the Appearance section to add the The IK Facebook Plugin Widget to your Widgets area.  If 'use_thumb' is set to true, the value of 'width' will be ignored.  If 'use_thumb' or 'width' are not set, the values from the Options page will be used.
+* To output the custome Facebook Feed, place `[ik_fb_feed colorscheme="light or dark" use_thumb="true or false" width="250" num_posts="5" id="123456789"]` in the body of a post, or use the Appearance section to add the The IK Facebook Plugin Widget to your Widgets area.  If 'use_thumb' is set to true, the value of 'width' will be ignored.  If 'use_thumb' or 'width' are not set, the values from the Options page will be used.  If id is not set, the shortcode will use the Page ID from your Settings page.
 * You can also use the function `ik_fb_display_feed($colorscheme,$use_thumb,$width)` to display the custom facebook feed in your theme.
 
 = Outputting the Like Button = 
@@ -125,6 +126,10 @@ In this case, the ID is '539627829386059'.
 3. This is the Display Options Settings page.  These settings help you control what content appears in your custom facebook feed.
 
 == Changelog ==
+
+= 2.2.2 =
+* New Feature: Ability to pass the Page ID of the Facebook Page via the shortcode - this allows you to add more than one Facebook account to a given page!
+* Bug Fix: Address PHP error with unset data when using the Template Function to add the facebook feed.
 
 = 2.2.1 =
 * Minor Update: adds support for new feature - limit number of posts displayed via the shortcode.
@@ -303,5 +308,5 @@ In this case, the ID is '539627829386059'.
 
 == Upgrade Notice ==
 
-= 2.2 =
-* New Features Available!
+= 2.2.2 =
+* Feature and Bug Fix Available!
