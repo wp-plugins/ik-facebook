@@ -136,6 +136,7 @@ In this case, the ID is '539627829386059'.
 
 = 2.2.1 =
 * Minor Update: adds support for new feature - limit number of posts displayed via the shortcode.
+
 = 2.2 =
 * New Feature: Ability To Embed Facebook Photo Galleries into your Website!
 * Fix: when no fullsized photo is parsed from the feed, fallback to using the thumbnail photo.
