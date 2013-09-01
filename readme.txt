@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, facebook feed, facebook embed, facebook feed widget, facebook feed embed, like button widget
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: 2.2.2
+Stable tag: 2.2.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -126,6 +126,9 @@ In this case, the ID is '539627829386059'.
 3. This is the Display Options Settings page.  These settings help you control what content appears in your custom facebook feed.
 
 == Changelog ==
+
+= 2.2.3 =
+* Bug Fix: Address issue where the absolute path to the custom stylesheet (if you were using one in your theme directory) was being used instead of the URI, causing the stylesheet not to load.
 
 = 2.2.2 =
 * New Feature: Ability to pass the Page ID of the Facebook Page via the shortcode - this allows you to add more than one Facebook account to a given page!
