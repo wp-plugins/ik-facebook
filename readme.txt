@@ -28,6 +28,10 @@ The IK Facebook Plugin is an **easy-to-use** plugin that allows users to add a *
 * Ability to Pass Page ID Via Shortcode and Widget Allows Multiple Facebook Feeds on One Page!
 * and our quality documentation won't leave you hanging!
 
+= Outstanding Support =
+
+We pride ourselves on taking customer support seriously. In fact, [send us an email](http://iksocialpro.com/contact-us/ "Send Us An Email") now if you have any questions at all. You’ll get a quick response directly from the developers.
+
 = User Friendly Features =
 The IK Facebook Plugin includes options to set the Title of the custom Facebook Feed widget, whether or not to show the Like Button above the custom Facebook Feed widget, and whether or not to show the Profile Picture.  The IK Facebook Plugin supports both the Light and Dark color schemes for the Like Button widget and has multiple color schemes for the custom Facebook Feed widget.  The IK Facebook Plugin allows you to pass the ID of the Facebook page via the shortcode - allowing you to display the feeds from multiple accounts on one page!
 
@@ -324,5 +328,5 @@ In this case, the ID is '539627829386059'.
 
 == Upgrade Notice ==
 
-= 2.2.2 =
-* Feature and Bug Fix Available!
+= 2.2.4 =
+* New Version Available
