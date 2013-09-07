@@ -8,11 +8,11 @@ Stable tag: 2.2.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-The IK Facebook Plugin is an easy-to-use plugin for adding a Custom Facebook Feed to a WordPress site, with a shortcode or widget.
+The IK Facebook Plugin is an easy-to-use plugin for adding a Custom Facebook Feed of any Public Facebook Page to a WordPress site, with a shortcode or widget.
 
 == Description ==
 
-The IK Facebook Plugin is an **easy-to-use** plugin that allows users to add a **custom Facebook Feed widget** to the sidebar, as a widget, or to embed the custom Facebook Feed widget into a Page or Post using the shortcode.  The IK Facebook Plugin also allows you to insert a Like Button widget into the Page, Post, or theme.
+The IK Facebook Plugin is an **easy-to-use** plugin that allows users to add a **custom Facebook Feed widget** to the sidebar, as a widget, or to embed the custom Facebook Feed widget into a Page or Post using the shortcode, of any Public Facebook Page.  The IK Facebook Plugin also allows you to insert a Facebook Like Button widget into the Page, Post, or theme.
 
 = The IK Facebook Plugin is a great plugin for many uses, including: =
 
@@ -20,6 +20,7 @@ The IK Facebook Plugin is an **easy-to-use** plugin that allows users to add a *
 * Powering your blog with your Facebook Feed - avoid the need to maintain content in multiple locations!
 * Embed a Custom Facebook Feed Widget in your Sidebar or Footer
 * Styling a Custom Facebook Feed
+* Custom HTML Options allow Facebook Feed Shortcode and Facebook Feed Widget to be displayed any way you like!
 * Adding a Facebook Like Button to your website, anywhere!
 * Showing Facebook Comments in your Custom Facebook Feed!
 * Adding a Facebook-powered Photo Gallery to your website!
@@ -30,14 +31,14 @@ The IK Facebook Plugin is an **easy-to-use** plugin that allows users to add a *
 
 = Outstanding Support =
 
-We pride ourselves on taking customer support seriously. In fact, [send us an email](http://iksocialpro.com/contact-us/ "Send Us An Email") now if you have any questions at all. You’ll get a quick response directly from the developers.
+We pride ourselves on taking customer support seriously. In fact, [send us an email](http://iksocialpro.com/contact-us/ "Send Us An Email") now if you have any questions at all. You’ll get a quick response directly from the developers.  Our developers have been making Facebook apps for years and are well versed in all things Facebook.
 
 = User Friendly Features =
 The IK Facebook Plugin includes options to set the Title of the custom Facebook Feed widget, whether or not to show the Like Button above the custom Facebook Feed widget, and whether or not to show the Profile Picture.  The IK Facebook Plugin supports both the Light and Dark color schemes for the Like Button widget and has multiple color schemes for the custom Facebook Feed widget.  The IK Facebook Plugin allows you to pass the ID of the Facebook page via the shortcode - allowing you to display the feeds from multiple accounts on one page!
 
 = Professional Development =
 
-The IK Facebook Plugin is a free version of [IK Social Pro](http://iksocialpro.com/ "IK Social Pro") - IK Social Pro is a professionally developed WordPress plugin that integrates your Facebook Feed into your WordPress website as a custom widget.  The IK Facebook Plugin receives regular updates with new features and tweaks to the custom Facebook Feed.  With the IK Facebook Plugin, you can easily add **Search Engine Optimization friendly** content to your website without extra effort -- no iframe means the content exists on your site and is crawlable by search engines like Google!  
+The IK Facebook Plugin is a free version of [IK Social Pro](http://iksocialpro.com/ "IK Social Pro") - IK Social Pro is a professionally developed WordPress plugin that integrates your Facebook Feed into your WordPress website as a custom widget.  The IK Facebook Plugin receives regular updates with new features and tweaks to the custom Facebook Feed.  With the IK Facebook Plugin, you can easily add **Search Engine Optimization friendly** content to your website without extra effort -- no iframe means the content exists on your site and is crawlable by search engines like Google!  Our Professional Developers are currently working on things like Multi Lingual Translations, Transient API Caching, and coming up with new unique ways to integrate Facebook into your website.
 
 = Powerful Customization =
 
@@ -55,15 +56,15 @@ This section describes how to install the plugin and get it working.
 2. Activate the IK Facebook Plugin through the 'Plugins' menu in WordPress
 3. [Click here](http://iksocialpro.com/installation-usage-instructions/configuration-options-and-instructions/ "Configuration Options and Instructions") for information on how to configure the plugin.
 
-= Outputting the Feed =
+= Outputting the Facebook Feed =
 * To output the custome Facebook Feed, place `[ik_fb_feed colorscheme="light or dark" use_thumb="true or false" width="250" num_posts="5" id="123456789"]` in the body of a post, or use the Appearance section to add the The IK Facebook Plugin Widget to your Widgets area.  If 'use_thumb' is set to true, the value of 'width' will be ignored.  If 'use_thumb' or 'width' are not set, the values from the Options page will be used.  If id is not set, the shortcode will use the Page ID from your Settings page.  All of the options on the widget will use the defaults, drawn from the Settings page, if they aren't passed via the widget.
 * You can also use the function `ik_fb_display_feed($colorscheme,$use_thumb,$width)` to display the custom facebook feed in your theme.
 
-= Outputting the Like Button = 
+= Outputting the Facebook Like Button = 
 * To output the Like Button, place `[ik_fb_like_button url="http://some_url" height"desired_iframe_height" colorscheme="light or dark"]` in the body of a post.
 * You can also use the function `ik_fb_display_like_button($url_to_like,$height_of_iframe,$colorscheme)` to output a like button in your theme.
 
-= Outputting a Photo Gallery = 
+= Outputting a Facebook Photo Gallery = 
 * To output a Photo Gallery, place `[ik_fb_gallery id="539627829386059" size="130x73" title="Hello World!"]` in the body of a post.  If no size is passed, it will default to 320 x 180.  Size options are 2048x1152, 960x540, 720x405, 600x337, 480x270, 320x180, and 130x73.  The ID number is found by looking at the URL of the link to the Album on Facebook.
 
 == Frequently Asked Questions ==
@@ -129,14 +130,14 @@ The Pro version of IK Facebook has this functionality - [purchase IK Social Pro]
 OK, try this: looking at the following url, you want to grab the number that appears directly after "set=a." and before the next period - 
 facebook.com/media/set/?set=a.**539627829386059**.148135.322657451083099&type=3
 
-In this case, the ID is '539627829386059'.
+In this case, the Facebook Album ID is '539627829386059'.
 
 == Screenshots ==
 
-1. This is the Configuration Options Settings page.
-2. This is the Style Options Settings page.  These settings help you control the visible appearance of your custom facebook feed.
-3. This is the Display Options Settings page.  These settings help you control what content appears in your custom facebook feed.
-4. This is the Facebook Feed Widget.  The options on this widget allow you to override the settings you have selected on your Settings panel.
+1. This is the Configuration Options Settings page of the IK Facebook Plugin.
+2. This is the Style Options Settings page of the IK Facebook Plugin.  These settings help you control the visible appearance of your custom facebook feed.
+3. This is the Display Options Settings page of the IK Facebook Plugin.  These settings help you control what content appears in your custom facebook feed.
+4. This is the Facebook Feed Widget of the IK Facebook Plugin.  The options on this widget allow you to override the settings you have selected on your Settings panel.
 
 == Changelog ==
 
@@ -328,5 +329,5 @@ In this case, the ID is '539627829386059'.
 
 == Upgrade Notice ==
 
-= 2.2.4 =
-* New Version Available
+= 2.3 =
+* New Feature Available!
