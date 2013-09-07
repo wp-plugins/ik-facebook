@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, facebook feed, facebook embed, facebook feed widget, facebook feed embed, like button widget
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: 2.2.4
+Stable tag: 2.2.5
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -140,6 +140,10 @@ In this case, the Facebook Album ID is '539627829386059'.
 4. This is the Facebook Feed Widget of the IK Facebook Plugin.  The options on this widget allow you to override the settings you have selected on your Settings panel.
 
 == Changelog ==
+
+= 2.2.5 =
+* Bug Fix: fix issue where site-wide image width settings were being ignored in the Widget version of the feed.
+* Minor Feature: add option to control the width of images in the Widget, via Widget settings.
 
 = 2.2.4 =
 * Minor Update: Adds Full List of Options to Widget
