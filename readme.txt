@@ -8,7 +8,7 @@ Stable tag: 2.2.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-The IK Facebook Plugin is an easy-to-use plugin for adding a Custom Facebook Feed of any Public Facebook Page to a WordPress site, with a shortcode or widget.
+IK Facebook is an easy-to-use plugin for adding a Custom Facebook Feed of any Public Facebook Page to your site, with a shortcode or widget.
 
 == Description ==
 
