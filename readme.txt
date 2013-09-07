@@ -329,5 +329,5 @@ In this case, the Facebook Album ID is '539627829386059'.
 
 == Upgrade Notice ==
 
-= 2.3 =
+= 2.2.4 =
 * New Feature Available!
