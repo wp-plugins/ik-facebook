@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://iksocialpro.com/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.2.6
+Version: 2.3
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -357,11 +357,11 @@ class ikFacebook
 			}
 			$count = 0;
 			
-			if(!is_numeric($limit)){
+			if(!is_numeric($limit)){				
 				$limit = -1;
 			}
 			
-			foreach($feed as $item){//$item is the feed object
+			foreach($feed as $item){//$item is the feed object				
 				if($limit == -1 || $count < $limit){
 					$replace .= $this->buildFeedLineItem($item, $use_thumb, $width, $page_data, $height, $the_link);
 					$count ++;
@@ -612,7 +612,53 @@ class ikFacebook
 				}	
 			
 				$output = str_replace('{ikfb:feed_item}', $line_item, $feed_item_html);	
-			}
+			} else if(strpos($item->link,'http://www.facebook.com/events/') !== false){
+				//some event parsing				
+				$event_id = explode('/',$item->link);
+				$event_id = $event_id[4];
+				
+				if($event_id){
+					$app_id = get_option('ik_fb_app_id');
+					$app_secret = get_option('ik_fb_secret_key');
+					
+					if(!isset($this->authToken)){
+						$this->authToken = $this->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
+					}
+					
+					$event_data = $this->fetchUrl("https://graph.facebook.com/{$event_id}?{$this->authToken}", true);//the event data
+					
+					$replace = '';	
+					
+					//add avatar for pro users
+					if(is_valid_key(get_option('ik_fb_pro_key'))){		
+						$replace = $ik_social_pro->pro_user_avatars($replace, $item) . " ";
+					}
+					
+					//load event image source
+					$event_image = "http://graph.facebook.com/" . $event_id . "/picture";
+					
+					//event name
+					$replace = '<p class="ikfb_event_title">' . $replace . $event_data->name . '</p>';
+					
+					//event start time - event end time
+					//TBD: date formatting
+					$replace .= '<p class="ikfb_event_date">' . date('l, F jS, Y', strtotime($event_data->start_time)) . ' - ' . date('l, F jS, Y', strtotime($event_data->end_time)) . '</p>';
+					
+					//event image					
+					$replace .= '<img class="ikfb_event_image" src="' . $event_image . '" />';					
+					
+					//event description
+					$event_description = substr($event_data->description, 0, 250);
+					$event_description .= "... ";
+						
+					$replace .= '<p class="ikfb_event_description">' . $event_description . '</p>';
+					
+					//event read more link
+					$replace .= '<p class="ikfb_event_link"><a href="http://facebook.com/events/'.$event_id.'" title="Click Here To Read More" target="_blank">Read More...</a></p>';
+					
+					$output = str_replace('{ikfb:feed_item}', $replace, $feed_item_html);	
+				}
+			}			
 		}
 		
 		return $output;

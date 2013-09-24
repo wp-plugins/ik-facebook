@@ -216,3 +216,32 @@ p.ik_fb_error{
     margin: 0 auto;
     text-align: center;
 }
+
+/* Events */
+.ikfb_event_title {
+	font-weight: bold !important;
+	padding: 0 !important;
+}
+
+.ikfb_event_image{
+	display: block !important;
+    margin: 5px auto !important;
+}
+
+.ikfb_event_date{
+	padding: 0 !important;
+}
+
+.ikfb_event_link{
+}
+
+.ikfb_event_link a{
+}
+
+.ikfb_event_link a:hover{
+}
+
+.ikfb_event_description{
+	font-size: 12px !important;
+	padding: 0 !important;
+}

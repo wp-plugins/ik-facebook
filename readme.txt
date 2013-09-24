@@ -1,10 +1,10 @@
 === IK Facebook Plugin ===
 Contributors: richardgabriel
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V7HR8DP4EJSYN
-Tags: facebook, facebook feed, facebook embed, facebook feed widget, facebook feed embed, like button widget
+Tags: facebook, facebook feed, facebook embed, facebook feed widget, facebook feed embed, like button widget, facebook events
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: 2.2.6
+Stable tag: 2.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -25,6 +25,7 @@ The IK Facebook Plugin is an **easy-to-use** plugin that allows users to add a *
 * Showing Facebook Comments in your Custom Facebook Feed!
 * Adding a Facebook-powered Photo Gallery to your website!
 * Show multiple different custom Facebook Feeds!
+* Display Facebook Events in your Feed!
 * Custom Facebook Feed Widget allows user to override Site Wide Options
 * Ability to Pass Page ID Via Shortcode and Widget Allows Multiple Facebook Feeds on One Page!
 * and our quality documentation won't leave you hanging!
@@ -140,6 +141,9 @@ In this case, the Facebook Album ID is '539627829386059'.
 4. This is the Facebook Feed Widget of the IK Facebook Plugin.  The options on this widget allow you to override the settings you have selected on your Settings panel.
 
 == Changelog ==
+
+= 2.3 =
+* Feature: adds support for Events.
 
 = 2.2.6 =
 * Fix: address issue where number of items displayed was defaulting to 2, if not limit had ever been set previously.
