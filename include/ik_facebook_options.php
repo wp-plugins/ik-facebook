@@ -65,6 +65,7 @@ class ikFacebookOptions
 		register_setting( 'ik-fb-config-settings-group', 'ik_fb_page_id' );
 		register_setting( 'ik-fb-config-settings-group', 'ik_fb_app_id' );
 		register_setting( 'ik-fb-config-settings-group', 'ik_fb_secret_key' );
+		register_setting( 'ik-fb-config-settings-group', 'ik_fb_tz' );
 		register_setting( 'ik-fb-config-settings-group', 'ik_fb_pro_key' );
 		register_setting( 'ik-fb-config-settings-group', 'ik_fb_pro_url' );
 		register_setting( 'ik-fb-config-settings-group', 'ik_fb_pro_email' );
@@ -120,6 +121,7 @@ class ikFacebookOptions
 					<li><strong>Hide non-page-owner posts from your feed:</strong> With this option, your feed will only show the posts from your own account.</li>
 					<li><strong>Custom Styling Options:</strong> Unfamiliar with CSS? These options will enable you to style the output of the various text, links, change the dimensions of the feed, and more!</li>
 					<li><strong>Custom HTML Output:</strong> Use any HTML tags you want for the feed. You'll be able to specify a custom HTML template for your feed.</li>
+					<li><strong>Fanatical Support:</strong> We're here to help!  Purchase IK Social Pro and receive prompt, responsive, and professional support.</li>
 					<li><strong>Free Updates For Life:</strong> Get IK Social Pro now, and you'll get free updates for life!</li>
 				</ul>
 					
@@ -172,7 +174,50 @@ class ikFacebookOptions
 					<td><input type="text" name="ik_fb_secret_key" id="ik_fb_secret_key" value="<?php echo get_option('ik_fb_secret_key'); ?>" style="width: 250px" />
 					<p class="description">This is the App Secret you acquired when you <a href="http://iksocialpro.com/installation-usage-instructions/how-to-get-an-app-id-and-secret-key-from-facebook/?ikfbsettings" target="_blank" title="How To Get An App ID and Secret Key From Facebook">setup your Facebook app</a>.</p></td>
 				</tr>
+			</table>			
+			
+			<!--
+			<table class="form-table">
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_tz">Facebook Event Timezone</label></th>
+						<td><select name="ik_fb_tz" id="ik_fb_tz">
+							<option value="-12" <?php if(get_option('ik_fb_tz') == "-12.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT -12:00) Eniwetok, Kwajalein</option>
+							<option value="-11" <?php if(get_option('ik_fb_tz') == "-11.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT -11:00) Midway Island, Samoa</option>
+							<option value="-10" <?php if(get_option('ik_fb_tz') == "-10.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT -10:00) Hawaii</option>
+							<option value="-9" <?php if(get_option('ik_fb_tz') == "-9.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT -9:00) Alaska</option>
+							<option value="-8" <?php if(get_option('ik_fb_tz') == "-8.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT -8:00) Pacific Time (US &amp; Canada)</option>
+							<option value="-7" <?php if(get_option('ik_fb_tz') == "-7.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT -7:00) Mountain Time (US &amp; Canada)</option>
+							<option value="-6" <?php if(get_option('ik_fb_tz') == "-6.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT -6:00) Central Time (US &amp; Canada), Mexico City</option>
+							<option value="-5" <?php if(get_option('ik_fb_tz') == "-5.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</option>
+							<option value="-4" <?php if(get_option('ik_fb_tz') == "-4.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz</option>
+							<option value="-3.5" <?php if(get_option('ik_fb_tz') == "-3.5"): echo 'selected="SELECTED"'; endif; ?>>(GMT -3:30) Newfoundland</option>
+							<option value="-3.0" <?php if(get_option('ik_fb_tz') == "-3.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT -3:00) Brazil, Buenos Aires, Georgetown</option>
+							<option value="-2.0" <?php if(get_option('ik_fb_tz') == "-2.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT -2:00) Mid-Atlantic</option>
+							<option value="-1.0" <?php if(get_option('ik_fb_tz') == "-1.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT -1:00 hour) Azores, Cape Verde Islands</option>
+							<option value="+0.0" <?php if(get_option('ik_fb_tz') == "+ 0.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT) Western Europe Time, London, Lisbon, Casablanca</option>
+							<option value="+1.0" <?php if(get_option('ik_fb_tz') == "+ 1.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT +1:00 hour) Brussels, Copenhagen, Madrid, Paris</option>
+							<option value="+2.0" <?php if(get_option('ik_fb_tz') == "+ 2.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT +2:00) Kaliningrad, South Africa</option>
+							<option value="+3.0" <?php if(get_option('ik_fb_tz') == "+ 3.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg</option>
+							<option value="+3.5" <?php if(get_option('ik_fb_tz') == "+ 3.5"): echo 'selected="SELECTED"'; endif; ?>>(GMT +3:30) Tehran</option>
+							<option value="+4.0" <?php if(get_option('ik_fb_tz') == "+ 4.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi</option>
+							<option value="+4.5" <?php if(get_option('ik_fb_tz') == "+ 4.5"): echo 'selected="SELECTED"'; endif; ?>>(GMT +4:30) Kabul</option>
+							<option value="+5.0" <?php if(get_option('ik_fb_tz') == "+ 5.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent</option>
+							<option value="+5.5" <?php if(get_option('ik_fb_tz') == "+ 5.5"): echo 'selected="SELECTED"'; endif; ?>>(GMT +5:30) Bombay, Calcutta, Madras, New Delhi</option>
+							<option value="+5.75" <?php if(get_option('ik_fb_tz') == "+ 5.75"): echo 'selected="SELECTED"'; endif; ?>>(GMT +5:45) Kathmandu</option>
+							<option value="+6.0" <?php if(get_option('ik_fb_tz') == "+ 6.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT +6:00) Almaty, Dhaka, Colombo</option>
+							<option value="+7.0" <?php if(get_option('ik_fb_tz') == "+ 7.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT +7:00) Bangkok, Hanoi, Jakarta</option>
+							<option value="+8.0" <?php if(get_option('ik_fb_tz') == "+ 8.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT +8:00) Beijing, Perth, Singapore, Hong Kong</option>
+							<option value="+9.0" <?php if(get_option('ik_fb_tz') == "+ 9.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk</option>
+							<option value="+9.5" <?php if(get_option('ik_fb_tz') == "+ 9.5"): echo 'selected="SELECTED"'; endif; ?>>(GMT +9:30) Adelaide, Darwin</option>
+							<option value="+10.0" <?php if(get_option('ik_fb_tz') == "+ 10.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT +10:00) Eastern Australia, Guam, Vladivostok</option>
+							<option value="+11.0" <?php if(get_option('ik_fb_tz') == "+ 11.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT +11:00) Magadan, Solomon Islands, New Caledonia</option>
+							<option value="+12.0" <?php if(get_option('ik_fb_tz') == "+ 12.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka</option>
+						</select>
+					<p class="description">This is the timezone that will be used for displaying your event information.</p></td>
+				</tr>
 			</table>
+			-->
+			
 				<?php
 					break;
 					case 'style_options' :

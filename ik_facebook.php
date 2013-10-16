@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://iksocialpro.com/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.3
+Version: 2.3.1
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -640,9 +640,43 @@ class ikFacebook
 					//event name
 					$replace = '<p class="ikfb_event_title">' . $replace . $event_data->name . '</p>';
 					
-					//event start time - event end time
-					//TBD: date formatting
-					$replace .= '<p class="ikfb_event_date">' . date('l, F jS, Y', strtotime($event_data->start_time)) . ' - ' . date('l, F jS, Y', strtotime($event_data->end_time)) . '</p>';
+					$ikfb_tz = get_option('ik_fb_tz');
+					
+					$ikfb_seconds = substr($ikfb_tz,1);
+					$ikfb_direction = substr($ikfb_tz,0,1);
+					
+					$ikfb_seconds = $ikfb_seconds * 3600;
+					
+					$start_time = strtotime($event_data->start_time . " UTC");
+					$end_time = strtotime($event_data->end_time . " UTC");				
+					
+					/*
+					if($ikfb_direction == "-"){
+						$start_time = $start_time - $ikfb_seconds;
+						$end_time = $end_time - $ikfb_seconds;
+					} else if($ikfb_direction == "+") {
+						$start_time = $start_time + $ikfb_seconds;
+						$end_time = $end_time + $ikfb_seconds;
+					}
+					*/
+					
+					//event start time - event end time					
+					$event_start_time = isset($event_data->start_time) ? date('l, F jS, Y', $start_time) : '';					
+					$event_end_time = isset($event_data->end_time) ? date('l, F jS, Y', $end_time) : '';
+					
+					$replace .= '<p class="ikfb_event_date">';
+					$event_had_start = false;
+					if(strlen($event_start_time)>2){
+						$replace .= $event_start_time;
+						$event_had_start = true;
+					}
+					if($event_had_start){
+						$replace .= ' - ';
+					}
+					if(strlen($event_end_time)>2){
+						$replace .= $event_end_time; 
+					}
+					$replace .= '</p>';
 					
 					//event image					
 					$replace .= '<img class="ikfb_event_image" src="' . $event_image . '" />';					
