@@ -235,8 +235,9 @@ class ikSocialPro
 	//insert like info into feed, if enabled
 	function pro_likes($item, $the_link){
 		$likes = "";
-
-		if(get_option('ik_fb_show_likes')){		
+		
+		if(get_option('ik_fb_show_likes')){			
+			
 			if(isset($item->likes)){
 			
 				$num_likes = count($item->likes->data);

@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://iksocialpro.com/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.3.1
+Version: 2.4
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -140,10 +140,11 @@ class ikFacebook
 			'height' => get_option('ik_fb_feed_image_height'),
 			'use_thumb' => !get_option('ik_fb_fix_feed_image_width') && !get_option('ik_fb_fix_feed_image_height'),
 			'num_posts' => null,
-			'id' => false
+			'id' => false,
+			'show_errors' => false
 		), $atts ) );
 		
-		return $this->ik_fb_output_feed($colorscheme, $use_thumb, $width, false, $height, $num_posts, $id);				
+		return $this->ik_fb_output_feed($colorscheme, $use_thumb, $width, false, $height, $num_posts, $id, $show_errors);				
 	}
 	
 	function ik_fb_output_gallery_shortcode($atts){			
@@ -152,13 +153,14 @@ class ikFacebook
 			'id' => '',
 			'size' => '320x180',
 			'show_name' => true,
-			'title' => null
+			'title' => null,
+			'num_photos' => false
 		), $atts ) );
 		
-		return $this->ik_fb_output_gallery($id, $size, $show_name, $title);				
+		return $this->ik_fb_output_gallery($id, $size, $show_name, $title, $num_photos);				
 	}
 	
-	public function ik_fb_output_gallery($id = '', $size = '320x180', $show_name = true, $the_title = null){
+	public function ik_fb_output_gallery($id = '', $size = '320x180', $show_name = true, $the_title = null, $num_photos = false){
 		$output = '';
 		
 		$app_id = get_option('ik_fb_app_id');
@@ -199,8 +201,21 @@ class ikFacebook
 		if(!isset($this->authToken)){
 			$this->authToken = $this->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
 		}
+			
+		//see if a limit is set in the options, if one wasn't passed via shortcode
+		if(!$num_photos){
+			$limit = get_option('ik_fb_photo_feed_limit');
+	
+		} else {
+			$limit = $num_photos;
+		}
 		
-		$gallery = $this->fetchUrl("https://graph.facebook.com/{$id}/photos?{$this->authToken}", true);//the gallery data
+		//make sure its really a number, otherwise we default to 25
+		if(!is_numeric($limit)){				
+			$limit = 25;
+		}
+		
+		$gallery = $this->fetchUrl("https://graph.facebook.com/{$id}/photos?limit={$limit}&summary=1&{$this->authToken}", true);//the gallery data
 		
 		ob_start();
 		
@@ -210,16 +225,20 @@ class ikFacebook
 			echo '<span class="ik_fb_gallery_standard_title">' . $the_title . '</span>';
 		}
 		
-		foreach($gallery->data as $gallery_item){
-			echo '<div class="ik_fb_gallery_item" style="width:'.$width_array[$size].';height:'.$height_array[$size].';">';
-			
-				echo '<a href="'.$gallery_item->source.'" target="_blank" title="Click to View Full Sized Photo"><img class="ik_fb_standard_image" src="'.$gallery_item->images[$position]->source.'" /></a>';
+		if(isset($gallery->data)){
+			foreach($gallery->data as $gallery_item){
+				echo '<div class="ik_fb_gallery_item" style="width:'.$width_array[$size].';height:'.$height_array[$size].';">';
 				
-				if($show_name){
-					echo '<p class="ik_fb_standard_image_name">' . $gallery_item->name . '</p>';
-				}
-			
-			echo '</div>';
+					echo '<a href="'.$gallery_item->source.'" target="_blank" title="Click to View Full Sized Photo"><img class="ik_fb_standard_image" src="'.$gallery_item->images[$position]->source.'" /></a>';
+					
+					if($show_name){
+						echo '<p class="ik_fb_standard_image_name">' . $gallery_item->name . '</p>';
+					}
+				
+				echo '</div>';
+			}
+		} else {
+			echo '<p class="ik_fb_error">IK FB: Unable to load photos.</p>';
 		}
 		
 		echo '</div>';
@@ -232,9 +251,9 @@ class ikFacebook
 	}
 	
 	//facebook feed
-	public function ik_fb_output_feed($colorscheme = "light", $use_thumb = true, $width = "", $is_sidebar_widget = false, $height = "", $num_posts = -1, $id = false){		
+	public function ik_fb_output_feed($colorscheme = "light", $use_thumb = true, $width = "", $is_sidebar_widget = false, $height = "", $num_posts = -1, $id = false, $show_errors = false){		
 		//load facebook data
-		$fbData = $this->loadFacebook($id);
+		$fbData = $this->loadFacebook($id, $num_posts);
 		
 		$feed = $fbData['feed'];
 		$page_data = $fbData['page_data'];
@@ -249,12 +268,6 @@ class ikFacebook
 		} else {
 			$ik_fb_feed_height = strlen(get_option('ik_fb_sidebar_feed_window_height')) > 0 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_sidebar_feed_window_height') : '';
 			$ik_fb_feed_width = strlen(get_option('ik_fb_sidebar_feed_window_width')) > 0 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_sidebar_feed_window_width') : '';
-		}
-		
-		//something went wrong!
-		if(count($feed)<1){
-			$output = "<p class='ik_fb_error'>IK FB: Please check your settings.</p>";
-			return $output;
 		}
 		
 		//feed window width
@@ -291,7 +304,7 @@ class ikFacebook
 		}
 		$custom_styling_3 .= '"';
 		
-		$default_html = '<div id="ik_fb_widget" ' . $custom_styling_1 . ' ><div id="ik_fb_widget_top" ' . $custom_styling_3 . ' ><div class="ik_fb_profile_picture">{ikfb:image}{ikfb:link}</div>{ikfb:like_button}</div><ul class="ik_fb_feed_window" ' . $custom_styling_2 . ' >{ikfb:feed}</ul></div>';
+		$default_html = '<div id="ik_fb_widget" {custom_styling_1} ><div id="ik_fb_widget_top" {custom_styling_3} ><div class="ik_fb_profile_picture">{ikfb:image}{ikfb:link}</div>{ikfb:like_button}</div><ul class="ik_fb_feed_window" {custom_styling_2} >{ikfb:feed}</ul></div>';
 		
 		//load custom HTML structure from Pro Plugin, if available and enabled
 		$output = strlen(get_option('ik_fb_feed_html')) > 2 && get_option('ik_fb_use_custom_html') ? get_option('ik_fb_feed_html') : $default_html;		
@@ -348,28 +361,26 @@ class ikFacebook
 		//build line items to replace with
 		$replace = '';
 		
-		if(count($feed)>0){//check to see if feed data is set
-			//see if a limit is set in the options
-			if(!$num_posts){
-				$limit = get_option('ik_fb_feed_limit');
+		if(count($feed)>0){//check to see if feed data is set			
+			foreach($feed as $item){//$item is the feed object	
+				$replace .= $this->buildFeedLineItem($item, $use_thumb, $width, $page_data, $height, $the_link);
+			}
+		} else {
+			//something went wrong!
+			if($show_errors){
+				$replace = "<p class='ik_fb_error'>IK FB: Unable to load feed.</p>";
 			} else {
-				$limit = $num_posts;
-			}
-			$count = 0;
-			
-			if(!is_numeric($limit)){				
-				$limit = -1;
-			}
-			
-			foreach($feed as $item){//$item is the feed object				
-				if($limit == -1 || $count < $limit){
-					$replace .= $this->buildFeedLineItem($item, $use_thumb, $width, $page_data, $height, $the_link);
-					$count ++;
-				}
+				//hide the feed window, there was an error and we don't want a big blank space messing up websites
+				$custom_styling_2 = 'style="display:none;"';
 			}
 		}			
 		
 		$output = str_replace('{ikfb:feed}', $replace, $output);
+		
+		//last step, replace all the custom styling, if it's present
+		$output = str_replace('{custom_styling_1}', $custom_styling_1, $output);
+		$output = str_replace('{custom_styling_2}', $custom_styling_2, $output);
+		$output = str_replace('{custom_styling_3}', $custom_styling_3, $output);
 		
 		return $output;		
 	}
@@ -463,37 +474,19 @@ class ikFacebook
 				//get the item id
 				$item_id = $item->object_id;
 								
-				//load arguments into array for use below
-				$parsed_url = parse_url($item->picture);
-				parse_str($parsed_url['query'], $params);		
-				
-				if(isset($params['url'])) {
-					//default the photo link to the thumbnail, in case any of the other methods don't work out
-					$photo_link = $params['url'];
-					$thumbnail_photo = false;
-				} else {
-					//no fullsized version available, use what's on FB
-					$photo = $this->fetchUrl("https://graph.facebook.com/{$item_id}/picture?{$this->authToken}&redirect=false", true);	
-					$photo_link = $item->picture;
-					
-					$thumbnail_photo = true;
-				}
+				$photo = $this->fetchUrl("https://graph.facebook.com/{$item_id}/picture?summary=1&{$this->authToken}&redirect=false", true);	
+								
+				$photo_link = $photo->data->url;
 				
 				//output the images
 				//if set, load the custom image width from the options page
-				if(!$use_thumb){			
-					//TBD: add some logic to not distort the images being output (if the set height/width requirements are larger than the initial photo)
-					
+				if(!$use_thumb){								
 					//if using custom width, output fullsized image
 					$width = get_option('ik_fb_fix_feed_image_width') ? $width : '';
 					$height = get_option('ik_fb_fix_feed_image_height') ? $height : '';	
 					
-					if(!$thumbnail_photo){
-						$replace = '<a href="'.$photo_link.'" title="Click to View Fullsize Photo" target="_blank"><img width="'.$width.'" height="'.$height.'" src="'.$photo_link.'" /></a>';
-					} else {
-						$replace = '<a href="'.$photo_link.'" title="Click to View Fullsize Photo" target="_blank"><img src="'.$photo_link.'" /></a>';
-					}
-			
+					$replace = '<a href="'.$photo_link.'" title="Click to View Fullsize Photo" target="_blank"><img width="'.$width.'" height="'.$height.'" src="'.$photo_link.'" /></a>';
+								
 					//add custom image styling from pro options
 					if(is_valid_key(get_option('ik_fb_pro_key')) && !get_option('ik_fb_use_custom_html')){		
 						$image_html = $ik_social_pro->pro_image_styling($image_html);
@@ -625,7 +618,7 @@ class ikFacebook
 						$this->authToken = $this->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
 					}
 					
-					$event_data = $this->fetchUrl("https://graph.facebook.com/{$event_id}?{$this->authToken}", true);//the event data
+					$event_data = $this->fetchUrl("https://graph.facebook.com/{$event_id}?summary=1&{$this->authToken}", true);//the event data
 					
 					$replace = '';	
 					
@@ -640,29 +633,18 @@ class ikFacebook
 					//event name
 					$replace = '<p class="ikfb_event_title">' . $replace . $event_data->name . '</p>';
 					
-					$ikfb_tz = get_option('ik_fb_tz');
+					$start_time = strtotime($event_data->start_time);
+					$end_time = strtotime($event_data->end_time);			
 					
-					$ikfb_seconds = substr($ikfb_tz,1);
-					$ikfb_direction = substr($ikfb_tz,0,1);
+					$time_object = new DateTime($event_data->start_time);
+					$start_time = $time_object->format('l, F jS, Y h:i:s a');	
 					
-					$ikfb_seconds = $ikfb_seconds * 3600;
-					
-					$start_time = strtotime($event_data->start_time . " UTC");
-					$end_time = strtotime($event_data->end_time . " UTC");				
-					
-					/*
-					if($ikfb_direction == "-"){
-						$start_time = $start_time - $ikfb_seconds;
-						$end_time = $end_time - $ikfb_seconds;
-					} else if($ikfb_direction == "+") {
-						$start_time = $start_time + $ikfb_seconds;
-						$end_time = $end_time + $ikfb_seconds;
-					}
-					*/
+					$time_object = new DateTime($event_data->end_time);
+					$end_time = $time_object->format('l, F jS, Y h:i:s a');						
 					
 					//event start time - event end time					
-					$event_start_time = isset($event_data->start_time) ? date('l, F jS, Y', $start_time) : '';					
-					$event_end_time = isset($event_data->end_time) ? date('l, F jS, Y', $end_time) : '';
+					$event_start_time = isset($event_data->start_time) ? $start_time : '';					
+					$event_end_time = isset($event_data->end_time) ? $end_time : '';
 					
 					$replace .= '<p class="ikfb_event_date">';
 					$event_had_start = false;
@@ -749,7 +731,6 @@ class ikFacebook
 	function fetchUrl($url,$decode=false){		
 		//caching
 		$ch = new CachedCurl();
-
 		$retData = $ch->load_url($url);
 		
 		if($decode){
@@ -760,7 +741,7 @@ class ikFacebook
 	}
 	
 	//loads facebook feed based on current id
-	function loadFacebook($id = false){
+	function loadFacebook($id = false, $num_posts = -1){
 		$retData = array();
 	
 		if(!$id){
@@ -777,7 +758,19 @@ class ikFacebook
 				$this->authToken = $this->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
 			}
 			
-			$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/feed?{$this->authToken}", true);//the feed data
+			//see if a limit is set in the options, if one wasn't passed via shortcode
+			if(!$num_posts){
+				$limit = get_option('ik_fb_feed_limit');
+			} else {
+				$limit = $num_posts;
+			}
+			
+			//make sure its really a number, otherwise we default to 25
+			if(!is_numeric($limit)){				
+				$limit = 25;
+			}
+			
+			$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/feed?limit={$limit}&{$this->authToken}", true);//the feed data
 			$page_data = $this->fetchUrl("https://graph.facebook.com/{$profile_id}", true);//the page data
 			
 			if(isset($feed->data)){//check to see if feed data is set				

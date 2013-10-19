@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, facebook feed, facebook embed, facebook feed widget, facebook feed embed, like button widget, facebook events
 Requires at least: 3.0.1
 Tested up to: 3.6.1
-Stable tag: 2.3.1
+Stable tag: 2.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -28,11 +28,11 @@ The IK Facebook Plugin is an **easy-to-use** plugin that allows users to add a *
 * Display Facebook Events in your Feed!
 * Custom Facebook Feed Widget allows user to override Site Wide Options
 * Ability to Pass Page ID Via Shortcode and Widget Allows Multiple Facebook Feeds on One Page!
-* and our quality documentation won't leave you hanging!
+* And our quality documentation won't leave you hanging!
 
 = Outstanding Support =
 
-We pride ourselves on taking customer support seriously. In fact, [send us an email](http://iksocialpro.com/contact-us/ "Send Us An Email") now if you have any questions at all. You’ll get a quick response directly from the developers.  Our developers have been making Facebook apps for years and are well versed in all things Facebook.
+We pride ourselves on taking customer support seriously. In fact, [send us an email](http://iksocialpro.com/contact-us/ "Send Us an Email") now if you have any questions at all. You’ll get a quick response directly from the developers.  Our developers have been making Facebook apps for years and are well versed in all things Facebook.
 
 = User Friendly Features =
 The IK Facebook Plugin includes options to set the Title of the custom Facebook Feed widget, whether or not to show the Like Button above the custom Facebook Feed widget, and whether or not to show the Profile Picture.  The IK Facebook Plugin supports both the Light and Dark color schemes for the Like Button widget and has multiple color schemes for the custom Facebook Feed widget.  The IK Facebook Plugin allows you to pass the ID of the Facebook page via the shortcode - allowing you to display the feeds from multiple accounts on one page!
@@ -43,11 +43,11 @@ The IK Facebook Plugin is a free version of [IK Social Pro](http://iksocialpro.c
 
 = Powerful Customization =
 
-The IK Facebook Plugin includes the option to set your own custom CSS for styling purposes or, if you prefer, the IK Facebook Plugin allows you to include a custom style sheet in your theme directory  -- either method is great for displaying a custom Facebok Feed widget. The IK Facebook Plugin also allows the user to select from a few pre-made Feed Themes, to help generate their custom Facebook Feed widget.  *Gone are the days of fighting with the Facebook Social Plugin!*
+The IK Facebook Plugin includes the option to set your own custom CSS for styling purposes or, if you prefer, the IK Facebook Plugin allows you to include a custom style sheet in your theme directory  -- either method is great for displaying a custom Facebook Feed widget. The IK Facebook Plugin also allows the user to select from a few pre-made Feed Themes, to help generate their custom Facebook Feed widget.  *Gone are the days of fighting with the Facebook Social Plugin!*
 
 = New Features Are On The Way! =
 
-Currently on our roadmap, we are planning on doing a lot more with the new Photo Gallery features - such as lightbox technology and other javascript options, sidebar widgets, and more!  We also have plans to add more options to the sidebar custom facebook feed widget, as well as adding the ability to display videos in your custom facebook feed.
+Currently on our roadmap, we are planning on doing a lot more with the new Photo Gallery features - such as lightbox technology and other JavaScript options, sidebar widgets, and more!  We also have plans to add more options to the sidebar custom facebook feed widget, as well as adding the ability to display videos in your custom facebook feed.
 
 == Installation ==
 
@@ -58,15 +58,15 @@ This section describes how to install the plugin and get it working.
 3. [Click here](http://iksocialpro.com/installation-usage-instructions/configuration-options-and-instructions/ "Configuration Options and Instructions") for information on how to configure the plugin.
 
 = Outputting the Facebook Feed =
-* To output the custome Facebook Feed, place `[ik_fb_feed colorscheme="light or dark" use_thumb="true or false" width="250" num_posts="5" id="123456789"]` in the body of a post, or use the Appearance section to add the The IK Facebook Plugin Widget to your Widgets area.  If 'use_thumb' is set to true, the value of 'width' will be ignored.  If 'use_thumb' or 'width' are not set, the values from the Options page will be used.  If id is not set, the shortcode will use the Page ID from your Settings page.  All of the options on the widget will use the defaults, drawn from the Settings page, if they aren't passed via the widget.
+* To output the custom Facebook Feed, place `[ik_fb_feed colorscheme="light" use_thumb="true" width="250" num_posts="5" id="123456789"]` in the body of a post, or use the Appearance section to add the The IK Facebook Plugin Widget to your Widgets area.  Valid choices for colorscheme are "light" and "dark"  If 'use_thumb' is set to true, the value of 'width' will be ignored.  If 'use_thumb' or 'width’ is not set, the values from the Options page will be used.  If id is not set, the shortcode will use the Page ID from your Settings page.  All of the options on the widget will use the defaults, drawn from the Settings page, if they aren't passed via the widget.
 * You can also use the function `ik_fb_display_feed($colorscheme,$use_thumb,$width)` to display the custom facebook feed in your theme.
 
 = Outputting the Facebook Like Button = 
-* To output the Like Button, place `[ik_fb_like_button url="http://some_url" height"desired_iframe_height" colorscheme="light or dark"]` in the body of a post.
+* To output the Like Button, place `[ik_fb_like_button url="http://some_url" height="desired_iframe_height" colorscheme="light"]` in the body of a post.  Valid choices for colorscheme are "light" and "dark".
 * You can also use the function `ik_fb_display_like_button($url_to_like,$height_of_iframe,$colorscheme)` to output a like button in your theme.
 
 = Outputting a Facebook Photo Gallery = 
-* To output a Photo Gallery, place `[ik_fb_gallery id="539627829386059" size="130x73" title="Hello World!"]` in the body of a post.  If no size is passed, it will default to 320 x 180.  Size options are 2048x1152, 960x540, 720x405, 600x337, 480x270, 320x180, and 130x73.  The ID number is found by looking at the URL of the link to the Album on Facebook.
+* To output a Photo Gallery, place `[ik_fb_gallery id="539627829386059" num_photos="25" size="130x73" title="Hello World!"]` in the body of a post.  If no size is passed, it will default to 320 x 180.  Size options are 2048x1152, 960x540, 720x405, 600x337, 480x270, 320x180, and 130x73.  If num_photos is not passed, the Gallery will default to the amount set on the Dashboard - if no amount is set there, it will display up to 25 photos.  The ID number is found by looking at the URL of the link to the Album on Facebook.
 
 == Frequently Asked Questions ==
 
@@ -74,9 +74,9 @@ This section describes how to install the plugin and get it working.
 
 OK!  We have a great page with some helpful information [here](http://iksocialpro.com/installation-usage-instructions/how-to-get-an-app-id-and-secret-key-from-facebook/ "Configuration Options and Instructions").
 
-Follow the information on that page to Create A Simple Facebook App - you'll be guided along the way to get your App ID, Secret Key, and any other info you may need.
+Follow the information on that page to create a Simple Facebook App - you'll be guided along the way to get your App ID, Secret Key, and any other info you may need.
 
-= Ack!  All I see is 'IK FB: Please check your settings.' - what do I do? =
+= Ack!  All I see is 'IK FB: Please check your settings.' - What do I do? =
 
 It's all good!  This just means there is no feed data - this could be due to bad settings, including a bad Page ID, App ID, or Secret Key, or it could be due to some other error such as not having cUrl installed.  Be sure to check your Facebook Page's Privacy Settings, too!  Check the plugin instructions for help (or send us a message if you think it's an error.)
 
@@ -84,7 +84,7 @@ It's all good!  This just means there is no feed data - this could be due to bad
 
 OK, so here's the deal:
 
-Your Facebook Feed needs to come from a Publicly Accessible Facebook page.  If your page is Private, if its a Personal Profile and not a Page, or if you have an Age Limit set that thus requires the user to login, the plugin won't be able to display the feed data (it will instead just display the page title, like button, and profile pic - even that can be dependent upon your settings.)
+Your Facebook Feed needs to come from a Publicly Accessible Facebook page.  If your page is Private, if it’s a Personal Profile and not a Page, or if you have an Age Limit set that thus requires the user to login, the plugin won't be able to display the feed data (it will instead just display the page title, like button, and profile pic - even that can be dependent upon your settings.)
 
 Here's how to test if your page is Public or Private:
 
@@ -128,7 +128,7 @@ The Pro version of IK Facebook has this functionality - [purchase IK Social Pro]
 
 = Urk!  How to find my Album's ID for outputting a photo gallery? =
 
-OK, try this: looking at the following url, you want to grab the number that appears directly after "set=a." and before the next period - 
+OK, try this: looking at the following URL, you want to grab the number that appears directly after "set=a." and before the next period - 
 facebook.com/media/set/?set=a.**539627829386059**.148135.322657451083099&type=3
 
 In this case, the Facebook Album ID is '539627829386059'.
@@ -142,8 +142,19 @@ In this case, the Facebook Album ID is '539627829386059'.
 
 == Changelog ==
 
+= 2.4 =
+* Feature: Ability to set number of photos displayed in a gallery via the Shortcode or Dashboard.
+* Feature: Much improved configuration error reporting - no more public facing IK FB messages in your feed.
+* Feature: Plugin Settings & Help Screen.  This screen will show you your settings, help you troubleshoot what may be wrong (if you're having trouble), and will show you example shortcodes to use.
+* Social Pro Fix: Show more than 25 likes on each Feed item.
+* Fix: Allow more than 25 items to be displayed in the Feed.
+* Fix: Address issue where Thumbnail sized photos were always displayed in the feed, regardless of Settings.
+* Minor Fix: Allow more than 25 photos to be displayed in a Photo Gallery.
+* Minor Fix: Compute Event Date times differently.
+* Minor Fix: Update caching method to speed up page load times.
+
 = 2.3.1 =
-* Fix: Address end date and timezone issues with Events.
+* Fix: Address end date and time zone issues with Events.
 
 = 2.3 =
 * Feature: adds support for Events.
@@ -170,8 +181,8 @@ In this case, the Facebook Album ID is '539627829386059'.
 * Minor Update: adds support for new feature - limit number of posts displayed via the shortcode.
 
 = 2.2 =
-* New Feature: Ability To Embed Facebook Photo Galleries into your Website!
-* Fix: when no fullsized photo is parsed from the feed, fallback to using the thumbnail photo.
+* New Feature: Ability to Embed Facebook Photo Galleries into your Website!
+* Fix: when no full-sized photo is parsed from the feed, fallback to using the thumbnail photo.
 * Minor Fix: CSS adjustments.
 
 = 2.1.2 =
@@ -214,7 +225,7 @@ In this case, the Facebook Album ID is '539627829386059'.
 * Feature: Adds Option to display date of post in feed.
 
 = 1.8.4 =
-* Feature: Option to Limit The Number Of Displayed Characters in Parts of Feed.  Read More is Displayed if Post is Shortened.
+* Feature: Option to Limit the Number of Displayed Characters in Parts of Feed.  Read More is displayed if Post is shortened.
 
 = 1.8.3 =
 * Update: change default Feed Title link to go to Feed's FB Page
@@ -269,7 +280,7 @@ In this case, the Facebook Album ID is '539627829386059'.
 * Update: remove branding from Settings Updated message.
 * Update: update method of building and outputting the feed.
 * Update: Change some wording throughout.
-* Fix: fix bad image output when URL to fullsized photo was not set.
+* Fix: fix bad image output when URL to full-sized photo was not set.
 
 = 1.4 = 
 * Feature: Adds support for new Pro Feature - Unbranded Dashboard
@@ -295,7 +306,7 @@ In this case, the Facebook Album ID is '539627829386059'.
 * Fix: Fix issue that was causing Profile Photo to not load for some Facebook Profiles.
 
 = 1.2 =
-* Feature: Adds option to set width of images displayed in feed.  Will use high-res images if this option is enabled, otherwise outputs thumbnails.
+* Feature: Adds option to set width of images displayed in feed.  Will use high-res images if this option is enabled, otherwise output thumbnails.
 * Feature: Adds ability to output the Dark or Light color scheme for the Like Button, both in the Feed, Widget and the standalone Like Button.
 
 = 1.1.2 =
@@ -317,7 +328,7 @@ In this case, the Facebook Album ID is '539627829386059'.
 * Feature: can now create a CSS file in your theme directory titled 'ik_fb_custom_style.css' - these styles will automatically be loaded by the plugin.
 
 = 1.0.7 =
-* Bugfix: remove double output of wrapping widget tag.
+* Bug fix: remove double output of wrapping widget tag.
 * Feature: added option to show or hide the Like Button (hidden by default).
 
 = 1.0.6 = 
@@ -344,5 +355,5 @@ In this case, the Facebook Album ID is '539627829386059'.
 
 == Upgrade Notice ==
 
-= 2.2.6 =
+= 2.4 =
 * Update Available!

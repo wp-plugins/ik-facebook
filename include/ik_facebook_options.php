@@ -49,7 +49,7 @@ class ikFacebookOptions
 	//function to produce tabs on admin screen
 	function ik_fb_admin_tabs( $current = 'homepage' ) {
 	
-		$tabs = array( 'config_options' => 'Configuration Options', 'style_options' => 'Style Options', 'display_options' => 'Display Options', 'pro_options' => 'Pro Options' );
+		$tabs = array( 'plugin_status' => 'Plugin Status &amp; Help', 'config_options' => 'Configuration Options', 'style_options' => 'Style Options', 'display_options' => 'Display Options', 'pro_options' => 'Pro Options' );
 		echo '<div id="icon-themes" class="icon32"><br></div>';
 		echo '<h2 class="nav-tab-wrapper">';
 			foreach( $tabs as $tab => $name ){
@@ -85,6 +85,7 @@ class ikFacebookOptions
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_show_posted_by' );
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_show_date' );
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_feed_limit' );
+		register_setting( 'ik-fb-display-settings-group', 'ik_fb_photo_feed_limit' );
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_powered_by' );
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_character_limit' );
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_description_character_limit' );
@@ -111,22 +112,28 @@ class ikFacebookOptions
 	<div class="wrap">
 		<h2><?php echo $title; ?></h2>		
 		
-		<?php if(!is_valid_key(get_option('ik_fb_pro_key') )): ?>
-			<div class="updated" id="message">
-				<h2>Want More Features?</h2>
-				<p><a href="http://iksocialpro.com/purchase-ik-social-pro/?ikfbtop">Upgrade to IK Social Pro now</a> and get tons of new features and settings. </p>
-				<h3>Pro Features Include:</h3>
-				<ul>
-					<li><strong>Unbranded Admin screens:</strong> Remove all IK FB branding from your Wordpress admin.</li>
-					<li><strong>Hide non-page-owner posts from your feed:</strong> With this option, your feed will only show the posts from your own account.</li>
-					<li><strong>Custom Styling Options:</strong> Unfamiliar with CSS? These options will enable you to style the output of the various text, links, change the dimensions of the feed, and more!</li>
-					<li><strong>Custom HTML Output:</strong> Use any HTML tags you want for the feed. You'll be able to specify a custom HTML template for your feed.</li>
-					<li><strong>Fanatical Support:</strong> We're here to help!  Purchase IK Social Pro and receive prompt, responsive, and professional support.</li>
-					<li><strong>Free Updates For Life:</strong> Get IK Social Pro now, and you'll get free updates for life!</li>
-				</ul>
-					
-				<p>More to come! IK Social Pro plugin owners get new updates automatically by email. New features land in the Pro version first, so be sure to upgrade today.</p>
+		<?php if(!is_valid_key(get_option('ik_fb_pro_key') )): ?>			
+			<div>			
+				<!-- Begin MailChimp Signup Form -->
+				<link href="//cdn-images.mailchimp.com/embedcode/slim-081711.css" rel="stylesheet" type="text/css">
+				<style type="text/css">
+					#mc_embed_signup{background:#EEE; color:green; clear:left; font:14px Helvetica,Arial,sans-serif; }
+					#mc_embed_signup form{padding: 10px}
+					#mc_embed_signup input.button{color:green;}
+					/* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+					   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+				</style>				
+				<div id="mc_embed_signup">
+				<form action="http://illuminatikarate.us2.list-manage1.com/subscribe/post?u=403e206455845b3b4bd0c08dc&amp;id=3e22ddb309" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+					<label for="mce-EMAIL">Subscribe to our mailing list</label>
+					<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
+					<p>New subscribers will receive a discount code good for any version of <a href="http://iksocialpro.com//purchase-ik-social-pro/?signupform">IK Social Pro</a>!</p>
+					<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+				</form>
+				</div>
+				<!--End mc_embed_signup-->
 			</div>
+			
 		<?php endif; ?>
 	
 		<?php if (isset($_GET['settings-updated']) && $_GET['settings-updated'] == 'true') : ?>
@@ -134,19 +141,66 @@ class ikFacebookOptions
 		<?php endif; ?>	
 		
 		<?php if ( isset ( $_GET['tab'] ) ) $this->ik_fb_admin_tabs($_GET['tab']); else $this->ik_fb_admin_tabs('config_options'); ?>
-		
-		<form method="post" action="options.php">
-			
-			<?php 
-				if ( $pagenow == 'admin.php' && $_GET['page'] == 'ik-facebook/include/ik_facebook_options.php' ){
-					if ( isset ( $_GET['tab'] ) ) $tab = $_GET['tab'];
-					else $tab = 'config_options';
-				}	
-			
+		<?php 
+			if ( $pagenow == 'admin.php' && $_GET['page'] == 'ik-facebook/include/ik_facebook_options.php' ){
+				if ( isset ( $_GET['tab'] ) ) $tab = $_GET['tab'];
+				else $tab = 'config_options';
+			} 
+		?>
+			<?php if($tab != 'plugin_status'): ?>
+			<form method="post" action="options.php">
+			<?php endif; ?>
+				
+			<?php 			
 				switch ( $tab ){
+					case 'plugin_status' :	
+			?>
+				<style>p{font-size:14px;}td iframe{height:45px;}ol{padding-top:10px;}em{font-size:12px;}.ik_fb_error{color:red;}</style>
+				<h3>Plugin Status &amp; Help</h3>
+				<p>This page is used to determine if your plugin and page are setup correctly.  Use the below items to help troubleshoot any issues you may have and to see example shortcodes.</p>
+			<?php
+				//example shortcodes
+				
+				echo "<h4>Example Shortcodes</h4>";
+				echo '<p>To output the custom Facebook Feed, place <code>[ik_fb_feed colorscheme="light" use_thumb="true" width="250" num_posts="5" id="123456789"]</code> in the body of a post.</p>';
+				echo '<p><em>Valid choices for "colorscheme" are "light" and "dark". If "use_thumb" is set to true, the value of "width" will be ignored.  If "use_thumb" or "width" are not set, the values from the Options page will be used.  If id is not set, the shortcode will use the Page ID from your Settings page.</em></p>';
+				echo '<p>To output the Like Button, place <code>[ik_fb_like_button url="http://some_url" height="desired_iframe_height" colorscheme="light"]</code> in the body of a post.</p>';
+				echo '<p><em>Valid options for colorscheme are "light" and "dark".</em></p>';
+				echo '<p>To output a Photo Gallery, place <code>[ik_fb_gallery id="539627829386059" num_photos="25" size="130x73" title="Hello World!"]</code> in the body of a post.</p>';
+				echo '<p><em>If no size is passed, it will default to 320 x 180.  Size options are 2048x1152, 960x540, 720x405, 600x337, 480x270, 320x180, and 130x73.  If num_photos is not passed, the Gallery will default to the amount set on the Dashboard - if no amount is set there, it will display up to 25 photos.  The ID number is found by looking at the URL of the link to the Album on Facebook.</em></p>';
+				
+				//some PHP for testing the plugin!
+				$curl_enabled = function_exists('curl_version') ? 'Enabled' : 'Disabled';
+				
+				echo "<h4>Configuration Settings</h4>";
+				echo "<p>If you need to contact us for help, please be sure to include these settings in your message.</p>";
+				echo "<table><tbody>";
+				echo "<tr><td align='right'>Page ID:</td><td>" . get_option("ik_fb_page_id") . "</td></tr>";
+				echo "<tr><td align='right'>App ID:</td><td>" . get_option("ik_fb_app_id") . "</td></tr>";
+				echo "<tr><td align='right'>Secret Key:</td><td>" . get_option("ik_fb_secret_key") . "</td></tr>";
+				echo "<tr><td align='right'>cURL Status: </td><td>{$curl_enabled}</td></tr>";
+				echo "</tbody></table>";
+				
+				echo "<h3>Plugin Settings Test</h3>";
+				echo "<p>Use the below feeds to determine if your settings are correct.</p>";
+				echo "<strong>How to use:</strong>";
+				echo "<ol>";
+				echo "<li>If both feeds are showing up, everything is working!  Hooray!</li>";
+				echo "<li>If neither feed is showing up, and cURL is enabled, then your App ID or Secret Key is incorrect.  Please verify you have entered the correct information.</li>";
+				echo "<li>If our feed is showing up, but your feed is not, then either:";
+					echo "<ol><li>Your Page ID is Incorrect.  Please verify you have entered the correct information.</li>";
+					echo "<li>Your Page is not configured to be publically viewable.  Please verify that you are using a Facebook Page, not a Personal Profile, and that the page has no Country, Age, or other restrictions placed on it.</li></ol></li></ol>";
+				
+				echo "<table><tbody>";
+				echo "<tr><td><h4>Our Feed</h4></td><td><h4>Your Feed</h4></td></tr>";
+				echo "<tr><td valign='top'>" . do_shortcode('[ik_fb_feed show_errors="1" id="IlluminatiKarate" num_posts="1"]') . "</td><td valign='top'>" . do_shortcode('[ik_fb_feed show_errors="1" num_posts="1"]') . "</td></tr>";
+				echo "</tbody></table>";
+			?>
+			<?php
+					break;
 					case 'config_options' :	
-				?>
-				<?php settings_fields( 'ik-fb-config-settings-group' ); ?>
+			?>
+			<?php settings_fields( 'ik-fb-config-settings-group' ); ?>
 			
 			<h3>Configuration Options</h3>
 			<p>The below options are used to configure your plugin to interact with your Facebook Page.</p>
@@ -174,49 +228,7 @@ class ikFacebookOptions
 					<td><input type="text" name="ik_fb_secret_key" id="ik_fb_secret_key" value="<?php echo get_option('ik_fb_secret_key'); ?>" style="width: 250px" />
 					<p class="description">This is the App Secret you acquired when you <a href="http://iksocialpro.com/installation-usage-instructions/how-to-get-an-app-id-and-secret-key-from-facebook/?ikfbsettings" target="_blank" title="How To Get An App ID and Secret Key From Facebook">setup your Facebook app</a>.</p></td>
 				</tr>
-			</table>			
-			
-			<!--
-			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_tz">Facebook Event Timezone</label></th>
-						<td><select name="ik_fb_tz" id="ik_fb_tz">
-							<option value="-12" <?php if(get_option('ik_fb_tz') == "-12.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT -12:00) Eniwetok, Kwajalein</option>
-							<option value="-11" <?php if(get_option('ik_fb_tz') == "-11.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT -11:00) Midway Island, Samoa</option>
-							<option value="-10" <?php if(get_option('ik_fb_tz') == "-10.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT -10:00) Hawaii</option>
-							<option value="-9" <?php if(get_option('ik_fb_tz') == "-9.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT -9:00) Alaska</option>
-							<option value="-8" <?php if(get_option('ik_fb_tz') == "-8.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT -8:00) Pacific Time (US &amp; Canada)</option>
-							<option value="-7" <?php if(get_option('ik_fb_tz') == "-7.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT -7:00) Mountain Time (US &amp; Canada)</option>
-							<option value="-6" <?php if(get_option('ik_fb_tz') == "-6.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT -6:00) Central Time (US &amp; Canada), Mexico City</option>
-							<option value="-5" <?php if(get_option('ik_fb_tz') == "-5.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</option>
-							<option value="-4" <?php if(get_option('ik_fb_tz') == "-4.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz</option>
-							<option value="-3.5" <?php if(get_option('ik_fb_tz') == "-3.5"): echo 'selected="SELECTED"'; endif; ?>>(GMT -3:30) Newfoundland</option>
-							<option value="-3.0" <?php if(get_option('ik_fb_tz') == "-3.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT -3:00) Brazil, Buenos Aires, Georgetown</option>
-							<option value="-2.0" <?php if(get_option('ik_fb_tz') == "-2.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT -2:00) Mid-Atlantic</option>
-							<option value="-1.0" <?php if(get_option('ik_fb_tz') == "-1.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT -1:00 hour) Azores, Cape Verde Islands</option>
-							<option value="+0.0" <?php if(get_option('ik_fb_tz') == "+ 0.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT) Western Europe Time, London, Lisbon, Casablanca</option>
-							<option value="+1.0" <?php if(get_option('ik_fb_tz') == "+ 1.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT +1:00 hour) Brussels, Copenhagen, Madrid, Paris</option>
-							<option value="+2.0" <?php if(get_option('ik_fb_tz') == "+ 2.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT +2:00) Kaliningrad, South Africa</option>
-							<option value="+3.0" <?php if(get_option('ik_fb_tz') == "+ 3.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg</option>
-							<option value="+3.5" <?php if(get_option('ik_fb_tz') == "+ 3.5"): echo 'selected="SELECTED"'; endif; ?>>(GMT +3:30) Tehran</option>
-							<option value="+4.0" <?php if(get_option('ik_fb_tz') == "+ 4.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi</option>
-							<option value="+4.5" <?php if(get_option('ik_fb_tz') == "+ 4.5"): echo 'selected="SELECTED"'; endif; ?>>(GMT +4:30) Kabul</option>
-							<option value="+5.0" <?php if(get_option('ik_fb_tz') == "+ 5.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent</option>
-							<option value="+5.5" <?php if(get_option('ik_fb_tz') == "+ 5.5"): echo 'selected="SELECTED"'; endif; ?>>(GMT +5:30) Bombay, Calcutta, Madras, New Delhi</option>
-							<option value="+5.75" <?php if(get_option('ik_fb_tz') == "+ 5.75"): echo 'selected="SELECTED"'; endif; ?>>(GMT +5:45) Kathmandu</option>
-							<option value="+6.0" <?php if(get_option('ik_fb_tz') == "+ 6.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT +6:00) Almaty, Dhaka, Colombo</option>
-							<option value="+7.0" <?php if(get_option('ik_fb_tz') == "+ 7.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT +7:00) Bangkok, Hanoi, Jakarta</option>
-							<option value="+8.0" <?php if(get_option('ik_fb_tz') == "+ 8.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT +8:00) Beijing, Perth, Singapore, Hong Kong</option>
-							<option value="+9.0" <?php if(get_option('ik_fb_tz') == "+ 9.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk</option>
-							<option value="+9.5" <?php if(get_option('ik_fb_tz') == "+ 9.5"): echo 'selected="SELECTED"'; endif; ?>>(GMT +9:30) Adelaide, Darwin</option>
-							<option value="+10.0" <?php if(get_option('ik_fb_tz') == "+ 10.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT +10:00) Eastern Australia, Guam, Vladivostok</option>
-							<option value="+11.0" <?php if(get_option('ik_fb_tz') == "+ 11.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT +11:00) Magadan, Solomon Islands, New Caledonia</option>
-							<option value="+12.0" <?php if(get_option('ik_fb_tz') == "+ 12.0"): echo 'selected="SELECTED"'; endif; ?>>(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka</option>
-						</select>
-					<p class="description">This is the timezone that will be used for displaying your event information.</p></td>
-				</tr>
-			</table>
-			-->
+			</table>	
 			
 				<?php
 					break;
@@ -317,9 +329,17 @@ class ikFacebookOptions
 			
 			<table class="form-table">
 				<tr valign="top">
+					<th scope="row"><label for="ik_fb_photo_feed_limit">Number of Photo Feed Items</label></th>
+					<td><input type="text" name="ik_fb_photo_feed_limit" id="ik_fb_photo_feed_limit" value="<?php echo get_option('ik_fb_photo_feed_limit'); ?>" style="width: 250px" />
+					<p class="description">If set, the photo feed will be limited to this number of items.  This can be overridden via the shortcode.</p></td>
+				</tr>
+			</table>
+			
+			<table class="form-table">
+				<tr valign="top">
 					<th scope="row"><label for="ik_fb_feed_limit">Number of Feed Items</label></th>
 					<td><input type="text" name="ik_fb_feed_limit" id="ik_fb_feed_limit" value="<?php echo get_option('ik_fb_feed_limit'); ?>" style="width: 250px" />
-					<p class="description">If set, the feed will be limited to this number of items.</p></td>
+					<p class="description">If set, the feed will be limited to this number of items.  This can be overridden via the shortcode.</p></td>
 				</tr>
 			</table>
 			
@@ -370,20 +390,40 @@ class ikFacebookOptions
 						$ik_social_pro_options->output_settings();
 					break;
 					}//end switch
+					
+					//don't output the save button on the status screen
+					if($tab != 'plugin_status'):
 				?>			
-				<p class="submit">
-					<input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
-				</p>		
-				<?php
-					if(!is_valid_key(get_option('ik_fb_pro_key'))):					
-				?>
-				<div style="margin: 20px auto; text-align: left; text-decoration: none;">					
-					<a href="http://iksocialpro.com/purchase-ik-social-pro/?ikfbbottom" target="_blank" title="Learn More About IK Social Pro"><img src="<?php echo plugins_url('/img/ik_social_pro.jpg', __FILE__); ?>" alt="IK Social Pro" /><p class="description">Click Here To Learn About IK Social Pro</p></a>
-				</div>
+					<p class="submit">
+						<input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
+					</p>		
 				<?php
 					endif;
 				?>
-		</form>
+				<?php if($tab != 'plugin_status'): ?></form><?php endif; ?>
+				<?php
+					if(!is_valid_key(get_option('ik_fb_pro_key'))):					
+				?>
+					<div class="updated" id="message">
+						<h2>Want More Features?</h2>
+						<p><a href="http://iksocialpro.com/purchase-ik-social-pro/?ikfbbottomtext">Upgrade to IK Social Pro now</a> and get tons of new features and settings. </p>
+						<h3>Pro Features Include:</h3>
+						<ul>
+							<li><strong>Unbranded Admin screens:</strong> Remove all IK FB branding from your Wordpress admin.</li>
+							<li><strong>Hide non-page-owner posts from your feed:</strong> With this option, your feed will only show the posts from your own account.</li>
+							<li><strong>Custom Styling Options:</strong> Unfamiliar with CSS? These options will enable you to style the output of the various text, links, change the dimensions of the feed, and more!</li>
+							<li><strong>Custom HTML Output:</strong> Use any HTML tags you want for the feed. You'll be able to specify a custom HTML template for your feed.</li>
+							<li><strong>Fanatical Support:</strong> We're here to help!  Purchase IK Social Pro and receive prompt, responsive, and professional support.</li>
+							<li><strong>Free Updates For Life:</strong> Get IK Social Pro now, and you'll get free updates for life!</li>
+						</ul>
+							
+						<p>More to come! IK Social Pro plugin owners get new updates automatically by email. New features land in the Pro version first, so be sure to upgrade today.</p>
+									
+						<a href="http://iksocialpro.com/purchase-ik-social-pro/?ikfbbottom" target="_blank" title="Learn More About IK Social Pro"><img src="<?php echo plugins_url('/img/ik_social_pro.jpg', __FILE__); ?>" alt="IK Social Pro" /><p class="description">Click Here To Learn About IK Social Pro</p></a>
+					</div>
+				<?php
+					endif;
+				?>
 	</div>
 	<?php } // end settings_page function
 	
