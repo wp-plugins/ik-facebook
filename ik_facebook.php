@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://iksocialpro.com/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.4
+Version: 2.4.1
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -475,8 +475,18 @@ class ikFacebook
 				$item_id = $item->object_id;
 								
 				$photo = $this->fetchUrl("https://graph.facebook.com/{$item_id}/picture?summary=1&{$this->authToken}&redirect=false", true);	
-								
-				$photo_link = $photo->data->url;
+
+				//load arguments into array for use below
+				$parsed_url = parse_url($item->picture);
+				parse_str($parsed_url['query'], $params);               
+				
+				if(isset($photo->data->url)){
+					$photo_link = $photo->data->url;
+				} else if(isset($params['url'])) {
+					$photo_link = $params['url'];
+				} else {
+					$photo_link = $item->picture;
+				}
 				
 				//output the images
 				//if set, load the custom image width from the options page
@@ -535,9 +545,11 @@ class ikFacebook
 				$line_item .= ' <a href="'.$the_link.'" class="ikfb_read_more" target="_blank">Read More...</a>';
 			}	
 
-			if(isset($item->link)){ //output the item link
-				if(isset($item->caption)){
+			if(isset($item->link)){ //output the item link				
+				if(isset($item->caption) && isset($item->picture)){
 					$link_text = $item->caption; //some items have a caption	
+				} else if(isset($item->description)){
+					$link_text = $item->description; //some items have a description	
 				} else {
 					$link_text = $item->name;  //others might just have a name
 				}

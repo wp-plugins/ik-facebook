@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, facebook feed, facebook embed, facebook feed widget, facebook feed embed, like button widget, facebook events
 Requires at least: 3.0.1
 Tested up to: 3.6.1
-Stable tag: 2.4
+Stable tag: 2.4.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -142,11 +142,14 @@ In this case, the Facebook Album ID is '539627829386059'.
 
 == Changelog ==
 
+= 2.4.1 =
+* Fix: Address issue with Shared Images not coming through in the feed correctly.
+* Fix: Address issue where shared links with text were only outputting the URL of the link and not the shared text.
+
 = 2.4 =
 * Feature: Ability to set number of photos displayed in a gallery via the Shortcode or Dashboard.
 * Feature: Much improved configuration error reporting - no more public facing IK FB messages in your feed.
 * Feature: Plugin Settings & Help Screen.  This screen will show you your settings, help you troubleshoot what may be wrong (if you're having trouble), and will show you example shortcodes to use.
-* Social Pro Fix: Show more than 25 likes on each Feed item.
 * Fix: Allow more than 25 items to be displayed in the Feed.
 * Fix: Address issue where Thumbnail sized photos were always displayed in the feed, regardless of Settings.
 * Minor Fix: Allow more than 25 photos to be displayed in a Photo Gallery.
