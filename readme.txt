@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, facebook feed, facebook embed, facebook feed widget, facebook feed embed, like button widget, facebook events
 Requires at least: 3.0.1
 Tested up to: 3.6.1
-Stable tag: 2.5
+Stable tag: 2.5.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -146,6 +146,9 @@ In this case, the Facebook Album ID is '539627829386059'.
 5. This is the Plugin Status & Help Tab.  This tab provides example shortcodes, a quick summary of some important settings, and other means of help and support.
 
 == Changelog ==
+
+= 2.5.1 =
+* Quick Fix: Fix bad path to Dark Theme stylesheet.
 
 = 2.5 =
 * Pro Feature: Adds tons of new themes!  Including the Pro Halloween theme - just in time!
@@ -370,5 +373,5 @@ In this case, the Facebook Album ID is '539627829386059'.
 
 == Upgrade Notice ==
 
-= 2.5 =
+= 2.5.1 =
 * Update Available!
