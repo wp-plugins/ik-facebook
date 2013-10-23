@@ -65,23 +65,38 @@ class ikFacebookOptions
 		register_setting( 'ik-fb-config-settings-group', 'ik_fb_page_id' );
 		register_setting( 'ik-fb-config-settings-group', 'ik_fb_app_id' );
 		register_setting( 'ik-fb-config-settings-group', 'ik_fb_secret_key' );
-		register_setting( 'ik-fb-config-settings-group', 'ik_fb_tz' );
 		register_setting( 'ik-fb-config-settings-group', 'ik_fb_pro_key' );
 		register_setting( 'ik-fb-config-settings-group', 'ik_fb_pro_url' );
 		register_setting( 'ik-fb-config-settings-group', 'ik_fb_pro_email' );
 		
 		//register our style settings
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_custom_css' );
-		register_setting( 'ik-fb-style-settings-group', 'ik_fb_show_like_button' );
-		register_setting( 'ik-fb-style-settings-group', 'ik_fb_show_profile_picture' );
-		register_setting( 'ik-fb-style-settings-group', 'ik_fb_show_page_title' );
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_fix_feed_image_width' );
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_feed_image_width' );
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_fix_feed_image_height' );
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_feed_image_height' );
-		register_setting( 'ik-fb-style-settings-group', 'ik_fb_feed_theme' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_feed_theme' );		
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_header_bg_color' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_window_bg_color' );		
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_powered_by_font_color' );		
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_powered_by_font_size' );	
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_posted_by_font_color' );				
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_posted_by_font_size' );		
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_description_font_color' );		
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_description_font_size' );		
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_link_font_color' );		
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_link_font_size' );		
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_feed_window_height' );		
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_feed_window_width' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_font_color' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_font_size' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_sidebar_feed_window_height' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_sidebar_feed_window_width' );
 		
 		//register our display settings
+		register_setting( 'ik-fb-display-settings-group', 'ik_fb_show_like_button' );
+		register_setting( 'ik-fb-display-settings-group', 'ik_fb_show_profile_picture' );
+		register_setting( 'ik-fb-display-settings-group', 'ik_fb_show_page_title' );
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_show_posted_by' );
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_show_date' );
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_feed_limit' );
@@ -232,7 +247,23 @@ class ikFacebookOptions
 			
 				<?php
 					break;
-					case 'style_options' :
+					case 'style_options' :					
+						$ikfb_themes = array(
+							'style' => 'Default Style',
+							'dark_style' => 'Dark Style',
+							'light_style' => 'Light Style',
+							'blue_style' => 'Blue Style',
+							'no_style' => 'No Style',
+						);
+						
+						if(is_valid_key(get_option('ik_fb_pro_key'))){
+							$ikfb_themes['blue_gray_style'] = 'Blue Gray Style';
+							$ikfb_themes['cobalt_style'] = 'Cobalt Style';
+							$ikfb_themes['green_gray_style'] = 'Green Gray Style';
+							$ikfb_themes['halloween_style'] = 'Halloween Style';
+							$ikfb_themes['indigo_style'] = 'Indigo Style';
+							$ikfb_themes['orange_style'] = 'Orange Style';			
+						}
 				?>
 				<?php settings_fields( 'ik-fb-style-settings-group' ); ?>
 			
@@ -241,25 +272,208 @@ class ikFacebookOptions
 			
 			<table class="form-table">
 				<tr valign="top">
-					<th scope="row"><label for="ik_fb_feed_theme">Feed Style</a></th>
+					<th scope="row"><label for="ik_fb_feed_theme">Feed Theme</a></th>
 					<td>
 						<select name="ik_fb_feed_theme" id="ik_fb_feed_theme">	
-							<option value="default_style" <?php if(get_option('ik_fb_feed_theme') == "default_style"): echo 'selected="SELECTED"'; endif; ?>>Default Style</option>
-							<option value="dark_style" <?php if(get_option('ik_fb_feed_theme') == "dark_style"): echo 'selected="SELECTED"'; endif; ?>>Dark Style</option>
-							<option value="light_style" <?php if(get_option('ik_fb_feed_theme') == "light_style"): echo 'selected="SELECTED"'; endif; ?>>Light Style</option>
-							<option value="blue_style" <?php if(get_option('ik_fb_feed_theme') == "blue_style"): echo 'selected="SELECTED"'; endif; ?>>Blue Style</option>
-							<option value="no_style" <?php if(get_option('ik_fb_feed_theme') == "no_style"): echo 'selected="SELECTED"'; endif; ?>>No Style</option>
+							<?php foreach($ikfb_themes as $value => $name): ?>
+							<option value="<?php echo $value; ?>" <?php if(get_option('ik_fb_feed_theme') == $value): echo 'selected="SELECTED"'; endif; ?>><?php echo $name; ?></option>
+							<?php endforeach; ?>
 						</select>
-						<p class="description">Select which style you want to use.  If 'No Style' is selected, only your Theme's CSS, and any Custom CSS you've added, will be used.</p>
+						<p class="description">Select which theme you want to use.  If 'No Style' is selected, only your Theme's CSS, and any Custom CSS you've added, will be used.  The settings below will override the defaults set in your selected theme.</p>
 					</td>
+				</tr>
+				
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_custom_css">Custom CSS</a></th>
+					<td><textarea name="ik_fb_custom_css" id="ik_fb_custom_css" style="width: 250px; height: 250px;"><?php echo get_option('ik_fb_custom_css'); ?></textarea>
+					<p class="description">Input any Custom CSS you want to use here.  You can also include a file in your theme's folder called 'ik_fb_custom_style.css' - any styles in that file will be loaded with the plugin.  The plugin will work without you placing anything here - this is useful in case you need to edit any styles for it to work with your theme, though.</p></td>
+				</tr>
+				
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_fix_feed_image_width">Fix Feed Image Width</label></th>
+					<td><input type="checkbox" name="ik_fb_fix_feed_image_width" id="ik_fb_fix_feed_image_width" value="1" <?php if(get_option('ik_fb_fix_feed_image_width')){ ?> checked="CHECKED" <?php } ?>/>
+					<p class="description">If checked, images inside the feed will all be displayed at the width set below.  If both this and 'Fix Feed Image Height' are unchecked, feed will display image thumbnails.</p></td>
+				</tr>
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_feed_image_width">Feed Image Width</label></th>
+					<td><input type="text" name="ik_fb_feed_image_width" id="ik_fb_feed_image_width" value="<?php echo get_option('ik_fb_feed_image_width'); ?>" style="width: 250px" />
+					<p class="description">If 'Fix Feed Image Width' is checked, the images will be set to this width (integer only.)</p></td>
+				</tr>
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_fix_feed_image_height">Fix Feed Image Height</label></th>
+					<td><input type="checkbox" name="ik_fb_fix_feed_image_height" id="ik_fb_fix_feed_image_height" value="1" <?php if(get_option('ik_fb_fix_feed_image_height')){ ?> checked="CHECKED" <?php } ?>/>
+					<p class="description">If checked, images inside the feed will all be displayed at the height set below.  If both this and 'Fix Feed Image Width' are unchecked, feed will display image thumbnails.</p></td>
+				</tr>
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_feed_image_height">Feed Image Height</label></th>
+					<td><input type="text" name="ik_fb_feed_image_height" id="ik_fb_feed_image_height" value="<?php echo get_option('ik_fb_feed_image_height'); ?>" style="width: 250px" />
+					<p class="description">If 'Fix Feed Image Height' is checked, the images will be set to this width (integer only.)</p></td>
+				</tr>
+				
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_header_bg_color">Feed Header Background Color</label></th>
+					<td>
+					<div class="color-picker" style="position: relative;">
+						<input <?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?>disabled="disabled"<?php endif; ?>  type="text" name="ik_fb_header_bg_color" id="ik_fb_header_bg_color" value="<?php echo strlen(get_option('ik_fb_header_bg_color'))>2 ? get_option('ik_fb_header_bg_color') : ' '; ?>" class="color" />
+						<div style="z-index: 100; background: none repeat scroll 0% 0% rgb(238, 238, 238); border: 1px solid rgb(204, 204, 204); position: absolute;" class="colorpicker"></div>
+					</div>		
+					
+					<p class="description">Input your hex color code, by clicking and using the Colorpicker or typing it in.  Erase the contents of this field to use the default color.</p></td>
+				</tr>
+				
+				<tr valign="top">
+					<div class="color-picker" style="position: relative;">					
+					<th scope="row"><label for="ik_fb_window_bg_color">Feed Window Background Color</label></th>
+					<td>				
+					<div class="color-picker" style="position: relative;">
+						<input type="text" name="ik_fb_window_bg_color" id="ik_fb_window_bg_color" value="<?php echo strlen(get_option('ik_fb_window_bg_color'))>2 ? get_option('ik_fb_window_bg_color') : ' '; ?>" class="color" />
+						<div style="z-index: 100; background: none repeat scroll 0% 0% rgb(238, 238, 238); border: 1px solid rgb(204, 204, 204); position: absolute;" class="colorpicker"></div>
+					</div>		
+					<p class="description">Input your hex color code, by clicking and using the Colorpicker or typing it in.  Erase the contents of this field to use the default color.</p></td>
+				</tr>
+			
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_description_font_color">Description Font Color</label></th>
+					<td>
+					<div class="color-picker" style="position: relative;">				
+						<input type="text" name="ik_fb_description_font_color" id="ik_fb_description_font_color" value="<?php echo strlen(get_option('ik_fb_description_font_color'))>2 ? get_option('ik_fb_description_font_color') : ' '; ?>" class="color" />
+						<div style="z-index: 100; background: none repeat scroll 0% 0% rgb(238, 238, 238); border: 1px solid rgb(204, 204, 204); position: absolute;" class="colorpicker"></div>
+					</div>						
+					<p class="description">Input your hex color code, by clicking and using the Colorpicker or typing it in.  Erase the contents of this field to use the default color.</p></td>
+				</tr>
+			
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_description_font_size">Description Font Size</label></th>
+					<td><input type="text" name="ik_fb_description_font_size" id="ik_fb_description_font_size" value="<?php echo get_option('ik_fb_description_font_size'); ?>" style="width: 250px" />
+					<p class="description">Input your font pixel size.</p></td>
+				</tr>
+			
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_font_color">Message Font Color</label></th>
+					<td>
+					<div class="color-picker" style="position: relative;">				
+						<input type="text" name="ik_fb_font_color" id="ik_fb_font_color" value="<?php echo strlen(get_option('ik_fb_font_color'))>2 ? get_option('ik_fb_font_color') : ' '; ?>" class="color" />
+						<div style="z-index: 100; background: none repeat scroll 0% 0% rgb(238, 238, 238); border: 1px solid rgb(204, 204, 204); position: absolute;" class="colorpicker"></div>
+					</div>						
+					<p class="description">Input your hex color code, by clicking and using the Colorpicker or typing it in.  Erase the contents of this field to use the default color.</p></td>
+				</tr>
+			
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_font_size">Message Font Size</label></th>
+					<td><input type="text" name="ik_fb_font_size" id="ik_fb_font_size" value="<?php echo get_option('ik_fb_font_size'); ?>" style="width: 250px" />
+					<p class="description">Input your font pixel size.</p></td>
+				</tr>
+			
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_link_font_color">Link Font Color</label></th>
+					<td>
+					<div class="color-picker" style="position: relative;">				
+						<input type="text" name="ik_fb_link_font_color" id="ik_fb_link_font_color" value="<?php echo strlen(get_option('ik_fb_link_font_color'))>2 ? get_option('ik_fb_link_font_color') : ' '; ?>" class="color" />
+						<div style="z-index: 100; background: none repeat scroll 0% 0% rgb(238, 238, 238); border: 1px solid rgb(204, 204, 204); position: absolute;" class="colorpicker"></div>
+					</div>						
+					<p class="description">Input your hex color code, by clicking and using the Colorpicker or typing it in.  Erase the contents of this field to use the default color.</p></td>
+				</tr>
+			
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_link_font_size">Link Font Size</label></th>
+					<td><input type="text" name="ik_fb_link_font_size" id="ik_fb_link_font_size" value="<?php echo get_option('ik_fb_link_font_size'); ?>" style="width: 250px" />
+					<p class="description">Input your font pixel size.</p></td>
+				</tr>			
+			
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_posted_by_font_color">Posted By Font Color</label></th>
+					<td>
+					<div class="color-picker" style="position: relative;">				
+						<input type="text" name="ik_fb_posted_by_font_color" id="ik_fb_posted_by_font_color" value="<?php echo strlen(get_option('ik_fb_posted_by_font_color'))>2 ? get_option('ik_fb_posted_by_font_color') : ' '; ?>" class="color" />
+						<div style="z-index: 100; background: none repeat scroll 0% 0% rgb(238, 238, 238); border: 1px solid rgb(204, 204, 204); position: absolute;" class="colorpicker"></div>
+					</div>						
+					<p class="description">Input your hex color code, by clicking and using the Colorpicker or typing it in.  Erase the contents of this field to use the default color.</p></td>
+				</tr>
+			
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_posted_by_font_size">Posted By Font Size</label></th>
+					<td><input type="text" name="ik_fb_posted_by_font_size" id="ik_fb_posted_by_font_size" value="<?php echo get_option('ik_fb_posted_by_font_size'); ?>" style="width: 250px" />
+					<p class="description">Input your font pixel size.</p></td>
+				</tr>
+				
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_feed_window_height">Feed Window Height</label></th>
+					<td><input type="text" name="ik_fb_feed_window_height" id="ik_fb_feed_window_height" value="<?php echo get_option('ik_fb_feed_window_height'); ?>" style="width: 250px" />
+					<p class="description">Input your feed height pixel size. This option does not apply to the sidebar widget.</p></td>
+				</tr>
+				
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_feed_window_width">Feed Window Width</label></th>
+					<td><input type="text" name="ik_fb_feed_window_width" id="ik_fb_feed_window_width" value="<?php echo get_option('ik_fb_feed_window_width'); ?>" style="width: 250px" />
+					<p class="description">Input your feed width pixel size. This option does not apply to the sidebar widget.</p></td>
+				</tr>
+				
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_sidebar_feed_window_height">Sidebar Feed Window Height</label></th>
+					<td><input type="text" name="ik_fb_sidebar_feed_window_height" id="ik_fb_sidebar_feed_window_height" value="<?php echo get_option('ik_fb_sidebar_feed_window_height'); ?>" style="width: 250px" />
+					<p class="description">Input your feed height pixel size.</p></td>
+				</tr>
+				
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_sidebar_feed_window_width">Sidebar Feed Window Width</label></th>
+					<td><input type="text" name="ik_fb_sidebar_feed_window_width" id="ik_fb_sidebar_feed_window_width" value="<?php echo get_option('ik_fb_sidebar_feed_window_width'); ?>" style="width: 250px" />
+					<p class="description">Input your feed width pixel size.</p></td>
+				</tr>
+			
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_powered_by_font_color">Powered By Font Color</label></th>
+					<td>
+					<div class="color-picker" style="position: relative;">				
+						<input type="text" name="ik_fb_powered_by_font_color" id="ik_fb_powered_by_font_color" value="<?php echo strlen(get_option('ik_fb_powered_by_font_color'))>2 ? get_option('ik_fb_powered_by_font_color') : ' '; ?>" class="color" />
+						<div style="z-index: 100; background: none repeat scroll 0% 0% rgb(238, 238, 238); border: 1px solid rgb(204, 204, 204); position: absolute;" class="colorpicker"></div>
+					</div>						
+					<p class="description">Input your hex color code, by clicking and using the Colorpicker or typing it in.  Erase the contents of this field to use the default color.</p></td>
+				</tr>
+			
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_powered_by_font_size">Powered By Font Size</label></th>
+					<td><input type="text" name="ik_fb_powered_by_font_size" id="ik_fb_powered_by_font_size" value="<?php echo get_option('ik_fb_powered_by_font_size'); ?>" style="width: 250px" />
+					<p class="description">Input your font pixel size.</p></td>
+				</tr>
+			</table>
+				<?php
+					break;
+					case 'display_options' :
+				?>
+				<?php settings_fields( 'ik-fb-display-settings-group' ); ?>
+			
+			<h3>Display Options</h3>
+			<p>The below options are used to control the type and amount of content that is displayed in your Facebook Feed.</p>
+			
+			<table class="form-table">
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_photo_feed_limit">Number of Photo Feed Items</label></th>
+					<td><input type="text" name="ik_fb_photo_feed_limit" id="ik_fb_photo_feed_limit" value="<?php echo get_option('ik_fb_photo_feed_limit'); ?>" style="width: 250px" />
+					<p class="description">The default number of items displayed is 25 - set higher numbers to display more.  If set, the photo feed will be limited to this number of items.  This can be overridden via the shortcode.</p></td>
 				</tr>
 			</table>
 			
 			<table class="form-table">
 				<tr valign="top">
-					<th scope="row"><label for="ik_fb_custom_css">Custom CSS</a></th>
-					<td><textarea name="ik_fb_custom_css" id="ik_fb_custom_css" style="width: 250px; height: 250px;"><?php echo get_option('ik_fb_custom_css'); ?></textarea>
-					<p class="description">Input any Custom CSS you want to use here.  You can also include a file in your theme's folder called 'ik_fb_custom_style.css' - any styles in that file will be loaded with the plugin.  The plugin will work without you placing anything here - this is useful in case you need to edit any styles for it to work with your theme, though.</p></td>
+					<th scope="row"><label for="ik_fb_feed_limit">Number of Feed Items</label></th>
+					<td><input type="text" name="ik_fb_feed_limit" id="ik_fb_feed_limit" value="<?php echo get_option('ik_fb_feed_limit'); ?>" style="width: 250px" />
+					<p class="description">The default number of items displayed is 25 - set higher numbers to display more.  If set, the feed will be limited to this number of items.  This can be overridden via the shortcode.</p></td>
+				</tr>
+			</table>
+			
+			<table class="form-table">
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_character_limit">Feed Item Message Character Limit</label></th>
+					<td><input type="text" name="ik_fb_character_limit" id="ik_fb_character_limit" value="<?php echo get_option('ik_fb_character_limit'); ?>" style="width: 250px" />
+					<p class="description">If set, the feed item will be limited to this number of characters.  If a feed item is shortened, a Read More link will be displayed.</p></td>
+				</tr>
+			</table>
+			
+			<table class="form-table">
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_description_character_limit">Feed Item Description Character Limit</label></th>
+					<td><input type="text" name="ik_fb_description_character_limit" id="ik_fb_description_character_limit" value="<?php echo get_option('ik_fb_description_character_limit'); ?>" style="width: 250px" />
+					<p class="description">If set, the feed item will be limited to this number of characters.  If a feed item is shortened, a Read More link will be displayed.</p></td>
 				</tr>
 			</table>
 			
@@ -284,78 +498,6 @@ class ikFacebookOptions
 					<th scope="row"><label for="ik_fb_show_page_title">Show Page Title</label></th>
 					<td><input type="checkbox" name="ik_fb_show_page_title" id="ik_fb_show_page_title" value="1" <?php if(get_option('ik_fb_show_page_title')){ ?> checked="CHECKED" <?php } ?>/>
 					<p class="description">If checked, the Title of the feed will be shown.</p></td>
-				</tr>
-			</table>
-			
-			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_fix_feed_image_width">Fix Feed Image Width</label></th>
-					<td><input type="checkbox" name="ik_fb_fix_feed_image_width" id="ik_fb_fix_feed_image_width" value="1" <?php if(get_option('ik_fb_fix_feed_image_width')){ ?> checked="CHECKED" <?php } ?>/>
-					<p class="description">If checked, images inside the feed will all be displayed at the width set below.  If both this and 'Fix Feed Image Height' are unchecked, feed will display image thumbnails.</p></td>
-				</tr>
-			</table>
-			
-			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_feed_image_width">Feed Image Width</label></th>
-					<td><input type="text" name="ik_fb_feed_image_width" id="ik_fb_feed_image_width" value="<?php echo get_option('ik_fb_feed_image_width'); ?>" style="width: 250px" />
-					<p class="description">If 'Fix Feed Image Width' is checked, the images will be set to this width (integer only.)</p></td>
-				</tr>
-			</table>
-			
-			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_fix_feed_image_height">Fix Feed Image Height</label></th>
-					<td><input type="checkbox" name="ik_fb_fix_feed_image_height" id="ik_fb_fix_feed_image_height" value="1" <?php if(get_option('ik_fb_fix_feed_image_height')){ ?> checked="CHECKED" <?php } ?>/>
-					<p class="description">If checked, images inside the feed will all be displayed at the height set below.  If both this and 'Fix Feed Image Width' are unchecked, feed will display image thumbnails.</p></td>
-				</tr>
-			</table>
-			
-			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_feed_image_height">Feed Image Height</label></th>
-					<td><input type="text" name="ik_fb_feed_image_height" id="ik_fb_feed_image_height" value="<?php echo get_option('ik_fb_feed_image_height'); ?>" style="width: 250px" />
-					<p class="description">If 'Fix Feed Image Height' is checked, the images will be set to this width (integer only.)</p></td>
-				</tr>
-			</table>
-				<?php
-					break;
-					case 'display_options' :
-				?>
-				<?php settings_fields( 'ik-fb-display-settings-group' ); ?>
-			
-			<h3>Display Options</h3>
-			<p>The below options are used to control the type and amount of content that is displayed in your Facebook Feed.</p>
-			
-			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_photo_feed_limit">Number of Photo Feed Items</label></th>
-					<td><input type="text" name="ik_fb_photo_feed_limit" id="ik_fb_photo_feed_limit" value="<?php echo get_option('ik_fb_photo_feed_limit'); ?>" style="width: 250px" />
-					<p class="description">If set, the photo feed will be limited to this number of items.  This can be overridden via the shortcode.</p></td>
-				</tr>
-			</table>
-			
-			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_feed_limit">Number of Feed Items</label></th>
-					<td><input type="text" name="ik_fb_feed_limit" id="ik_fb_feed_limit" value="<?php echo get_option('ik_fb_feed_limit'); ?>" style="width: 250px" />
-					<p class="description">If set, the feed will be limited to this number of items.  This can be overridden via the shortcode.</p></td>
-				</tr>
-			</table>
-			
-			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_character_limit">Feed Item Message Character Limit</label></th>
-					<td><input type="text" name="ik_fb_character_limit" id="ik_fb_character_limit" value="<?php echo get_option('ik_fb_character_limit'); ?>" style="width: 250px" />
-					<p class="description">If set, the feed item will be limited to this number of characters.  If a feed item is shortened, a Read More link will be displayed.</p></td>
-				</tr>
-			</table>
-			
-			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_description_character_limit">Feed Item Description Character Limit</label></th>
-					<td><input type="text" name="ik_fb_description_character_limit" id="ik_fb_description_character_limit" value="<?php echo get_option('ik_fb_description_character_limit'); ?>" style="width: 250px" />
-					<p class="description">If set, the feed item will be limited to this number of characters.  If a feed item is shortened, a Read More link will be displayed.</p></td>
 				</tr>
 			</table>
 			
@@ -411,7 +553,6 @@ class ikFacebookOptions
 						<ul>
 							<li><strong>Unbranded Admin screens:</strong> Remove all IK FB branding from your Wordpress admin.</li>
 							<li><strong>Hide non-page-owner posts from your feed:</strong> With this option, your feed will only show the posts from your own account.</li>
-							<li><strong>Custom Styling Options:</strong> Unfamiliar with CSS? These options will enable you to style the output of the various text, links, change the dimensions of the feed, and more!</li>
 							<li><strong>Custom HTML Output:</strong> Use any HTML tags you want for the feed. You'll be able to specify a custom HTML template for your feed.</li>
 							<li><strong>Fanatical Support:</strong> We're here to help!  Purchase IK Social Pro and receive prompt, responsive, and professional support.</li>
 							<li><strong>Free Updates For Life:</strong> Get IK Social Pro now, and you'll get free updates for life!</li>

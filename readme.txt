@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, facebook feed, facebook embed, facebook feed widget, facebook feed embed, like button widget, facebook events
 Requires at least: 3.0.1
 Tested up to: 3.6.1
-Stable tag: 2.4.1
+Stable tag: 2.5
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -19,7 +19,7 @@ The IK Facebook Plugin is an **easy-to-use** plugin that allows users to add a *
 * Adding SEO friendly content to your website
 * Powering your blog with your Facebook Feed - avoid the need to maintain content in multiple locations!
 * Embed a Custom Facebook Feed Widget in your Sidebar or Footer
-* Styling a Custom Facebook Feed
+* Styling a Custom Facebook Feed, without the need for CSS!
 * Custom HTML Options allow Facebook Feed Shortcode and Facebook Feed Widget to be displayed any way you like!
 * Adding a Facebook Like Button to your website, anywhere!
 * Showing Facebook Comments in your Custom Facebook Feed!
@@ -35,7 +35,7 @@ The IK Facebook Plugin is an **easy-to-use** plugin that allows users to add a *
 We pride ourselves on taking customer support seriously. In fact, [send us an email](http://iksocialpro.com/contact-us/ "Send Us an Email") now if you have any questions at all. You’ll get a quick response directly from the developers.  Our developers have been making Facebook apps for years and are well versed in all things Facebook.
 
 = User Friendly Features =
-The IK Facebook Plugin includes options to set the Title of the custom Facebook Feed widget, whether or not to show the Like Button above the custom Facebook Feed widget, and whether or not to show the Profile Picture.  The IK Facebook Plugin supports both the Light and Dark color schemes for the Like Button widget and has multiple color schemes for the custom Facebook Feed widget.  The IK Facebook Plugin allows you to pass the ID of the Facebook page via the shortcode - allowing you to display the feeds from multiple accounts on one page!
+The IK Facebook Plugin includes options to set the Title of the custom Facebook Feed widget, whether or not to show the Like Button above the custom Facebook Feed widget, and whether or not to show the Profile Picture.  The IK Facebook Plugin supports both the Light and Dark color schemes for the Like Button widget and has multiple color schemes for the custom Facebook Feed widget.  The IK Facebook Plugin allows you to pass the ID of the Facebook page via the shortcode - allowing you to display the feeds from multiple accounts on one page!  Many plugins require you to know CSS to style your custom Facebook Feed widget - ours gives you full control over the output of your custom Facebook Feed, with Themes, Colorpickers, Options, and more!
 
 = Professional Development =
 
@@ -114,6 +114,10 @@ Nope!  Thanks to the WordPress Transient API, all you have to do is sit back and
 
 Try using the "No Style" theme -- this will output everything in a list.  You can also turn off the Like Button, Feed Title, and Profile Pic to have it look more like a list of posts.
 
+= I Want Even More Themes To Choose From For My Feed =
+
+The Pro version of IK Facebook has tons of themes!  [purchase IK Social Pro](http://iksocialpro.com/purchase-ik-social-pro/ "Purchase IK Social Pro")
+
 = I Want All To Show The Number of Likes In My Facebook Feed! =
 
 The Pro version of IK Facebook has this functionality - [purchase IK Social Pro](http://iksocialpro.com/purchase-ik-social-pro/ "Purchase IK Social Pro")
@@ -139,8 +143,16 @@ In this case, the Facebook Album ID is '539627829386059'.
 2. This is the Style Options Settings page of the IK Facebook Plugin.  These settings help you control the visible appearance of your custom facebook feed.
 3. This is the Display Options Settings page of the IK Facebook Plugin.  These settings help you control what content appears in your custom facebook feed.
 4. This is the Facebook Feed Widget of the IK Facebook Plugin.  The options on this widget allow you to override the settings you have selected on your Settings panel.
+5. This is the Plugin Status & Help Tab.  This tab provides example shortcodes, a quick summary of some important settings, and other means of help and support.
 
 == Changelog ==
+
+= 2.5 =
+* Pro Feature: Adds tons of new themes!  Including the Pro Halloween theme - just in time!
+* Feature: Many Styling Options have been added - and more will come!  No need to know CSS.
+* Update: Use WordPress Language Setting for outputting time formats.
+* Update: Reorganize options to be easier to find.  Update descriptions to be easier to understand.
+* Fix: Link Read More to individual object on Facebook.
 
 = 2.4.1 =
 * Fix: Address issue with Shared Images not coming through in the feed correctly.
@@ -358,5 +370,5 @@ In this case, the Facebook Album ID is '539627829386059'.
 
 == Upgrade Notice ==
 
-= 2.4 =
+= 2.5 =
 * Update Available!

@@ -12,11 +12,7 @@ class ikSocialPro
 		add_action( 'admin_init', array($this, 'ikfb_pro_admin_init') );
 	}
 	
-    function ikfb_pro_admin_init() {
-        wp_enqueue_style( 'farbtastic' );
-		wp_enqueue_script( 'farbtastic' );
-		wp_enqueue_script( 'ik_fb_pro_options', plugins_url('../js/js.js', __FILE__), array( 'farbtastic', 'jquery' ) );
-		
+    function ikfb_pro_admin_init() {		
 		//register our pro settings
 		$ik_social_options = new ikSocialProOptions();		
 		return $ik_social_options->register_settings();

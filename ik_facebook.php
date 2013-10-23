@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://iksocialpro.com/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.4.1
+Version: 2.5
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -53,7 +53,15 @@ class ikFacebook
 
 		//display "powered by"
 		add_action('wp_footer', array($this, 'ik_fb_show_powered_by' ));
+		
+		add_action( 'admin_init', array($this, 'ikfb_admin_init') );
 	}
+	
+    function ikfb_admin_init() {
+        wp_enqueue_style( 'farbtastic' );
+		wp_enqueue_script( 'farbtastic' );
+		wp_enqueue_script( 'ik_fb_pro_options', plugins_url('include/js/js.js', __FILE__), array( 'farbtastic', 'jquery' ) );
+    }
 
 	//register any widgets here
 	function ik_fb_register_widgets() {
@@ -61,36 +69,31 @@ class ikFacebook
 	}
 	
 	//add Basic CSS
-	function ik_fb_setup_css() {
-		wp_register_style( 'ik_facebook_style', plugins_url('include/css/style.css', __FILE__) );
-		wp_register_style( 'ik_facebook_dark_style', plugins_url('include/css/dark_style.css', __FILE__) );
-		wp_register_style( 'ik_facebook_light_style', plugins_url('include/css/light_style.css', __FILE__) );
-		wp_register_style( 'ik_facebook_blue_style', plugins_url('include/css/blue_style.css', __FILE__) );
-		wp_register_style( 'ik_facebook_no_style', plugins_url('include/css/no_style.css', __FILE__) );
-		wp_register_style( 'ik_facebook_gallery_style', plugins_url('include/css/gallery.css', __FILE__) );
+	function ik_fb_setup_css() {						
+		$ikfb_themes = array(
+			'ik_facebook_style' => 'include/css/style.css',
+			'ik_facebook_dark_style' => 'include/css/dark_style.css',
+			'ik_facebook_light_style' => 'include/css/light_style.css',
+			'ik_facebook_blue_style' => 'include/css/blue_style.css',
+			'ik_facebook_no_style' => 'include/css/no_style.css',
+			'ik_facebook_gallery_style' => 'include/css/gallery.css',
+		);
 		
-		switch(get_option('ik_fb_feed_theme')){
-			case 'dark_style':
-				wp_enqueue_style( 'ik_facebook_dark_style' );
-				wp_enqueue_style( 'ik_facebook_gallery_style' );
-				break;
-			case 'light_style':
-				wp_enqueue_style( 'ik_facebook_light_style' );
-				wp_enqueue_style( 'ik_facebook_gallery_style' );
-				break;
-			case 'blue_style':
-				wp_enqueue_style( 'ik_facebook_blue_style' );
-				wp_enqueue_style( 'ik_facebook_gallery_style' );
-				break;
-			case 'no_style':
-				wp_enqueue_style( 'ik_facebook_no_style' );
-				break;
-			case 'default_style':
-			default:
-				wp_enqueue_style( 'ik_facebook_style' );
-				wp_enqueue_style( 'ik_facebook_gallery_style' );
-				break;
+		if(is_valid_key(get_option('ik_fb_pro_key'))){
+			$ikfb_themes['ik_facebook_blue_gray_style'] = 'include/css/blue_gray_style.css';
+			$ikfb_themes['ik_facebook_cobalt_style'] = 'include/css/cobalt_style.css';
+			$ikfb_themes['ik_facebook_green_gray_style'] = 'include/css/green_gray_style.css';
+			$ikfb_themes['ik_facebook_halloween_style'] = 'include/css/halloween_style.css';
+			$ikfb_themes['ik_facebook_indigo_style'] = 'include/css/indigo_style.css';
+			$ikfb_themes['ik_facebook_orange_style'] = 'include/css/orange_style.css';			
 		}
+	
+		foreach($ikfb_themes as $name => $path){
+			wp_register_style( $name, plugins_url($path, __FILE__) );
+		}
+		
+		wp_enqueue_style( 'ik_facebook_' . get_option('ik_fb_feed_theme'));
+		wp_enqueue_style( 'ik_facebook_gallery_style' );
 	}
 
 	//add Custom CSS
@@ -333,6 +336,7 @@ class ikFacebook
 			} else {
 			*/
 				$the_link = "https://www.facebook.com/pages/".$page_data->name."/".$page_data->id;
+				
 			//}
 			
 			$replace = '<a target="_blank" href="'.$the_link.'"><span class="ik_fb_name">'.$page_data->name.'</span></a>';	
@@ -363,7 +367,7 @@ class ikFacebook
 		
 		if(count($feed)>0){//check to see if feed data is set			
 			foreach($feed as $item){//$item is the feed object	
-				$replace .= $this->buildFeedLineItem($item, $use_thumb, $width, $page_data, $height, $the_link);
+				$replace .= $this->buildFeedLineItem($item, $use_thumb, $width, $page_data, $height, $the_link, $page_data->id);
 			}
 		} else {
 			//something went wrong!
@@ -394,7 +398,7 @@ class ikFacebook
 	}
 	
 	//passed a FB Feed Item, builds the appropriate HTML
-	function buildFeedLineItem($item, $use_thumb, $width, $page_data, $height, $the_link = false){
+	function buildFeedLineItem($item, $use_thumb, $width, $page_data, $height, $the_link = false, $page_id = null){
 		global $ik_social_pro;
 	
 		//build default HTML structure
@@ -542,6 +546,8 @@ class ikFacebook
 			}			
 			
 			if($shortened){
+				$item_id = explode("_",$item->id);
+				$the_link = "https://www.facebook.com/permalink.php?id=".$page_id."&story_fbid=". $item_id[1];				
 				$line_item .= ' <a href="'.$the_link.'" class="ikfb_read_more" target="_blank">Read More...</a>';
 			}	
 
@@ -593,10 +599,11 @@ class ikFacebook
 				
 				//output date, if option to display it is enabled
 				if(get_option('ik_fb_show_date')){
+					setlocale(LC_TIME, WPLANG);
 					if(strtotime($date) >= strtotime('-1 day')){
 						$date = $this->humanTiming(strtotime($date)). " ago";
 					}else{
-						$date = date('F jS', strtotime($date));
+						$date = strftime('%B %d', strtotime($date));
 					}
 				
 					if(strlen($date)>2){

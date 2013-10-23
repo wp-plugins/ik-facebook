@@ -18,29 +18,12 @@ class ikSocialProOptions
 		register_setting( 'ik-fb-html-settings-group', 'ik_fb_caption_html' );
 		register_setting( 'ik-fb-html-settings-group', 'ik_fb_feed_html' );
 		register_setting( 'ik-fb-html-settings-group', 'ik_fb_use_custom_html' );
-		
-		register_setting( 'ik-fb-pro-style-settings-group', 'ik_fb_header_bg_color' );
-		register_setting( 'ik-fb-pro-style-settings-group', 'ik_fb_window_bg_color' );		
-		register_setting( 'ik-fb-pro-style-settings-group', 'ik_fb_powered_by_font_color' );		
-		register_setting( 'ik-fb-pro-style-settings-group', 'ik_fb_powered_by_font_size' );	
-		register_setting( 'ik-fb-pro-style-settings-group', 'ik_fb_posted_by_font_color' );				
-		register_setting( 'ik-fb-pro-style-settings-group', 'ik_fb_posted_by_font_size' );		
-		register_setting( 'ik-fb-pro-style-settings-group', 'ik_fb_description_font_color' );		
-		register_setting( 'ik-fb-pro-style-settings-group', 'ik_fb_description_font_size' );		
-		register_setting( 'ik-fb-pro-style-settings-group', 'ik_fb_link_font_color' );		
-		register_setting( 'ik-fb-pro-style-settings-group', 'ik_fb_link_font_size' );		
-		register_setting( 'ik-fb-pro-style-settings-group', 'ik_fb_feed_window_height' );		
-		register_setting( 'ik-fb-pro-style-settings-group', 'ik_fb_feed_window_width' );
-		register_setting( 'ik-fb-pro-style-settings-group', 'ik_fb_font_color' );
-		register_setting( 'ik-fb-pro-style-settings-group', 'ik_fb_font_size' );
-		register_setting( 'ik-fb-pro-style-settings-group', 'ik_fb_sidebar_feed_window_height' );
-		register_setting( 'ik-fb-pro-style-settings-group', 'ik_fb_sidebar_feed_window_width' );
 	}
 	
 	//function to produce tabs on admin screen
 	function ikfb_admin_tabs( $current = 'display_options' ) {
 	
-		$tabs = array( 'style_options' => 'Style Options', 'display_options' => 'Display Options', 'html_options' => 'Custom HTML Options', 'branding_options' => 'Branding Options' );
+		$tabs = array( 'display_options' => 'Display Options', 'html_options' => 'Custom HTML Options', 'branding_options' => 'Branding Options' );
 		echo '<div id="icon-themes" class="icon32"><br></div>';
 		echo '<h2 class="nav-tab-wrapper">';
 			foreach( $tabs as $tab => $name ){
@@ -67,156 +50,17 @@ class ikSocialProOptions
 			<p><a href="http://iksocialpro.com/purchase-ik-social-pro/?ikfbprotop">Upgrade to IK Social Pro now</a> and get access to tons of new features and settings. </p>
 		<?php endif; ?>
 		
-		<?php if ( isset ( $_GET['tabtab'] ) ) $this->ikfb_admin_tabs($_GET['tabtab']); else $this->ikfb_admin_tabs('style_options'); ?>
+		<?php if ( isset ( $_GET['tabtab'] ) ) $this->ikfb_admin_tabs($_GET['tabtab']); else $this->ikfb_admin_tabs('display_options'); ?>
 			
 		<?php 
 			if ( $pagenow == 'admin.php' && $_GET['page'] == 'ik-facebook/include/ik_facebook_options.php' ){
 				if ( isset ( $_GET['tabtab'] ) ) $tab = $_GET['tabtab'];
-				else $tab = 'style_options';
+				else $tab = 'display_options';
 			}	
 		
 			if(!is_valid_key(get_option('ik_fb_pro_key'))): ?><style>div.disabled,div.disabled label,div.disabled .description{color:#999999;}</style><?php endif;
 		
 			switch ( $tab ){
-				case 'style_options' :	
-			?>
-			<?php settings_fields( 'ik-fb-pro-style-settings-group' ); ?>
-		
-			<?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?><div class="disabled"><?php endif; ?>
-		
-			<h3>Style Options</h3>
-			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_header_bg_color">Feed Header Background Color</label></th>
-					<td>
-					<div class="color-picker" style="position: relative;">
-						<input <?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?>disabled="disabled"<?php endif; ?>  type="text" name="ik_fb_header_bg_color" id="ik_fb_header_bg_color" value="<?php echo strlen(get_option('ik_fb_header_bg_color'))>2 ? get_option('ik_fb_header_bg_color') : ' '; ?>" class="color" />
-						<div style="z-index: 100; background: none repeat scroll 0% 0% rgb(238, 238, 238); border: 1px solid rgb(204, 204, 204); position: absolute;" class="colorpicker"></div>
-					</div>		
-					
-					<p class="description">Input your hex color code.</p></td>
-				</tr>
-				
-				<tr valign="top">
-					<div class="color-picker" style="position: relative;">					
-					<th scope="row"><label for="ik_fb_window_bg_color">Feed Window Background Color</label></th>
-					<td>				
-					<div class="color-picker" style="position: relative;">
-						<input <?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?>disabled="disabled"<?php endif; ?>  type="text" name="ik_fb_window_bg_color" id="ik_fb_window_bg_color" value="<?php echo strlen(get_option('ik_fb_window_bg_color'))>2 ? get_option('ik_fb_window_bg_color') : ' '; ?>" class="color" />
-						<div style="z-index: 100; background: none repeat scroll 0% 0% rgb(238, 238, 238); border: 1px solid rgb(204, 204, 204); position: absolute;" class="colorpicker"></div>
-					</div>		
-					<p class="description">Input your hex color code.</p></td>
-				</tr>
-			
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_description_font_color">Description Font Color</label></th>
-					<td>
-					<div class="color-picker" style="position: relative;">				
-						<input <?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?>disabled="disabled"<?php endif; ?>  type="text" name="ik_fb_description_font_color" id="ik_fb_description_font_color" value="<?php echo strlen(get_option('ik_fb_description_font_color'))>2 ? get_option('ik_fb_description_font_color') : ' '; ?>" class="color" />
-						<div style="z-index: 100; background: none repeat scroll 0% 0% rgb(238, 238, 238); border: 1px solid rgb(204, 204, 204); position: absolute;" class="colorpicker"></div>
-					</div>						
-					<p class="description">Input your hex color code.</p></td>
-				</tr>
-			
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_description_font_size">Description Font Size</label></th>
-					<td><input <?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?>disabled="disabled"<?php endif; ?>  type="text" name="ik_fb_description_font_size" id="ik_fb_description_font_size" value="<?php echo get_option('ik_fb_description_font_size'); ?>" style="width: 250px" />
-					<p class="description">Input your font pixel size.</p></td>
-				</tr>
-			
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_font_color">Message Font Color</label></th>
-					<td>
-					<div class="color-picker" style="position: relative;">				
-						<input <?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?>disabled="disabled"<?php endif; ?>  type="text" name="ik_fb_font_color" id="ik_fb_font_color" value="<?php echo strlen(get_option('ik_fb_font_color'))>2 ? get_option('ik_fb_font_color') : ' '; ?>" class="color" />
-						<div style="z-index: 100; background: none repeat scroll 0% 0% rgb(238, 238, 238); border: 1px solid rgb(204, 204, 204); position: absolute;" class="colorpicker"></div>
-					</div>						
-					<p class="description">Input your hex color code.</p></td>
-				</tr>
-			
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_font_size">Message Font Size</label></th>
-					<td><input <?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?>disabled="disabled"<?php endif; ?>  type="text" name="ik_fb_font_size" id="ik_fb_font_size" value="<?php echo get_option('ik_fb_font_size'); ?>" style="width: 250px" />
-					<p class="description">Input your font pixel size.</p></td>
-				</tr>
-			
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_link_font_color">Link Font Color</label></th>
-					<td>
-					<div class="color-picker" style="position: relative;">				
-						<input <?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?>disabled="disabled"<?php endif; ?>  type="text" name="ik_fb_link_font_color" id="ik_fb_link_font_color" value="<?php echo strlen(get_option('ik_fb_link_font_color'))>2 ? get_option('ik_fb_link_font_color') : ' '; ?>" class="color" />
-						<div style="z-index: 100; background: none repeat scroll 0% 0% rgb(238, 238, 238); border: 1px solid rgb(204, 204, 204); position: absolute;" class="colorpicker"></div>
-					</div>						
-					<p class="description">Input your hex color code.</p></td>
-				</tr>
-			
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_link_font_size">Link Font Size</label></th>
-					<td><input <?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?>disabled="disabled"<?php endif; ?>  type="text" name="ik_fb_link_font_size" id="ik_fb_link_font_size" value="<?php echo get_option('ik_fb_link_font_size'); ?>" style="width: 250px" />
-					<p class="description">Input your font pixel size.</p></td>
-				</tr>			
-			
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_posted_by_font_color">Posted By Font Color</label></th>
-					<td>
-					<div class="color-picker" style="position: relative;">				
-						<input <?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?>disabled="disabled"<?php endif; ?>  type="text" name="ik_fb_posted_by_font_color" id="ik_fb_posted_by_font_color" value="<?php echo strlen(get_option('ik_fb_posted_by_font_color'))>2 ? get_option('ik_fb_posted_by_font_color') : ' '; ?>" class="color" />
-						<div style="z-index: 100; background: none repeat scroll 0% 0% rgb(238, 238, 238); border: 1px solid rgb(204, 204, 204); position: absolute;" class="colorpicker"></div>
-					</div>						
-					<p class="description">Input your hex color code.</p></td>
-				</tr>
-			
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_posted_by_font_size">Posted By Font Size</label></th>
-					<td><input <?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?>disabled="disabled"<?php endif; ?>  type="text" name="ik_fb_posted_by_font_size" id="ik_fb_posted_by_font_size" value="<?php echo get_option('ik_fb_posted_by_font_size'); ?>" style="width: 250px" />
-					<p class="description">Input your font pixel size.</p></td>
-				</tr>
-				
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_feed_window_height">Feed Window Height</label></th>
-					<td><input <?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?>disabled="disabled"<?php endif; ?>  type="text" name="ik_fb_feed_window_height" id="ik_fb_feed_window_height" value="<?php echo get_option('ik_fb_feed_window_height'); ?>" style="width: 250px" />
-					<p class="description">Input your feed height pixel size. This option does not apply to the sidebar widget.</p></td>
-				</tr>
-				
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_feed_window_width">Feed Window Width</label></th>
-					<td><input <?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?>disabled="disabled"<?php endif; ?>  type="text" name="ik_fb_feed_window_width" id="ik_fb_feed_window_width" value="<?php echo get_option('ik_fb_feed_window_width'); ?>" style="width: 250px" />
-					<p class="description">Input your feed width pixel size. This option does not apply to the sidebar widget.</p></td>
-				</tr>
-				
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_sidebar_feed_window_height">Sidebar Feed Window Height</label></th>
-					<td><input <?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?>disabled="disabled"<?php endif; ?>  type="text" name="ik_fb_sidebar_feed_window_height" id="ik_fb_sidebar_feed_window_height" value="<?php echo get_option('ik_fb_sidebar_feed_window_height'); ?>" style="width: 250px" />
-					<p class="description">Input your feed height pixel size.</p></td>
-				</tr>
-				
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_sidebar_feed_window_width">Sidebar Feed Window Width</label></th>
-					<td><input <?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?>disabled="disabled"<?php endif; ?>  type="text" name="ik_fb_sidebar_feed_window_width" id="ik_fb_sidebar_feed_window_width" value="<?php echo get_option('ik_fb_sidebar_feed_window_width'); ?>" style="width: 250px" />
-					<p class="description">Input your feed width pixel size.</p></td>
-				</tr>
-			
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_powered_by_font_color">Powered By Font Color</label></th>
-					<td>
-					<div class="color-picker" style="position: relative;">				
-						<input <?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?>disabled="disabled"<?php endif; ?>  type="text" name="ik_fb_powered_by_font_color" id="ik_fb_powered_by_font_color" value="<?php echo strlen(get_option('ik_fb_powered_by_font_color'))>2 ? get_option('ik_fb_powered_by_font_color') : ' '; ?>" class="color" />
-						<div style="z-index: 100; background: none repeat scroll 0% 0% rgb(238, 238, 238); border: 1px solid rgb(204, 204, 204); position: absolute;" class="colorpicker"></div>
-					</div>						
-					<p class="description">Input your hex color code.</p></td>
-				</tr>
-			
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_powered_by_font_size">Powered By Font Size</label></th>
-					<td><input <?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?>disabled="disabled"<?php endif; ?>  type="text" name="ik_fb_powered_by_font_size" id="ik_fb_powered_by_font_size" value="<?php echo get_option('ik_fb_powered_by_font_size'); ?>" style="width: 250px" />
-					<p class="description">Input your font pixel size.</p></td>
-				</tr>
-			</table>
-			
-			<?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?></div><?php endif; ?>
-			
-			<?php
-				break;
 				case 'display_options' :	
 			?>
 			<?php settings_fields( 'ik-fb-pro-display-settings-group' ); ?>
