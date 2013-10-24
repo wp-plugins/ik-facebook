@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://iksocialpro.com/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.5.1
+Version: 2.5.2
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -80,7 +80,6 @@ class ikFacebook
 		);
 		
 		if(is_valid_key(get_option('ik_fb_pro_key'))){
-			$ikfb_themes['ik_facebook_blue_gray_style'] = 'include/css/blue_gray_style.css';
 			$ikfb_themes['ik_facebook_cobalt_style'] = 'include/css/cobalt_style.css';
 			$ikfb_themes['ik_facebook_green_gray_style'] = 'include/css/green_gray_style.css';
 			$ikfb_themes['ik_facebook_halloween_style'] = 'include/css/halloween_style.css';
@@ -275,35 +274,29 @@ class ikFacebook
 		
 		//feed window width
 		$custom_styling_1 = ' style="';
-		if(is_valid_key(get_option('ik_fb_pro_key'))){
-			if(strlen($ik_fb_feed_width)>0){
-				$custom_styling_1 .= "width: {$ik_fb_feed_width}px;";
-			}	
-			if(strlen($ik_fb_feed_height)>0){		
-				$custom_styling_1 .= "height: auto; ";
-			}
+		if(strlen($ik_fb_feed_width)>0){
+			$custom_styling_1 .= "width: {$ik_fb_feed_width}px;";
+		}	
+		if(strlen($ik_fb_feed_height)>0){		
+			$custom_styling_1 .= "height: auto; ";
 		}
 		$custom_styling_1 .= '"';
 		
 		//feed window height, feed window bg color
 		$custom_styling_2 = ' style="';
-		if(is_valid_key(get_option('ik_fb_pro_key'))){
-			if(strlen($ik_fb_feed_height)>0){		
-				$custom_styling_2 .= "height: {$ik_fb_feed_height}px; ";
-			}
-			if(strlen($ik_fb_window_bg_color)>0){
-				$custom_styling_2 .= " background-color: {$ik_fb_window_bg_color};";
-			}
-		}		
+		if(strlen($ik_fb_feed_height)>0){		
+			$custom_styling_2 .= "height: {$ik_fb_feed_height}px; ";
+		}
+		if(strlen($ik_fb_window_bg_color)>0){
+			$custom_styling_2 .= " background-color: {$ik_fb_window_bg_color};";
+		}	
 		
 		$custom_styling_2 .= '"';
 		
 		//feed heading bg color
 		$custom_styling_3 = ' style="';
-		if(is_valid_key(get_option('ik_fb_pro_key'))){
-			if(strlen($ik_fb_header_bg_color)>0){
-				$custom_styling_3 .= "background-color: {$ik_fb_header_bg_color};";
-			}
+		if(strlen($ik_fb_header_bg_color)>0){
+			$custom_styling_3 .= "background-color: {$ik_fb_header_bg_color};";
 		}
 		$custom_styling_3 .= '"';
 		
@@ -461,8 +454,8 @@ class ikFacebook
 				}
 				
 				//add custom message styling from pro options
-				if(is_valid_key(get_option('ik_fb_pro_key')) && !get_option('ik_fb_use_custom_html')){		
-					$message_html = $ik_social_pro->pro_message_styling($message_html);
+				if(!get_option('ik_fb_use_custom_html')){		
+					$message_html = $this->ikfb_message_styling($message_html);
 				}		
 				
 				$line_item .= str_replace('{ikfb:feed_item:message}', $replace, $message_html);			
@@ -500,22 +493,13 @@ class ikFacebook
 					$height = get_option('ik_fb_fix_feed_image_height') ? $height : '';	
 					
 					$replace = '<a href="'.$photo_link.'" title="Click to View Fullsize Photo" target="_blank"><img width="'.$width.'" height="'.$height.'" src="'.$photo_link.'" /></a>';
-								
-					//add custom image styling from pro options
-					if(is_valid_key(get_option('ik_fb_pro_key')) && !get_option('ik_fb_use_custom_html')){		
-						$image_html = $ik_social_pro->pro_image_styling($image_html);
-					}		
+						
 					
 					$line_item .= str_replace('{ikfb:feed_item:image}', $replace, $image_html);						
 				} else {						
 					//otherwise, use thumbnail
 					$replace = '<a href="'.$photo_link.'" target="_blank"><img src="'.$item->picture.'" /></a>';
-				
-					//add custom image styling from pro options
-					if(is_valid_key(get_option('ik_fb_pro_key')) && !get_option('ik_fb_use_custom_html')){		
-						$image_html = $ik_social_pro->pro_image_styling($image_html);
-					}	
-					
+									
 					$line_item .= str_replace('{ikfb:feed_item:image}', $replace, $image_html);	
 				}
 
@@ -537,8 +521,8 @@ class ikFacebook
 					}					
 				
 					//add custom image styling from pro options
-					if(is_valid_key(get_option('ik_fb_pro_key')) && !get_option('ik_fb_use_custom_html')){		
-						$description_html = $ik_social_pro->pro_description_styling($description_html);
+					if(!get_option('ik_fb_use_custom_html')){		
+						$description_html = $this->ikfb_description_styling($description_html);
 					}	
 					
 					$line_item .= str_replace('{ikfb:feed_item:description}', $replace, $description_html);	
@@ -566,8 +550,8 @@ class ikFacebook
 					$replace_back = $link_text.'</a>';				
 				
 					//add custom link styling from pro options
-					if(is_valid_key(get_option('ik_fb_pro_key')) && !get_option('ik_fb_use_custom_html')){		
-						$replace_front = $ik_social_pro->pro_link_styling($item->link);
+					if(!get_option('ik_fb_use_custom_html')){		
+						$replace_front = $this->ikfb_link_styling($item->link);
 					}	
 					
 					$line_item .= str_replace('{ikfb:feed_item:link}', $replace_front.$replace_back, $caption_html);	
@@ -588,8 +572,8 @@ class ikFacebook
 							$posted_by_text = '<p class="ikfb_item_author">Posted By '.$from_text.'</p>';
 				
 							//add custom posted by styling from pro options
-							if(is_valid_key(get_option('ik_fb_pro_key')) && !get_option('ik_fb_use_custom_html')){		
-								$posted_by_text = $ik_social_pro->pro_posted_by_styling($posted_by_text);
+							if(!get_option('ik_fb_use_custom_html')){		
+								$posted_by_text = $this->ikfb_posted_by_styling($posted_by_text);
 							}			
 							//TBD: make Custom HTML option for Posted By
 							$line_item .= $posted_by_text;
@@ -726,7 +710,6 @@ class ikFacebook
 	function ik_fb_show_powered_by() {
 		//use this to track if powered by has been output
 		global $ikfb_footer_poweredby_output;
-		global $ik_social_pro;
 				
 		if(get_option('ik_fb_powered_by')){			
 			if($ikfb_footer_poweredby_output){
@@ -735,8 +718,8 @@ class ikFacebook
 				$content = '<a href="https://illuminatikarate.com/ik-facebook-plugin/" target="_blank" id="ikfb_powered_by">Powered By IK Facebook Plugin</a>';			
 				
 				//add custom powered by styling from pro options
-				if(is_valid_key(get_option('ik_fb_pro_key')) && !get_option('ik_fb_use_custom_html')){		
-					$content = $ik_social_pro->pro_powered_by_styling($content);
+				if(!get_option('ik_fb_use_custom_html')){		
+					$content = $this->ikfb_powered_by_styling($content);
 				}		
 				
 				echo $content;
@@ -801,6 +784,122 @@ class ikFacebook
 		}
 		
 		return $retData;
+	}
+	
+	/* Styling Functions */
+	
+	
+	//inserts any selected custom styling options into the feed's message html
+	//load custom style options from Pro Plugin, if available
+	function ikfb_message_styling($message_html = ""){
+		$ik_fb_font_color = strlen(get_option('ik_fb_font_color')) > 2 ? get_option('ik_fb_font_color') : '';
+		$ik_fb_font_size = strlen(get_option('ik_fb_font_size')) > 0 ? get_option('ik_fb_font_size') : '';
+
+		//load our custom styling, to insert
+		$insertion = ' style="';
+		if(strlen($ik_fb_font_size)>0){
+			$insertion .= "font-size: {$ik_fb_font_size}px; ";
+		}
+		if(strlen($ik_fb_font_color)>0){
+			$insertion .= "color: {$ik_fb_font_color};";
+		}
+		$insertion .= '"';					
+		//find the position of the replacement shortcode in the HTML
+		$position = strpos($message_html,'{ikfb:feed_item:message}');
+		//move back one character from that position, assuming a closing bracket to some HTML tag, and insert our custom styling
+		$message_html = substr_replace($message_html, $insertion, $position-1, 0);
+		
+		return $message_html;
+	}
+	
+	//inserts any selected custom styling options into the feed's link
+	//$replace = <p class="ik_fb_facebook_link">{ikfb:feed_item:link}</p>
+	function ikfb_link_styling($item_link = ""){	
+		$ik_fb_link_font_color = strlen(get_option('ik_fb_link_font_color')) > 2 ? get_option('ik_fb_link_font_color') : '';
+		$ik_fb_link_font_size = strlen(get_option('ik_fb_link_font_size')) > 0 ? get_option('ik_fb_link_font_size') : '';
+		
+		//load our custom styling, to insert
+		$insertion = ' style="';
+		if(strlen($ik_fb_link_font_size)>0){
+			$insertion .= "font-size: {$ik_fb_link_font_size}px; ";
+		}
+		if(strlen($ik_fb_link_font_color)>0){
+			$insertion .= "color: {$ik_fb_link_font_color};";
+		}
+		$insertion .= '"';
+		
+		$replace = '<a href="'.$item_link.'" target="_blank" '.$insertion.'>';	
+		
+		return $replace;
+	}
+	
+	//inserts any selected custom styling options into the feed's posted by attribute
+	//$line_item .= '<p class="ikfb_item_author">Posted By '.$from_text.'</p>';		
+	function ikfb_posted_by_styling($line_item = ""){	
+		$ik_fb_posted_by_font_color = strlen(get_option('ik_fb_posted_by_font_color')) > 2 ? get_option('ik_fb_posted_by_font_color') : '';
+		$ik_fb_posted_by_font_size = strlen(get_option('ik_fb_posted_by_font_size')) > 0 ? get_option('ik_fb_posted_by_font_size') : '';
+		
+		//load our custom styling, to insert
+		$insertion = ' style="';
+		if(strlen($ik_fb_posted_by_font_size)>0){
+			$insertion .= "font-size: {$ik_fb_posted_by_font_size}px; ";
+		}
+		if(strlen($ik_fb_posted_by_font_color)>0){
+			$insertion .= "color: {$ik_fb_posted_by_font_color};";
+		}
+		$insertion .= '"';					
+		//find the position of the replacement shortcode in the HTML
+		$position = strpos($line_item,'Posted By');
+		//move back one character from that position, assuming a closing bracket to some HTML tag, and insert our custom styling
+		$line_item = substr_replace($line_item, $insertion, $position-1, 0);
+		
+		return $line_item;
+	}
+	
+	//inserts any selected custom styling options into the feed's description
+	//$replace = $item->description;				
+	function ikfb_description_styling($replace = ""){	
+		$ik_fb_description_font_color = strlen(get_option('ik_fb_description_font_color')) > 2 ? get_option('ik_fb_description_font_color') : '';
+		$ik_fb_description_font_size = strlen(get_option('ik_fb_description_font_size')) > 0 ? get_option('ik_fb_description_font_size') : '';
+		
+		//load our custom styling, to insert
+		$insertion = ' style="';
+		if(strlen($ik_fb_description_font_size)>0){
+			$insertion .= "font-size: {$ik_fb_description_font_size}px; ";
+		}
+		if(strlen($ik_fb_description_font_color)>0){
+			$insertion .= "color: {$ik_fb_description_font_color};";
+		}
+		$insertion .= '"';					
+		//find the position of the replacement shortcode in the HTML
+		$position = strpos($replace,'{ikfb:feed_item:description}');
+		//move back one character from that position, assuming a closing bracket to some HTML tag, and insert our custom styling
+		$replace = substr_replace($replace, $insertion, $position-1, 0);
+		
+		return $replace;
+	}
+	
+	//inserts any selected custom styling options into the feed's powered by attribute	
+	//$content = '<a href="https://illuminatikarate.com/ik-facebook-plugin/" target="_blank" id="ikfb_powered_by">Powered By IK Facebook Plugin</a>';	
+	function ikfb_powered_by_styling($content = ""){
+		$ik_fb_powered_by_font_color = strlen(get_option('ik_fb_powered_by_font_color')) > 2 ? get_option('ik_fb_powered_by_font_color') : '';
+		$ik_fb_powered_by_font_size = strlen(get_option('ik_fb_powered_by_font_size')) > 0 ? get_option('ik_fb_powered_by_font_size') : '';
+		
+		//load our custom styling, to insert
+		$insertion = ' style="';
+		if(strlen($ik_fb_powered_by_font_size)>0){
+			$insertion .= "font-size: {$ik_fb_powered_by_font_size}px; ";
+		}
+		if(strlen($ik_fb_powered_by_font_color)>0){
+			$insertion .= "color: {$ik_fb_powered_by_font_color};";
+		}
+		$insertion .= '"';					
+		//find the position of the replacement shortcode in the HTML
+		$position = strpos($content,'id="ikfb_powered_by"');
+		//move back one character from that position, assuming a closing bracket to some HTML tag, and insert our custom styling
+		$content = substr_replace($content, $insertion, $position-1, 0);
+		
+		return $content;
 	}
 }//end ikFacebook
 

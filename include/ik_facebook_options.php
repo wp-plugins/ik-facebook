@@ -257,7 +257,6 @@ class ikFacebookOptions
 						);
 						
 						if(is_valid_key(get_option('ik_fb_pro_key'))){
-							$ikfb_themes['blue_gray_style'] = 'Blue Gray Style';
 							$ikfb_themes['cobalt_style'] = 'Cobalt Style';
 							$ikfb_themes['green_gray_style'] = 'Green Gray Style';
 							$ikfb_themes['halloween_style'] = 'Halloween Style';
@@ -314,7 +313,7 @@ class ikFacebookOptions
 					<th scope="row"><label for="ik_fb_header_bg_color">Feed Header Background Color</label></th>
 					<td>
 					<div class="color-picker" style="position: relative;">
-						<input <?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?>disabled="disabled"<?php endif; ?>  type="text" name="ik_fb_header_bg_color" id="ik_fb_header_bg_color" value="<?php echo strlen(get_option('ik_fb_header_bg_color'))>2 ? get_option('ik_fb_header_bg_color') : ' '; ?>" class="color" />
+						<input type="text" name="ik_fb_header_bg_color" id="ik_fb_header_bg_color" value="<?php echo strlen(get_option('ik_fb_header_bg_color'))>2 ? get_option('ik_fb_header_bg_color') : ' '; ?>" class="color" />
 						<div style="z-index: 100; background: none repeat scroll 0% 0% rgb(238, 238, 238); border: 1px solid rgb(204, 204, 204); position: absolute;" class="colorpicker"></div>
 					</div>		
 					
