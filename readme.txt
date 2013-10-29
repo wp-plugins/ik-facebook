@@ -155,6 +155,9 @@ In this case, the Facebook Album ID is '539627829386059'.
 
 == Changelog ==
 
+= 2.5.4 =
+* Fix: address CSS issue in Blue Theme.
+
 = 2.5.3 =
 * Feature: Expands Event Support - now allowed to embed the Feed specifically from an Event's Page!  Plugin will automatically detect if this is an Event Feed.
 

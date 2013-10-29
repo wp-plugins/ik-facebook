@@ -1,4 +1,4 @@
-/*
+\/*
 This file is part of IK Facebook.
 
 IK Facebook is free software: you can redistribute it and/or modify
@@ -45,6 +45,7 @@ p.ik_fb_error{
 #ik_fb_widget .ik_fb_profile_picture img {
     float: left;
     margin: 0 4px 4px 0;
+	max-height: 50px;
 }
 #ik_fb_widget .ik_fb_profile_picture .ik_fb_facebook_like {
     float: left;
@@ -223,4 +224,10 @@ p.ik_fb_error{
     font-size: 10px;
     margin: 0 auto;
     text-align: center;
+}
+
+.ikfb_event_meta {
+    font-size: 12px !important;
+    line-height: 16px !important;
+    padding: 4px 10px !important;
 }
