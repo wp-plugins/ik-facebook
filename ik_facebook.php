@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://iksocialpro.com/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.5.2
+Version: 2.5.3
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -258,7 +258,15 @@ class ikFacebook
 		$fbData = $this->loadFacebook($id, $num_posts);
 		
 		$feed = $fbData['feed'];
+		
 		$page_data = $fbData['page_data'];
+		
+		//check and see if there is a start time - this will indicate whether or not this is an event!
+		if(isset($page_data->start_time)){
+			$is_event = true;
+		} else {
+			$is_event = false;
+		}
 		
 		$ik_fb_header_bg_color = strlen(get_option('ik_fb_header_bg_color')) > 2 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_header_bg_color') : '';
 		$ik_fb_window_bg_color = strlen(get_option('ik_fb_window_bg_color')) > 2 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_window_bg_color') : '';
@@ -347,14 +355,20 @@ class ikFacebook
 			$output = str_replace('{ikfb:link}', '', $output);	
 		}
 
-		//only show like button if enabled in settings
-		if(get_option('ik_fb_show_like_button')){
-			$replace = $this->ik_fb_like_button($the_link, "45", $colorscheme);
-			$output = str_replace('{ikfb:like_button}', $replace, $output);		
+		//events don't have a like button, so display datetime and location
+		if(!$is_event){
+			//only show like button if enabled in settings
+			if(get_option('ik_fb_show_like_button')){
+				$replace = $this->ik_fb_like_button($the_link, "45", $colorscheme);
+				$output = str_replace('{ikfb:like_button}', $replace, $output);		
+			} else {
+				$output = str_replace('{ikfb:like_button}', '', $output);		
+			}
 		} else {
-			$output = str_replace('{ikfb:like_button}', '', $output);		
+			$replace = '<p class="ikfb_event_meta">' . $page_data->location . ', ' . date('M d, Y',strtotime($page_data->start_time)) . '<br/>' . $page_data->venue->street . ', ' . $page_data->venue->city . ', ' . $page_data->venue->country . '</p>';
+			$output = str_replace('{ikfb:like_button}', $replace, $output);	
 		}
-
+		
 		//build line items to replace with
 		$replace = '';
 		
@@ -393,7 +407,7 @@ class ikFacebook
 	//passed a FB Feed Item, builds the appropriate HTML
 	function buildFeedLineItem($item, $use_thumb, $width, $page_data, $height, $the_link = false, $page_id = null){
 		global $ik_social_pro;
-	
+		
 		//build default HTML structure
 		$default_feed_item_html = '<li class="ik_fb_feed_item">{ikfb:feed_item}</li>';		
 		$default_message_html = '<p>{ikfb:feed_item:message}</p>';		
@@ -773,7 +787,8 @@ class ikFacebook
 			}
 			
 			$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/feed?limit={$limit}&{$this->authToken}", true);//the feed data
-			$page_data = $this->fetchUrl("https://graph.facebook.com/{$profile_id}", true);//the page data
+						
+			$page_data = $this->fetchUrl("https://graph.facebook.com/{$profile_id}?{$this->authToken}", true);//the page data
 			
 			if(isset($feed->data)){//check to see if feed data is set				
 				$retData['feed'] = $feed->data;

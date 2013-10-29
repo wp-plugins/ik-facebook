@@ -3,8 +3,8 @@ Contributors: richardgabriel
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V7HR8DP4EJSYN
 Tags: facebook, facebook feed, facebook embed, facebook feed widget, facebook feed embed, like button widget, facebook events
 Requires at least: 3.0.1
-Tested up to: 3.6.1
-Stable tag: 2.5.2
+Tested up to: 3.7
+Stable tag: 2.5.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -26,6 +26,7 @@ The IK Facebook Plugin is an **easy-to-use** plugin that allows users to add a *
 * Adding a Facebook-powered Photo Gallery to your website!
 * Show multiple different custom Facebook Feeds!
 * Display Facebook Events in your Feed!
+* Use a Facebook Event instead of a Page - Widget will output a customized Feed from the Facebook Event's Wall!
 * Custom Facebook Feed Widget allows user to override Site Wide Options
 * Ability to Pass Page ID Via Shortcode and Widget Allows Multiple Facebook Feeds on One Page!
 * And our quality documentation won't leave you hanging!
@@ -45,6 +46,10 @@ The IK Facebook Plugin is a free version of [IK Social Pro](http://iksocialpro.c
 
 The IK Facebook Plugin includes the option to set your own custom CSS for styling purposes or, if you prefer, the IK Facebook Plugin allows you to include a custom style sheet in your theme directory  -- either method is great for displaying a custom Facebook Feed widget. The IK Facebook Plugin also allows the user to select from a few pre-made Feed Themes, to help generate their custom Facebook Feed widget.  *Gone are the days of fighting with the Facebook Social Plugin!*
 
+= More Than Just A Custom Facebook Feed - Events and Photo Galleries, too! =
+
+The IK Facebook Plugin intends to support all types Facebook content - not just standard Feeds.  Currently, we have support for Facebook Events and Facebook Photo Galleries.  More features and functionality are added very regularly.  Don't see something you need?  Let us know!
+
 = New Features Are On The Way! =
 
 Currently on our roadmap, we are planning on doing a lot more with the new Photo Gallery features - such as lightbox technology and other JavaScript options, sidebar widgets, and more!  We also have plans to add more options to the sidebar custom facebook feed widget, as well as adding the ability to display videos in your custom facebook feed.
@@ -56,6 +61,9 @@ This section describes how to install the plugin and get it working.
 1. Upload the contents of `/ik-facebook/` to the `/wp-content/plugins/` directory
 2. Activate the IK Facebook Plugin through the 'Plugins' menu in WordPress
 3. [Click here](http://iksocialpro.com/installation-usage-instructions/configuration-options-and-instructions/ "Configuration Options and Instructions") for information on how to configure the plugin.
+
+= Outputting the Facebook Event Feed =
+* This is no different than outputting a normal Page Feed!  Just follow the instructions below and our plugin will detect what type of feed is being displayed.
 
 = Outputting the Facebook Feed =
 * To output the custom Facebook Feed, place `[ik_fb_feed colorscheme="light" use_thumb="true" width="250" num_posts="5" id="123456789"]` in the body of a post, or use the Appearance section to add the The IK Facebook Plugin Widget to your Widgets area.  Valid choices for colorscheme are "light" and "dark"  If 'use_thumb' is set to true, the value of 'width' will be ignored.  If 'use_thumb' or 'width’ is not set, the values from the Options page will be used.  If id is not set, the shortcode will use the Page ID from your Settings page.  All of the options on the widget will use the defaults, drawn from the Settings page, if they aren't passed via the widget.
@@ -146,6 +154,9 @@ In this case, the Facebook Album ID is '539627829386059'.
 5. This is the Plugin Status & Help Tab.  This tab provides example shortcodes, a quick summary of some important settings, and other means of help and support.
 
 == Changelog ==
+
+= 2.5.3 =
+* Feature: Expands Event Support - now allowed to embed the Feed specifically from an Event's Page!  Plugin will automatically detect if this is an Event Feed.
 
 = 2.5.2 =
 * Minor Fix: Remove duplicate theme.
@@ -377,5 +388,5 @@ In this case, the Facebook Album ID is '539627829386059'.
 
 == Upgrade Notice ==
 
-= 2.5.2 =
-* Bug Fix Available!
+= 2.5.3 =
+* Event Feed Support now Available!
