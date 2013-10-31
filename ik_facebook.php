@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://iksocialpro.com/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.5.5
+Version: 2.5.5.1
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -493,10 +493,13 @@ class ikFacebook
 				
 				if(isset($photo->data->url)){
 					$photo_link = $photo->data->url;
+					$photo_source = $photo->data->url;
 				} else if(isset($params['url'])) {
 					$photo_link = $params['url'];
+					$photo_source = $params['url'];
 				} else {
 					$photo_link = $item->picture;
+					$photo_source = $item->picture;
 				}
 				
 				if(get_option('ik_fb_link_photo_to_feed_item')){
@@ -511,7 +514,7 @@ class ikFacebook
 					$width = get_option('ik_fb_fix_feed_image_width') ? $width : '';
 					$height = get_option('ik_fb_fix_feed_image_height') ? $height : '';	
 					
-					$replace = '<a href="'.$photo_link.'" title="Click to View Fullsize Photo" target="_blank"><img width="'.$width.'" height="'.$height.'" src="'.$photo_link.'" /></a>';
+					$replace = '<a href="'.$photo_link.'" title="Click to View Fullsize Photo" target="_blank"><img width="'.$width.'" height="'.$height.'" src="'.$photo_source.'" /></a>';
 						
 					
 					$line_item .= str_replace('{ikfb:feed_item:image}', $replace, $image_html);						
