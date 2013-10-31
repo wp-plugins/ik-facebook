@@ -105,6 +105,7 @@ class ikFacebookOptions
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_character_limit' );
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_description_character_limit' );
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_caption_character_limit' );
+		register_setting( 'ik-fb-display-settings-group', 'ik_fb_link_photo_to_feed_item' );
 		
 		//register any pro settings
 		if(function_exists("ik_fb_pro_register_settings")){
@@ -443,6 +444,14 @@ class ikFacebookOptions
 			
 			<h3>Display Options</h3>
 			<p>The below options are used to control the type and amount of content that is displayed in your Facebook Feed.</p>
+			
+			<table class="form-table">
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_link_photo_to_feed_item">Link Photo to Feed Item</label></th>
+					<td><input type="checkbox" name="ik_fb_link_photo_to_feed_item" id="ik_fb_link_photo_to_feed_item" value="1" <?php if(get_option('ik_fb_link_photo_to_feed_item')){ ?> checked="CHECKED" <?php } ?>/>
+					<p class="description">If checked, the Photos in the Feed will link to the same location that the Read More text does.  If unchecked, the Photos in the Feed will link to the Full Sized version of themselves.</p></td>
+				</tr>
+			</table>
 			
 			<table class="form-table">
 				<tr valign="top">
