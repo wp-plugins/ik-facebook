@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, facebook feed, facebook embed, facebook feed widget, facebook feed embed, like button widget, facebook events
 Requires at least: 3.0.1
 Tested up to: 3.7.1
-Stable tag: 2.5.5.1
+Stable tag: 2.5.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -13,6 +13,30 @@ IK Facebook is an easy-to-use plugin for adding a Custom Facebook Feed of any Pu
 == Description ==
 
 The IK Facebook Plugin is an **easy-to-use** plugin that allows users to add a **custom Facebook Feed widget** to the sidebar, as a widget, or to embed the custom Facebook Feed widget into a Page or Post using the shortcode, of any Public Facebook Page.  The IK Facebook Plugin also allows you to insert a Facebook Like Button widget into the Page, Post, or theme.
+
+
+= What People Are Saying = 
+
+**5 stars**
+_Super plugin and support_
+By _mountaincrawlie, October 29, 2013_
+
+"This plugin has ticked all the boxes for me - responsive and displays images and super fast replies to my support question - thanks"
+
+
+**5 stars**
+_Great Plugin and Super Support_
+By _warmearthling, October 1, 2013_
+
+"I searched forever for a simple plugin to display a public Facebook page pictures on my site. This plugin worked perfectly, and even better is the great support. Thanks so much Richard."
+
+
+**5 stars**
+_Fantastic_
+By _sarah.ruth.mccormick, September 9, 2013_
+
+"Looks great, easy to use. Better than any of the other Facebook feed plugins I've tried."
+
 
 = The IK Facebook Plugin is a great plugin for many uses, including: =
 
@@ -154,6 +178,12 @@ In this case, the Facebook Album ID is '539627829386059'.
 5. This is the Plugin Status & Help Tab.  This tab provides example shortcodes, a quick summary of some important settings, and other means of help and support.
 
 == Changelog ==
+
+= 2.5.6 =
+* Feature: adds Like Button Widget for Sidebar.
+* Update: add some sanitation to various Options.
+* Update: format Style Options screen to be more user-friendly.  Add ability to set height of images and feed window to 100%, as well as specific pixel sizes.
+* Update: modify output of title attribute on photo links for compatibility with some lightbox javascripts, such as foobox
 
 = 2.5.5.1 =
 * Fix: address issue where non-thumbnail images had broken sources if the link to facebook item option was enabled.
@@ -397,5 +427,5 @@ In this case, the Facebook Album ID is '539627829386059'.
 
 == Upgrade Notice ==
 
-= 2.5.5 =
+= 2.5.6 =
 * Update Available!

@@ -92,8 +92,15 @@ class ikFacebookOptions
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_font_size' );
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_sidebar_feed_window_height' );
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_sidebar_feed_window_width' );
+		register_setting( 'ik-fb-style-settings-group', 'other_ik_fb_feed_window_width' );
+		register_setting( 'ik-fb-style-settings-group', 'other_ik_fb_feed_image_width' );
+		register_setting( 'ik-fb-style-settings-group', 'other_ik_fb_feed_image_height' );
+		register_setting( 'ik-fb-style-settings-group', 'other_ik_fb_feed_window_height' );
+		register_setting( 'ik-fb-style-settings-group', 'other_ik_fb_sidebar_feed_window_height' );
+		register_setting( 'ik-fb-style-settings-group', 'other_ik_fb_sidebar_feed_window_width' );
 		
 		//register our display settings
+		register_setting( 'ik-fb-display-settings-group', 'ik_fb_hide_feed_images' );
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_show_like_button' );
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_show_profile_picture' );
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_show_page_title' );
@@ -285,9 +292,11 @@ class ikFacebookOptions
 				
 				<tr valign="top">
 					<th scope="row"><label for="ik_fb_custom_css">Custom CSS</a></th>
-					<td><textarea name="ik_fb_custom_css" id="ik_fb_custom_css" style="width: 250px; height: 250px;"><?php echo get_option('ik_fb_custom_css'); ?></textarea>
+					<td><textarea name="ik_fb_custom_css" id="ik_fb_custom_css" style="width: 100%; height: 250px;"><?php echo get_option('ik_fb_custom_css'); ?></textarea>
 					<p class="description">Input any Custom CSS you want to use here.  You can also include a file in your theme's folder called 'ik_fb_custom_style.css' - any styles in that file will be loaded with the plugin.  The plugin will work without you placing anything here - this is useful in case you need to edit any styles for it to work with your theme, though.</p></td>
 				</tr>
+				
+				<tr><td colspan=2><h4>Feed Images</h4></td></tr>
 				
 				<tr valign="top">
 					<th scope="row"><label for="ik_fb_fix_feed_image_width">Fix Feed Image Width</label></th>
@@ -296,8 +305,12 @@ class ikFacebookOptions
 				</tr>
 				<tr valign="top">
 					<th scope="row"><label for="ik_fb_feed_image_width">Feed Image Width</label></th>
-					<td><input type="text" name="ik_fb_feed_image_width" id="ik_fb_feed_image_width" value="<?php echo get_option('ik_fb_feed_image_width'); ?>" style="width: 250px" />
-					<p class="description">If 'Fix Feed Image Width' is checked, the images will be set to this width (integer only.)</p></td>
+					<td>
+					
+					<input type="radio" name="ik_fb_feed_image_width" id="ik_fb_feed_image_width" <?php if(get_option('ik_fb_feed_image_width')=="100%"){ ?> checked="CHECKED" <?php } ?> value="100%"> 100%<br>
+					<input type="radio" name="ik_fb_feed_image_width" id="ik_fb_feed_image_width"  <?php if(get_option('ik_fb_feed_image_width')=="OTHER"){ ?> checked="CHECKED" <?php } ?> value="OTHER"> Other Pixel Value <input type="text" style="width: 250px" value="<?php echo get_option('other_ik_fb_feed_image_width'); ?>" name="other_ik_fb_feed_image_width" />
+									
+					<p class="description">If 'Fix Feed Image Width' is checked, the images will be set to this width.  Choose '100%' or 'Other' and type in an integer number of pixels.  The effect of this setting may vary, based upon your theme's CSS.</p></td>
 				</tr>
 				<tr valign="top">
 					<th scope="row"><label for="ik_fb_fix_feed_image_height">Fix Feed Image Height</label></th>
@@ -306,9 +319,15 @@ class ikFacebookOptions
 				</tr>
 				<tr valign="top">
 					<th scope="row"><label for="ik_fb_feed_image_height">Feed Image Height</label></th>
-					<td><input type="text" name="ik_fb_feed_image_height" id="ik_fb_feed_image_height" value="<?php echo get_option('ik_fb_feed_image_height'); ?>" style="width: 250px" />
-					<p class="description">If 'Fix Feed Image Height' is checked, the images will be set to this width (integer only.)</p></td>
+					<td>
+					
+					<input type="radio" name="ik_fb_feed_image_height" id="ik_fb_feed_image_height" <?php if(get_option('ik_fb_feed_image_height')=="100%"){ ?> checked="CHECKED" <?php } ?> value="100%"> 100%<br>
+					<input type="radio" name="ik_fb_feed_image_height" id="ik_fb_feed_image_height"  <?php if(get_option('ik_fb_feed_image_height')=="OTHER"){ ?> checked="CHECKED" <?php } ?> value="OTHER"> Other Pixel Value <input type="text" style="width: 250px" value="<?php echo get_option('other_ik_fb_feed_image_height'); ?>" name="other_ik_fb_feed_image_height" />
+					
+					<p class="description">If 'Fix Feed Image Height' is checked, the images will be set to this width.  Choose '100%' or 'Other' and type in an integer number of pixels.  The effect of this setting may vary, based upon your theme's CSS.</p></td>
 				</tr>
+				
+				<tr><td colspan=2><h4>Feed Window Color and Dimensions</h4></td></tr>
 				
 				<tr valign="top">
 					<th scope="row"><label for="ik_fb_header_bg_color">Feed Header Background Color</label></th>
@@ -331,6 +350,56 @@ class ikFacebookOptions
 					</div>		
 					<p class="description">Input your hex color code, by clicking and using the Colorpicker or typing it in.  Erase the contents of this field to use the default color.</p></td>
 				</tr>
+				
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_feed_window_height">Feed Window Height</label></th>
+					<td>
+					
+					<input type="radio" name="ik_fb_feed_window_height" id="ik_fb_feed_window_height" <?php if(get_option('ik_fb_feed_window_height')==""){ ?> checked="CHECKED" <?php } ?> value=""> Default<br>
+					<input type="radio" name="ik_fb_feed_window_height" id="ik_fb_feed_window_height" <?php if(get_option('ik_fb_feed_window_height')=="auto"){ ?> checked="CHECKED" <?php } ?> value="auto"> Auto<br>
+					<input type="radio" name="ik_fb_feed_window_height" id="ik_fb_feed_window_height" <?php if(get_option('ik_fb_feed_window_height')=="100%"){ ?> checked="CHECKED" <?php } ?> value="100%"> 100%<br>
+					<input type="radio" name="ik_fb_feed_window_height" id="ik_fb_feed_window_height"  <?php if(get_option('ik_fb_feed_window_height')=="OTHER"){ ?> checked="CHECKED" <?php } ?> value="OTHER"> Other Pixel Value <input type="text" style="width: 250px" value="<?php echo get_option('other_ik_fb_feed_window_height'); ?>" name="other_ik_fb_feed_window_height" />
+					
+					<p class="description">Choose 'Auto', '100%', or 'Other' and type in an integer number of pixels. The effect of this setting may vary, based upon your theme's CSS. This option does not apply to the sidebar widget.</p></td>
+				</tr>
+				
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_feed_window_width">Feed Window Width</label></th>
+					<td>
+					
+					<input type="radio" name="ik_fb_feed_window_width" id="ik_fb_feed_window_width" <?php if(get_option('ik_fb_feed_window_width')==""){ ?> checked="CHECKED" <?php } ?> value=""> Default<br>
+					<input type="radio" name="ik_fb_feed_window_width" id="ik_fb_feed_window_width" <?php if(get_option('ik_fb_feed_window_width')=="auto"){ ?> checked="CHECKED" <?php } ?> value="auto"> Auto<br>
+					<input type="radio" name="ik_fb_feed_window_width" id="ik_fb_feed_window_width" <?php if(get_option('ik_fb_feed_window_width')=="100%"){ ?> checked="CHECKED" <?php } ?> value="100%"> 100%<br>
+					<input type="radio" name="ik_fb_feed_window_width" id="ik_fb_feed_window_width"  <?php if(get_option('ik_fb_feed_window_width')=="OTHER"){ ?> checked="CHECKED" <?php } ?> value="OTHER"> Other Pixel Value <input type="text" style="width: 250px" value="<?php echo get_option('other_ik_fb_feed_window_width'); ?>" name="other_ik_fb_feed_window_width" />
+					
+					<p class="description">Choose 'Auto', '100%', or 'Other' and type in an integer number of pixels. The effect of this setting may vary, based upon your theme's CSS. This option does not apply to the sidebar widget.</p></td>
+				</tr>
+				
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_sidebar_feed_window_height">Sidebar Feed Window Height</label></th>
+					<td>
+					
+					<input type="radio" name="ik_fb_sidebar_feed_window_height" id="ik_fb_sidebar_feed_window_height" <?php if(get_option('ik_fb_sidebar_feed_window_height')==""){ ?> checked="CHECKED" <?php } ?> value=""> Default<br>
+					<input type="radio" name="ik_fb_sidebar_feed_window_height" id="ik_fb_sidebar_feed_window_height" <?php if(get_option('ik_fb_sidebar_feed_window_height')=="auto"){ ?> checked="CHECKED" <?php } ?> value="auto"> Auto<br>
+					<input type="radio" name="ik_fb_sidebar_feed_window_height" id="ik_fb_sidebar_feed_window_height" <?php if(get_option('ik_fb_sidebar_feed_window_height')=="100%"){ ?> checked="CHECKED" <?php } ?> value="100%"> 100%<br>
+					<input type="radio" name="ik_fb_sidebar_feed_window_height" id="ik_fb_sidebar_feed_window_height"  <?php if(get_option('ik_fb_sidebar_feed_window_height')=="OTHER"){ ?> checked="CHECKED" <?php } ?> value="OTHER"> Other Pixel Value <input type="text" style="width: 250px" value="<?php echo get_option('other_ik_fb_sidebar_feed_window_height'); ?>" name="other_ik_fb_sidebar_feed_window_height" />
+					
+					<p class="description">Choose 'Auto', '100%', or 'Other' and type in an integer number of pixels. The effect of this setting may vary, based upon your theme's CSS. </p></td>
+				</tr>
+				
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_sidebar_feed_window_width">Sidebar Feed Window Width</label></th>
+					<td>
+					
+					<input type="radio" name="ik_fb_sidebar_feed_window_width" id="ik_fb_sidebar_feed_window_width" <?php if(get_option('ik_fb_sidebar_feed_window_width')==""){ ?> checked="CHECKED" <?php } ?> value=""> Default<br>
+					<input type="radio" name="ik_fb_sidebar_feed_window_width" id="ik_fb_sidebar_feed_window_width" <?php if(get_option('ik_fb_sidebar_feed_window_width')=="auto"){ ?> checked="CHECKED" <?php } ?> value="auto"> Auto<br>
+					<input type="radio" name="ik_fb_sidebar_feed_window_width" id="ik_fb_sidebar_feed_window_width" <?php if(get_option('ik_fb_sidebar_feed_window_width')=="100%"){ ?> checked="CHECKED" <?php } ?> value="100%"> 100%<br>
+					<input type="radio" name="ik_fb_sidebar_feed_window_width" id="ik_fb_sidebar_feed_window_width"  <?php if(get_option('ik_fb_sidebar_feed_window_width')=="OTHER"){ ?> checked="CHECKED" <?php } ?> value="OTHER"> Other Pixel Value <input type="text" style="width: 250px" value="<?php echo get_option('other_ik_fb_sidebar_feed_window_width'); ?>" name="other_ik_fb_sidebar_feed_window_width" />
+					
+					<p class="description">Choose 'Auto', '100%', or 'Other' and type in an integer number of pixels. The effect of this setting may vary, based upon your theme's CSS. </p></td>
+				</tr>
+				
+				<tr><td colspan=2><h4>Font Styling</h4></td></tr>
 			
 				<tr valign="top">
 					<th scope="row"><label for="ik_fb_description_font_color">Description Font Color</label></th>
@@ -395,30 +464,6 @@ class ikFacebookOptions
 					<td><input type="text" name="ik_fb_posted_by_font_size" id="ik_fb_posted_by_font_size" value="<?php echo get_option('ik_fb_posted_by_font_size'); ?>" style="width: 250px" />
 					<p class="description">Input your font pixel size.</p></td>
 				</tr>
-				
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_feed_window_height">Feed Window Height</label></th>
-					<td><input type="text" name="ik_fb_feed_window_height" id="ik_fb_feed_window_height" value="<?php echo get_option('ik_fb_feed_window_height'); ?>" style="width: 250px" />
-					<p class="description">Input your feed height pixel size. This option does not apply to the sidebar widget.</p></td>
-				</tr>
-				
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_feed_window_width">Feed Window Width</label></th>
-					<td><input type="text" name="ik_fb_feed_window_width" id="ik_fb_feed_window_width" value="<?php echo get_option('ik_fb_feed_window_width'); ?>" style="width: 250px" />
-					<p class="description">Input your feed width pixel size. This option does not apply to the sidebar widget.</p></td>
-				</tr>
-				
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_sidebar_feed_window_height">Sidebar Feed Window Height</label></th>
-					<td><input type="text" name="ik_fb_sidebar_feed_window_height" id="ik_fb_sidebar_feed_window_height" value="<?php echo get_option('ik_fb_sidebar_feed_window_height'); ?>" style="width: 250px" />
-					<p class="description">Input your feed height pixel size.</p></td>
-				</tr>
-				
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_sidebar_feed_window_width">Sidebar Feed Window Width</label></th>
-					<td><input type="text" name="ik_fb_sidebar_feed_window_width" id="ik_fb_sidebar_feed_window_width" value="<?php echo get_option('ik_fb_sidebar_feed_window_width'); ?>" style="width: 250px" />
-					<p class="description">Input your feed width pixel size.</p></td>
-				</tr>
 			
 				<tr valign="top">
 					<th scope="row"><label for="ik_fb_powered_by_font_color">Powered By Font Color</label></th>
@@ -482,6 +527,14 @@ class ikFacebookOptions
 					<th scope="row"><label for="ik_fb_description_character_limit">Feed Item Description Character Limit</label></th>
 					<td><input type="text" name="ik_fb_description_character_limit" id="ik_fb_description_character_limit" value="<?php echo get_option('ik_fb_description_character_limit'); ?>" style="width: 250px" />
 					<p class="description">If set, the feed item will be limited to this number of characters.  If a feed item is shortened, a Read More link will be displayed.</p></td>
+				</tr>
+			</table>
+			
+			<table class="form-table">
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_hide_feed_images">Hide Feed Images</label></th>
+					<td><input type="checkbox" name="ik_fb_hide_feed_images" id="ik_fb_show_feed_images" value="1" <?php if(get_option('ik_fb_hide_feed_images')){ ?> checked="CHECKED" <?php } ?>/>
+					<p class="description">If checked, images will be hidden from your feed.</p></td>
 				</tr>
 			</table>
 			

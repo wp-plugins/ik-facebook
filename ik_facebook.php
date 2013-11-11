@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://iksocialpro.com/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.5.5.1
+Version: 2.5.6
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -23,6 +23,7 @@ You should have received a copy of the GNU General Public License
 along with the IK Facebook Plugin .  If not, see <http://www.gnu.org/licenses/>.
 */
 include('include/widgets/ik_facebook_feed_widget.php');
+include('include/widgets/ik_facebook_like_button_widget.php');
 include('include/ik_facebook_options.php');
 include('include/lib/CachedCurl.php');
 include('include/lib/lib.php');
@@ -66,6 +67,7 @@ class ikFacebook
 	//register any widgets here
 	function ik_fb_register_widgets() {
 		register_widget( 'ikFacebookFeedWidget' );
+		register_widget( 'ikFacebookLikeButtonWidget' );
 	}
 	
 	//add Basic CSS
@@ -127,7 +129,7 @@ class ikFacebook
 		//load shortcode attributes into an array
 		extract( shortcode_atts( array(
 			'url' => site_url(),
-			'height' => '45',
+			'' => '45',
 			'colorscheme' => 'light'
 		), $atts ) );
 		
@@ -275,15 +277,31 @@ class ikFacebook
 		if(!$is_sidebar_widget){
 			$ik_fb_feed_height = strlen(get_option('ik_fb_feed_window_height')) > 0 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_feed_window_height') : '';
 			$ik_fb_feed_width = strlen(get_option('ik_fb_feed_window_width')) > 0 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_feed_window_width') : '';
+				
+			if($ik_fb_feed_width == "OTHER"){
+				$ik_fb_feed_width = str_replace("px", "", get_option('other_ik_fb_feed_window_width')) . "px";
+			}
+			
+			if($ik_fb_feed_height == "OTHER"){
+				$ik_fb_feed_height = str_replace("px", "", get_option('other_ik_fb_feed_window_height')) . "px";
+			}
 		} else {
 			$ik_fb_feed_height = strlen(get_option('ik_fb_sidebar_feed_window_height')) > 0 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_sidebar_feed_window_height') : '';
 			$ik_fb_feed_width = strlen(get_option('ik_fb_sidebar_feed_window_width')) > 0 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_sidebar_feed_window_width') : '';
+				
+			if($ik_fb_feed_width == "OTHER"){
+				$ik_fb_feed_width = str_replace("px", "", get_option('other_ik_fb_sidebar_feed_window_width')) . "px";
+			}			
+			
+			if($ik_fb_feed_height == "OTHER"){
+				$ik_fb_feed_height = str_replace("px", "", get_option('other_ik_fb_sidebar_feed_window_height')) . "px";
+			}
 		}
 		
 		//feed window width
 		$custom_styling_1 = ' style="';
 		if(strlen($ik_fb_feed_width)>0){
-			$custom_styling_1 .= "width: {$ik_fb_feed_width}px;";
+			$custom_styling_1 .= "width: {$ik_fb_feed_width};";
 		}	
 		if(strlen($ik_fb_feed_height)>0){		
 			$custom_styling_1 .= "height: auto; ";
@@ -293,7 +311,7 @@ class ikFacebook
 		//feed window height, feed window bg color
 		$custom_styling_2 = ' style="';
 		if(strlen($ik_fb_feed_height)>0){		
-			$custom_styling_2 .= "height: {$ik_fb_feed_height}px; ";
+			$custom_styling_2 .= "height: {$ik_fb_feed_height}; ";
 		}
 		if(strlen($ik_fb_window_bg_color)>0){
 			$custom_styling_2 .= " background-color: {$ik_fb_window_bg_color};";
@@ -514,14 +532,53 @@ class ikFacebook
 					$width = get_option('ik_fb_fix_feed_image_width') ? $width : '';
 					$height = get_option('ik_fb_fix_feed_image_height') ? $height : '';	
 					
-					$replace = '<a href="'.$photo_link.'" title="Click to View Fullsize Photo" target="_blank"><img width="'.$width.'" height="'.$height.'" src="'.$photo_source.'" /></a>';
-						
+					if($width == "OTHER"){
+						$width = get_option('other_ik_fb_feed_image_width');
+					}
 					
+					if($height == "OTHER"){
+						$height = get_option('other_ik_fb_feed_image_height');
+					}
+					
+					//source: tim morozzo
+					if (isset($item->description) && strlen($item->description) >5){
+						$title = $item->description;
+					}elseif (isset($item->message))
+					{
+						$title = $item->message;
+					}else{ 
+						$title = "Click for fullsize photo";
+					}
+					
+					$limit = get_option('ik_fb_description_character_limit');
+					
+					if(is_numeric($limit)){
+						if(strlen($replace) > $limit){
+							//remove characters beyond limit
+							$title = substr($replace, 0, $limit);
+							$title .= "... ";
+
+							$shortened = true;
+						}
+					}
+									
+					$replace = '<a href="'.$photo_link.'" title="'.$title.'" target="_blank"><img width="'.$width.'" height="'.$height.'" src="'.$photo_source.'" /></a>';
+					
+					//if set, hide feed images	
+					if(get_option('ik_fb_hide_feed_images')){
+						$replace = '';
+					}
+						
 					$line_item .= str_replace('{ikfb:feed_item:image}', $replace, $image_html);						
 				} else {						
 					//otherwise, use thumbnail
 					$replace = '<a href="'.$photo_link.'" target="_blank"><img src="'.$item->picture.'" /></a>';
-									
+					
+					//if set, hide feed images
+					if(get_option('ik_fb_hide_feed_images')){
+						$replace = '';
+					}
+							
 					$line_item .= str_replace('{ikfb:feed_item:image}', $replace, $image_html);	
 				}
 
