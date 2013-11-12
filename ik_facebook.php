@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://iksocialpro.com/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.5.7
+Version: 2.5.8
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -553,9 +553,9 @@ class ikFacebook
 					$limit = get_option('ik_fb_description_character_limit');
 					
 					if(is_numeric($limit)){
-						if(strlen($replace) > $limit){
+						if(strlen($limit) > $limit){
 							//remove characters beyond limit
-							$title = substr($replace, 0, $limit);
+							$title = substr($limit, 0, $limit);
 							$title .= "... ";
 
 							$shortened = true;
