@@ -59,10 +59,6 @@ The IK Facebook Plugin includes the option to set your own custom CSS for stylin
 
 The IK Facebook Plugin intends to support all types Facebook content - not just standard Feeds.  Currently, we have support for Facebook Events and Facebook Photo Galleries.  More features and functionality are added very regularly.  Don't see something you need?  Let us know!
 
-= New Features Are On The Way! =
-
-Currently on our roadmap, we are planning on doing a lot more with the new Photo Gallery features - such as lightbox technology and other JavaScript options, sidebar widgets, and more!  We also have plans to add more options to the sidebar custom facebook feed widget, as well as adding the ability to display videos in your custom facebook feed.
-
 == Installation ==
 
 This section describes how to install the plugin and get it working.
