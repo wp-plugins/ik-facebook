@@ -17,25 +17,13 @@ The IK Facebook Plugin is an **easy-to-use** plugin that allows users to add a *
 
 = What People Are Saying = 
 
-**5 stars**
-_Super plugin and support_
-By _mountaincrawlie, October 29, 2013_
-
-"This plugin has ticked all the boxes for me - responsive and displays images and super fast replies to my support question - thanks"
+_"This plugin has ticked all the boxes for me - responsive and displays images and super fast replies to my support question - thanks"_
 
 
-**5 stars**
-_Great Plugin and Super Support_
-By _warmearthling, October 1, 2013_
-
-"I searched forever for a simple plugin to display a public Facebook page pictures on my site. This plugin worked perfectly, and even better is the great support. Thanks so much Richard."
+_"I searched forever for a simple plugin to display a public Facebook page pictures on my site. This plugin worked perfectly, and even better is the great support. Thanks so much Richard."_
 
 
-**5 stars**
-_Fantastic_
-By _sarah.ruth.mccormick, September 9, 2013_
-
-"Looks great, easy to use. Better than any of the other Facebook feed plugins I've tried."
+_"Looks great, easy to use. Better than any of the other Facebook feed plugins I've tried."_
 
 
 = The IK Facebook Plugin is a great plugin for many uses, including: =
