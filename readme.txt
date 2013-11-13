@@ -14,9 +14,6 @@ IK Facebook is an easy-to-use plugin for adding a Custom Facebook Feed of any Pu
 
 The IK Facebook Plugin is an **easy-to-use** plugin that allows users to add a **custom Facebook Feed widget** to the sidebar, as a widget, or to embed the custom Facebook Feed widget into a Page or Post using the shortcode, of any Public Facebook Page.  The IK Facebook Plugin also allows you to insert a Facebook Like Button widget into the Page, Post, or theme.
 
-
-= What People Are Saying = 
-
 _"This plugin has ticked all the boxes for me - responsive and displays images and super fast replies to my support question - thanks"_
 
 
