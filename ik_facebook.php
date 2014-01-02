@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://iksocialpro.com/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.5.8
+Version: 2.6
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -37,6 +37,7 @@ global $ikfb_footer_poweredby_output;
 class ikFacebook
 {
 	var $authToken;
+	var $textdomain = "iksocialpro";
 
 	function __construct(){
 		//create shortcodes
@@ -231,9 +232,9 @@ class ikFacebook
 		
 		if(isset($gallery->data)){
 			foreach($gallery->data as $gallery_item){
-				echo '<div class="ik_fb_gallery_item" style="width:'.$width_array[$size].';height:'.$height_array[$size].';">';
+				echo '<div class="ik_fb_gallery_item" style="width:'.$width_array[$size].';height:'.$height_array[$size].';">';					
 				
-					echo '<a href="'.$gallery_item->source.'" target="_blank" title="Click to View Full Sized Photo"><img class="ik_fb_standard_image" src="'.$gallery_item->images[$position]->source.'" /></a>';
+					echo '<a href="'.$gallery_item->source.'" target="_blank" title="'. __('Click to View Full Sized Photo', $this->textdomain) . '"><img class="ik_fb_standard_image" src="'.$gallery_item->images[$position]->source.'" /></a>';
 					
 					if($show_name){
 						echo '<p class="ik_fb_standard_image_name">' . $gallery_item->name . '</p>';
@@ -242,7 +243,7 @@ class ikFacebook
 				echo '</div>';
 			}
 		} else {
-			echo '<p class="ik_fb_error">IK FB: Unable to load photos.</p>';
+			echo '<p class="ik_fb_error">'.__('IK FB: Unable to load photos.', $this->textdomain).'</p>';
 		}
 		
 		echo '</div>';
@@ -255,9 +256,14 @@ class ikFacebook
 	}
 	
 	//facebook feed
-	public function ik_fb_output_feed($colorscheme = "light", $use_thumb = true, $width = "", $is_sidebar_widget = false, $height = "", $num_posts = -1, $id = false, $show_errors = false){		
+	public function ik_fb_output_feed($colorscheme = "light", $use_thumb = true, $width = "", $is_sidebar_widget = false, $height = "", $num_posts = -1, $id = false, $show_errors = false){			
+		$show_only_events = get_option('ik_fb_show_only_events');
+		$show_only_events = ($show_only_events) ? 1 : 0;
+		
+		$content_type = ($show_only_events) ? "events" : "";
+		
 		//load facebook data
-		$fbData = $this->loadFacebook($id, $num_posts);
+		$fbData = $this->loadFacebook($id, $num_posts, $content_type);
 		
 		$feed = $fbData['feed'];
 		
@@ -348,27 +354,12 @@ class ikFacebook
 		
 		//only display title if option is set
 		if(get_option('ik_fb_show_page_title')){
-			/*
-			//use the link if set, else fall back to /pages/name/id
-			if(isset($page_data->link)){
-				$the_link = $this->addhttp($page_data->link);
-			} else {
-			*/
-				$the_link = "https://www.facebook.com/pages/".$page_data->name."/".$page_data->id;
-				
-			//}
+			$the_link = "https://www.facebook.com/pages/".$page_data->name."/".$page_data->id;
 			
 			$replace = '<a target="_blank" href="'.$the_link.'"><span class="ik_fb_name">'.$page_data->name.'</span></a>';	
 			$output = str_replace('{ikfb:link}', $replace, $output);	
 		} else {
-			/*
-			//use the link if set, else fall back to /pages/name/id
-			if(isset($page_data->link)){
-				$the_link = $this->addhttp($page_data->link);
-			} else {
-			*/
-				$the_link = "https://www.facebook.com/pages/".$page_data->name."/".$page_data->id;
-			//}
+			$the_link = "https://www.facebook.com/pages/".$page_data->name."/".$page_data->id;
 			
 			$output = str_replace('{ikfb:link}', '', $output);	
 		}
@@ -383,6 +374,7 @@ class ikFacebook
 				$output = str_replace('{ikfb:like_button}', '', $output);		
 			}
 		} else {
+			//TBD: allow the Date Formatting to be controlled by user
 			$replace = '<p class="ikfb_event_meta">' . $page_data->location . ', ' . date('M d, Y',strtotime($page_data->start_time)) . '<br/>' . $page_data->venue->street . ', ' . $page_data->venue->city . ', ' . $page_data->venue->country . '</p>';
 			$output = str_replace('{ikfb:like_button}', $replace, $output);	
 		}
@@ -397,7 +389,7 @@ class ikFacebook
 		} else {
 			//something went wrong!
 			if($show_errors){
-				$replace = "<p class='ik_fb_error'>IK FB: Unable to load feed.</p>";
+				$replace = "<p class='ik_fb_error'>" . __('IK FB: Unable to load feed.', $this->textdomain) . "</p>";
 			} else {
 				//hide the feed window, there was an error and we don't want a big blank space messing up websites
 				$custom_styling_2 = 'style="display:none;"';
@@ -433,7 +425,6 @@ class ikFacebook
 		$default_description_html = '<p class="ik_fb_facebook_description">{ikfb:feed_item:description}</p>';		
 		$default_caption_html = '<p class="ik_fb_facebook_link">{ikfb:feed_item:link}</p>';	
 		
-		//load custom HTML structure from Pro Plugin, if available
 		$feed_item_html = strlen(get_option('ik_fb_feed_item_html')) > 2 && get_option('ik_fb_use_custom_html') ? get_option('ik_fb_feed_item_html') : $default_feed_item_html;
 		$message_html = strlen(get_option('ik_fb_message_html')) > 2 && get_option('ik_fb_use_custom_html') ? get_option('ik_fb_message_html') : $default_message_html;
 		$image_html = strlen(get_option('ik_fb_image_html')) > 2 && get_option('ik_fb_use_custom_html') ? get_option('ik_fb_image_html') : $default_image_html;
@@ -479,7 +470,7 @@ class ikFacebook
 					if(strlen($replace) > $limit){
 						//remove characters beyond limit
 						$replace = substr($replace, 0, $limit);
-						$replace .= "... ";
+						$replace .= __('... ', $this->textdomain);
 						
 						$shortened = true;
 					}
@@ -547,7 +538,7 @@ class ikFacebook
 					{
 						$title = $item->message;
 					}else{ 
-						$title = "Click for fullsize photo";
+						$title = __('Click for fullsize photo', $this->textdomain);
 					}
 					
 					$limit = get_option('ik_fb_description_character_limit');
@@ -556,7 +547,7 @@ class ikFacebook
 						if(strlen($limit) > $limit){
 							//remove characters beyond limit
 							$title = substr($limit, 0, $limit);
-							$title .= "... ";
+							$title .= __('... ', $this->textdomain);
 
 							$shortened = true;
 						}
@@ -593,7 +584,7 @@ class ikFacebook
 						if(strlen($replace) > $limit){
 							//remove characters beyond limit
 							$replace = substr($replace, 0, $limit);
-							$replace .= "... ";
+							$replace .= __('... ', $this->textdomain);
 						
 							$shortened = true;
 						}
@@ -611,7 +602,7 @@ class ikFacebook
 			if($shortened){
 				$item_id = explode("_",$item->id);
 				$the_link = "https://www.facebook.com/permalink.php?id=".$page_id."&story_fbid=". $item_id[1];				
-				$line_item .= ' <a href="'.$the_link.'" class="ikfb_read_more" target="_blank">Read More...</a>';
+				$line_item .= ' <a href="'.$the_link.'" class="ikfb_read_more" target="_blank">'.__('Read More...', $this->textdomain).'</a>';
 			}	
 
 			if(isset($item->link)){ //output the item link				
@@ -648,7 +639,7 @@ class ikFacebook
 						}
 						
 						if(strlen($from_text) > 1){
-							$posted_by_text = '<p class="ikfb_item_author">Posted By '.$from_text.'</p>';
+							$posted_by_text = '<p class="ikfb_item_author">' . __('Posted By ', $this->textdomain) . $from_text . '</p>';
 				
 							//add custom posted by styling from pro options
 							if(!get_option('ik_fb_use_custom_html')){		
@@ -661,10 +652,11 @@ class ikFacebook
 				}
 				
 				//output date, if option to display it is enabled
+				//TBD: Allow user control over date formatting
 				if(get_option('ik_fb_show_date')){
 					setlocale(LC_TIME, WPLANG);
 					if(strtotime($date) >= strtotime('-1 day')){
-						$date = $this->humanTiming(strtotime($date)). " ago";
+						$date = $this->humanTiming(strtotime($date)). __(' ago', $this->textdomain);
 					}else{
 						$date = strftime('%B %d', strtotime($date));
 					}
@@ -687,10 +679,14 @@ class ikFacebook
 				}	
 			
 				$output = str_replace('{ikfb:feed_item}', $line_item, $feed_item_html);	
-			} else if(strpos($item->link,'http://www.facebook.com/events/') !== false){
+			} else if(strpos($item->link,'http://www.facebook.com/events/') !== false || get_option('ik_fb_show_only_events')){
 				//some event parsing				
 				$event_id = explode('/',$item->link);
 				$event_id = $event_id[4];
+				
+				if(get_option('ik_fb_show_only_events')){
+					$event_id = $item->id;
+				}
 				
 				if($event_id){
 					$app_id = get_option('ik_fb_app_id');
@@ -718,9 +714,11 @@ class ikFacebook
 					$start_time = strtotime($event_data->start_time);
 					$end_time = strtotime($event_data->end_time);			
 					
+					//TBD: Allow user control over date formatting
 					$time_object = new DateTime($event_data->start_time);
 					$start_time = $time_object->format('l, F jS, Y h:i:s a');	
 					
+					//TBD: Allow user control over date formatting
 					$time_object = new DateTime($event_data->end_time);
 					$end_time = $time_object->format('l, F jS, Y h:i:s a');						
 					
@@ -747,7 +745,7 @@ class ikFacebook
 					
 					//event description
 					$event_description = substr($event_data->description, 0, 250);
-					$event_description .= "... ";
+					$event_description .= __('... ', $this->textdomain);
 						
 					$replace .= '<p class="ikfb_event_description">' . $event_description . '</p>';
 					
@@ -766,15 +764,15 @@ class ikFacebook
 	//credit to http://stackoverflow.com/questions/2915864/php-how-to-find-the-time-elapsed-since-a-date-time
 	function humanTiming ($time)	{
 		$time = time() - $time; // to get the time since that moment
-
+	
 		$tokens = array (
-			31536000 => 'year',
-			2592000 => 'month',
-			604800 => 'week',
-			86400 => 'day',
-			3600 => 'hour',
-			60 => 'minute',
-			1 => 'second'
+			31536000 => __('year', $this->textdomain),
+			2592000 => __('month', $this->textdomain),
+			604800 => __('week', $this->textdomain),
+			86400 => __('day', $this->textdomain),
+			3600 => __('hour', $this->textdomain),
+			60 => __('minute', $this->textdomain),
+			1 => __('second', $this->textdomain)
 		);
 
 		foreach ($tokens as $unit => $text) {
@@ -794,7 +792,7 @@ class ikFacebook
 			if($ikfb_footer_poweredby_output){
 				return;
 			} else {			
-				$content = '<a href="https://illuminatikarate.com/ik-facebook-plugin/" target="_blank" id="ikfb_powered_by">Powered By IK Facebook Plugin</a>';			
+				$content = '<a href="https://illuminatikarate.com/ik-facebook-plugin/" target="_blank" id="ikfb_powered_by">'.__('Powered By IK Facebook Plugin', $this->textdomain).'</a>';			
 				
 				//add custom powered by styling from pro options
 				if(!get_option('ik_fb_use_custom_html')){		
@@ -822,7 +820,7 @@ class ikFacebook
 	}
 	
 	//loads facebook feed based on current id
-	function loadFacebook($id = false, $num_posts = -1){
+	function loadFacebook($id = false, $num_posts = -1, $content_type = ''){
 		$retData = array();
 	
 		if(!$id){
@@ -851,7 +849,12 @@ class ikFacebook
 				$limit = 25;
 			}
 			
-			$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/feed?limit={$limit}&{$this->authToken}", true);//the feed data
+			//handle events
+			if($content_type == "events") {
+				$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/events?limit={$limit}&{$this->authToken}", true);//the feed data
+			} else {
+				$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/feed?limit={$limit}&{$this->authToken}", true);//the feed data
+			}	
 						
 			$page_data = $this->fetchUrl("https://graph.facebook.com/{$profile_id}?{$this->authToken}", true);//the page data
 			

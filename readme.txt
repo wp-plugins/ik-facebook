@@ -3,8 +3,8 @@ Contributors: richardgabriel
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V7HR8DP4EJSYN
 Tags: facebook, facebook feed, facebook embed, facebook feed widget, facebook feed embed, like button widget, facebook events
 Requires at least: 3.0.1
-Tested up to: 3.7.1
-Stable tag: 2.5.8
+Tested up to: 3.8
+Stable tag: 2.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -32,6 +32,7 @@ _"Looks great, easy to use. Better than any of the other Facebook feed plugins I
 * Custom HTML Options allow Facebook Feed Shortcode and Facebook Feed Widget to be displayed any way you like!
 * Adding a Facebook Like Button to your website, anywhere!
 * Showing Facebook Comments in your Custom Facebook Feed!
+* Show a Feed of Only Facebook Events!
 * Adding a Facebook-powered Photo Gallery to your website!
 * Show multiple different custom Facebook Feeds!
 * Display Facebook Events in your Feed!
@@ -159,6 +160,11 @@ In this case, the Facebook Album ID is '539627829386059'.
 5. This is the Plugin Status & Help Tab.  This tab provides example shortcodes, a quick summary of some important settings, and other means of help and support.
 
 == Changelog ==
+
+= 2.6 =
+* Feature: adds multi language and regional support!  We will add new language options to the plugin as we complete our translations!
+* Feature: adds ability to filter feed to only show Events!
+* Fix: miscellaneous fixes.
 
 = 2.5.8 =
 * Fix: address issue with image link title being output incorrectly, causing broken HTML in the feed.
@@ -414,5 +420,5 @@ In this case, the Facebook Album ID is '539627829386059'.
 
 == Upgrade Notice ==
 
-= 2.5.8 =
-* Bug fixes Available!
+= 2.6 =
+* Upgrade Available!
