@@ -153,11 +153,11 @@ In this case, the Facebook Album ID is '539627829386059'.
 
 == Screenshots ==
 
-1. This is the Configuration Options Settings page of the IK Facebook Plugin.
-2. This is the Style Options Settings page of the IK Facebook Plugin.  These settings help you control the visible appearance of your custom facebook feed.
-3. This is the Display Options Settings page of the IK Facebook Plugin.  These settings help you control what content appears in your custom facebook feed.
-4. This is the Facebook Feed Widget of the IK Facebook Plugin.  The options on this widget allow you to override the settings you have selected on your Settings panel.
-5. This is the Plugin Status & Help Tab.  This tab provides example shortcodes, a quick summary of some important settings, and other means of help and support.
+1. This is the Plugin Status & Help Tab.  This tab provides example shortcodes, a quick summary of some important settings, and other means of help and support.
+2. This is the Configuration Options Settings page of the IK Facebook Plugin.
+3. This is the Style Options Settings page of the IK Facebook Plugin.  These settings help you control the visible appearance of your custom facebook feed.
+4. This is the Display Options Settings page of the IK Facebook Plugin.  These settings help you control what content appears in your custom facebook feed.
+5. This is the Facebook Feed Widget and the Facebook Like Button Widget of the IK Facebook Plugin.  The options on this widget allow you to override the settings you have selected on your Settings panel.
 
 == Changelog ==
 
