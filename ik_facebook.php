@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://iksocialpro.com/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.6
+Version: 2.6.1
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -492,13 +492,18 @@ class ikFacebook
 				
 				//need info about full sized photo for linking purposes
 				//get the item id
-				$item_id = $item->object_id;
+				$item_id = isset($item->object_id) ? $item->object_id : -999;
 								
-				$photo = $this->fetchUrl("https://graph.facebook.com/{$item_id}/picture?summary=1&{$this->authToken}&redirect=false", true);	
+				if($item_id != -999){
+					$photo = $this->fetchUrl("https://graph.facebook.com/{$item_id}/picture?summary=1&{$this->authToken}&redirect=false", true);	
+				}
 
 				//load arguments into array for use below
 				$parsed_url = parse_url($item->picture);
-				parse_str($parsed_url['query'], $params);               
+				
+				if(isset($parsed_url['query'])){
+					parse_str($parsed_url['query'], $params);               
+				}
 				
 				if(isset($photo->data->url)){
 					$photo_link = $photo->data->url;
@@ -611,7 +616,7 @@ class ikFacebook
 				} else if(isset($item->description)){
 					$link_text = $item->description; //some items have a description	
 				} else {
-					$link_text = $item->name;  //others might just have a name
+					$link_text = isset($item->name) ? $item->name : '';  //others might just have a name
 				}
 				
 				//don't add the line item if the link text isn't set
@@ -655,10 +660,13 @@ class ikFacebook
 				//TBD: Allow user control over date formatting
 				if(get_option('ik_fb_show_date')){
 					setlocale(LC_TIME, WPLANG);
-					if(strtotime($date) >= strtotime('-1 day')){
+					$ik_fb_use_human_timing = get_option('ik_fb_use_human_timing');
+					if(strtotime($date) >= strtotime('-1 day') && !$ik_fb_use_human_timing){
 						$date = $this->humanTiming(strtotime($date)). __(' ago', $this->textdomain);
 					}else{
-						$date = strftime('%B %d', strtotime($date));
+						$ik_fb_date_format = get_option('ik_fb_date_format');
+						$ik_fb_date_format = strlen($ik_fb_date_format) > 2 ? $ik_fb_date_format : "%B %d";
+						$date = strftime($ik_fb_date_format, strtotime($date));
 					}
 				
 					if(strlen($date)>2){
@@ -679,7 +687,7 @@ class ikFacebook
 				}	
 			
 				$output = str_replace('{ikfb:feed_item}', $line_item, $feed_item_html);	
-			} else if(strpos($item->link,'http://www.facebook.com/events/') !== false || get_option('ik_fb_show_only_events')){
+			} else if((isset($item->link) && strpos($item->link,'http://www.facebook.com/events/') !== false) || get_option('ik_fb_show_only_events')){
 				//some event parsing				
 				$event_id = explode('/',$item->link);
 				$event_id = $event_id[4];

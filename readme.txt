@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, facebook feed, facebook embed, facebook feed widget, facebook feed embed, like button widget, facebook events
 Requires at least: 3.0.1
 Tested up to: 3.8
-Stable tag: 2.6
+Stable tag: 2.6.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -124,6 +124,10 @@ If you are using the Free version of the plugin, you'll need to [purchase IK Soc
 
 Nope!  Thanks to the WordPress Transient API, all you have to do is sit back and relax and we'll do the rest!
 
+= I think I broke my date formatting!  Help! =
+
+It's OK!  Just place %B %d in the field, and you'll be back to default!
+
 = I Want All Of My Posts Visible -- Not Contained In A Box! =
 
 Try using the "No Style" theme -- this will output everything in a list.  You can also turn off the Like Button, Feed Title, and Profile Pic to have it look more like a list of posts.
@@ -160,6 +164,10 @@ In this case, the Facebook Album ID is '539627829386059'.
 5. This is the Facebook Feed Widget and the Facebook Like Button Widget of the IK Facebook Plugin.  The options on this widget allow you to override the settings you have selected on your Settings panel.
 
 == Changelog ==
+
+= 2.6.1 =
+* Feature: adds ability to control the format of the post date.
+* Fix: addresses various minor items.
 
 = 2.6 =
 * Feature: adds multi language and regional support!  We will add new language options to the plugin as we complete our translations!
@@ -420,5 +428,5 @@ In this case, the Facebook Album ID is '539627829386059'.
 
 == Upgrade Notice ==
 
-= 2.6 =
-* Upgrade Available!
+= 2.6.1 =
+* Minor fixes available!

@@ -109,6 +109,8 @@ class ikFacebookOptions
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_show_page_title' );
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_show_posted_by' );
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_show_date' );
+		register_setting( 'ik-fb-display-settings-group', 'ik_fb_date_format' );
+		register_setting( 'ik-fb-display-settings-group', 'ik_fb_use_human_timing' );
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_feed_limit' );
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_photo_feed_limit' );
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_powered_by' );
@@ -586,6 +588,22 @@ class ikFacebookOptions
 					<th scope="row"><label for="ik_fb_show_date"><?php _e('Show Posted Date');?></label></th>
 					<td><input type="checkbox" name="ik_fb_show_date" id="ik_fb_show_date" value="1" <?php if(get_option('ik_fb_show_date')){ ?> checked="CHECKED" <?php } ?>/>
 					<p class="description"><?php _e('If checked, the date of the post will be displayed in the Feed.');?></p></td>
+				</tr>
+			</table>
+			
+			<table class="form-table">
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_use_human_timing"><?php _e('Do Not Use Special Formatting for Times within 24 hours');?></label></th>
+					<td><input type="checkbox" name="ik_fb_use_human_timing" id="ik_fb_use_human_timing" value="1" <?php if(get_option('ik_fb_use_human_timing')){ ?> checked="CHECKED" <?php } ?>/>
+					<p class="description"><?php _e('If checked, the date of the post will not be displayed using XX hours ago, when within 24 hours of now.');?></p></td>
+				</tr>
+			</table>
+			
+			<table class="form-table">
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_date_format"><?php _e('Date Format');?></label></th>
+					<td><input type="text" name="ik_fb_date_format" id="ik_fb_date_format" value="<?php echo get_option('ik_fb_date_format'); ?>" style="width: 250px" />
+					<p class="description"><?php _e('The format string to be used for the Post Date.  This follows the standard used for PHP strfrtime().  Warning: this is an advanced feature - do not change this value if you do not know what you are doing! The default setting is %B %d');?></p></td>
 				</tr>
 			</table>
 			
