@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://iksocialpro.com/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.6.1
+Version: 2.6.2
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -716,49 +716,55 @@ class ikFacebook
 					//load event image source
 					$event_image = "http://graph.facebook.com/" . $event_id . "/picture";
 					
-					//event name
-					$replace = '<p class="ikfb_event_title">' . $replace . $event_data->name . '</p>';
-					
-					$start_time = strtotime($event_data->start_time);
-					$end_time = strtotime($event_data->end_time);			
-					
-					//TBD: Allow user control over date formatting
-					$time_object = new DateTime($event_data->start_time);
-					$start_time = $time_object->format('l, F jS, Y h:i:s a');	
-					
-					//TBD: Allow user control over date formatting
-					$time_object = new DateTime($event_data->end_time);
-					$end_time = $time_object->format('l, F jS, Y h:i:s a');						
-					
-					//event start time - event end time					
-					$event_start_time = isset($event_data->start_time) ? $start_time : '';					
-					$event_end_time = isset($event_data->end_time) ? $end_time : '';
-					
-					$replace .= '<p class="ikfb_event_date">';
-					$event_had_start = false;
-					if(strlen($event_start_time)>2){
-						$replace .= $event_start_time;
-						$event_had_start = true;
-					}
-					if($event_had_start){
-						$replace .= ' - ';
-					}
-					if(strlen($event_end_time)>2){
-						$replace .= $event_end_time; 
-					}
-					$replace .= '</p>';
-					
-					//event image					
-					$replace .= '<img class="ikfb_event_image" src="' . $event_image . '" />';					
-					
-					//event description
-					$event_description = substr($event_data->description, 0, 250);
-					$event_description .= __('... ', $this->textdomain);
+					if(isset($event_data->name)){
+						//event name
+						$replace = '<p class="ikfb_event_title">' . $replace . $event_data->name . '</p>';
 						
-					$replace .= '<p class="ikfb_event_description">' . $event_description . '</p>';
-					
-					//event read more link
-					$replace .= '<p class="ikfb_event_link"><a href="http://facebook.com/events/'.$event_id.'" title="Click Here To Read More" target="_blank">Read More...</a></p>';
+						$start_time = isset($event_data->start_time) ? $event_data->start_time : '';
+						$end_time = isset($event_data->end_time) ? $event_data->end_time : '';			
+						
+						//TBD: Allow user control over date formatting
+						$time_object = new DateTime($start_time);
+						$start_time = $time_object->format('l, F jS, Y h:i:s a');	
+						
+						//TBD: Allow user control over date formatting
+						if(strlen($end_time)>2){
+							$time_object = new DateTime($end_time);
+							$end_time = $time_object->format('l, F jS, Y h:i:s a');						
+						}
+						
+						//event start time - event end time					
+						$event_start_time = isset($event_data->start_time) ? $start_time : '';					
+						$event_end_time = isset($event_data->end_time) ? $end_time : '';
+						
+						$replace .= '<p class="ikfb_event_date">';
+						$event_had_start = false;
+						if(strlen($event_start_time)>2){
+							$replace .= $event_start_time;
+							$event_had_start = true;
+						}
+						if($event_had_start){
+							$replace .= ' - ';
+						}
+						if(strlen($event_end_time)>2){
+							$replace .= $event_end_time; 
+						}
+						$replace .= '</p>';
+						
+						//event image					
+						$replace .= '<img class="ikfb_event_image" src="' . $event_image . '" />';					
+						
+						//event description
+						if(isset($event_data->description)){
+							$event_description = substr($event_data->description, 0, 250);
+							$event_description .= __('... ', $this->textdomain);
+								
+							$replace .= '<p class="ikfb_event_description">' . $event_description . '</p>';
+						}
+						
+						//event read more link
+						$replace .= '<p class="ikfb_event_link"><a href="http://facebook.com/events/'.$event_id.'" title="Click Here To Read More" target="_blank">Read More...</a></p>';
+					}
 					
 					$output = str_replace('{ikfb:feed_item}', $replace, $feed_item_html);	
 				}

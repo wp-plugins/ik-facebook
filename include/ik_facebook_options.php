@@ -196,17 +196,13 @@ class ikFacebookOptions
 				_e('<p><em>Valid options for colorscheme are "light" and "dark".</em></p>');
 				_e('<p>To output a Photo Gallery, place <code>[ik_fb_gallery id="539627829386059" num_photos="25" size="130x73" title="Hello World!"]</code> in the body of a post.</p>');
 				_e('<p><em>If no size is passed, it will default to 320 x 180.  Size options are 2048x1152, 960x540, 720x405, 600x337, 480x270, 320x180, and 130x73.  If num_photos is not passed, the Gallery will default to the amount set on the Dashboard - if no amount is set there, it will display up to 25 photos.  The ID number is found by looking at the URL of the link to the Album on Facebook.</em></p>');
-				
-				//some PHP for testing the plugin!
-				$curl_enabled = function_exists('curl_version') ? 'Enabled' : 'Disabled';
-				
+								
 				_e("<h4>Configuration Settings</h4>");
 				_e("<p>If you need to contact us for help, please be sure to include these settings in your message.</p>");
 				echo "<table><tbody>";
 				_e("<tr><td align='right'>Page ID:</td><td>" . get_option("ik_fb_page_id") . "</td></tr>");
 				_e("<tr><td align='right'>App ID:</td><td>" . get_option("ik_fb_app_id") . "</td></tr>");
 				_e("<tr><td align='right'>Secret Key:</td><td>" . get_option("ik_fb_secret_key") . "</td></tr>");
-				_e("<tr><td align='right'>cURL Status: </td><td>{$curl_enabled}</td></tr>");
 				echo "</tbody></table>";
 				
 				_e("<h3>Plugin Settings Test</h3>");
@@ -221,7 +217,7 @@ class ikFacebookOptions
 				
 				echo "<table><tbody>";
 				_e("<tr><td><h4>Our Feed</h4></td><td><h4>Your Feed</h4></td></tr>");
-				echo "<tr><td valign='top'>" . do_shortcode('[ik_fb_feed show_errors="1" id="IlluminatiKarate" num_posts="1"]') . "</td><td valign='top'>" . do_shortcode('[ik_fb_feed show_errors="1" num_posts="1"]') . "</td></tr>";
+				echo "<tr><td valign='top'>" . do_shortcode('[ik_fb_feed show_errors="1" id="IlluminatiKarate" num_posts="2"]') . "</td><td valign='top'>" . do_shortcode('[ik_fb_feed show_errors="1" num_posts="2"]') . "</td></tr>";
 				echo "</tbody></table>";
 			?>
 			<?php
