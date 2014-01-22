@@ -1,10 +1,10 @@
 <?php
 /*
 Plugin Name: IK Facebook Plugin
-Plugin URI: http://iksocialpro.com/the-ik-facebook-plugin/
+Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.6.2.2
+Version: 2.6.3
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -671,6 +671,11 @@ class ikFacebook
 				
 					if(strlen($date)>2){
 						$date = '<p class="date">' . $date . '</p>';
+						
+						//add custom date styling from  options
+						if(!get_option('ik_fb_use_custom_html')){		
+							$date = $this->ikfb_date_styling($date);
+						}
 					}
 										
 					$line_item .= $date;
@@ -947,6 +952,28 @@ class ikFacebook
 		$insertion .= '"';					
 		//find the position of the replacement shortcode in the HTML
 		$position = strpos($line_item,'Posted By');
+		//move back one character from that position, assuming a closing bracket to some HTML tag, and insert our custom styling
+		$line_item = substr_replace($line_item, $insertion, $position-1, 0);
+		
+		return $line_item;
+	}
+	
+	//inserts any selected custom styling options into the feed's date attribute
+	function ikfb_date_styling($line_item = ""){	
+		$ik_fb_date_font_color = strlen(get_option('ik_fb_date_font_color')) > 2 ? get_option('ik_fb_date_font_color') : '';
+		$ik_fb_date_font_size = strlen(get_option('ik_fb_date_font_size')) > 0 ? get_option('ik_fb_date_font_size') : '';
+		
+		//load our custom styling, to insert
+		$insertion = ' style="';
+		if(strlen($ik_fb_date_font_size)>0){
+			$insertion .= "font-size: {$ik_fb_date_font_size}px; ";
+		}
+		if(strlen($ik_fb_date_font_color)>0){
+			$insertion .= "color: {$ik_fb_date_font_color};";
+		}
+		$insertion .= '"';					
+		//find the position of the replacement shortcode in the HTML
+		$position = strpos($line_item,'class="date"');
 		//move back one character from that position, assuming a closing bracket to some HTML tag, and insert our custom styling
 		$line_item = substr_replace($line_item, $insertion, $position-1, 0);
 		

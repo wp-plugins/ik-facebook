@@ -83,7 +83,9 @@ class ikFacebookOptions
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_powered_by_font_color' );		
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_powered_by_font_size' );	
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_posted_by_font_color' );				
-		register_setting( 'ik-fb-style-settings-group', 'ik_fb_posted_by_font_size' );		
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_posted_by_font_size' );	
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_date_font_color' );				
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_date_font_size' );		
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_description_font_color' );		
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_description_font_size' );		
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_link_font_color' );		
@@ -155,7 +157,7 @@ class ikFacebookOptions
 				<form action="http://illuminatikarate.us2.list-manage1.com/subscribe/post?u=403e206455845b3b4bd0c08dc&amp;id=3e22ddb309" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
 					<label for="mce-EMAIL"><?php _e("Subscribe to our mailing list", $this->textdomain); ?></label>
 					<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
-					<p><?php _e("New subscribers will receive a discount code good for any version of ", $this->textdomain); ?><a href="http://iksocialpro.com//purchase-ik-social-pro/?signupform">IK Social Pro</a>!</p>
+					<p><?php _e("New subscribers will receive a discount code good for any version of ", $this->textdomain); ?><a href="http://goldplugins.com/our-plugins/wp-social-pro/">WP Social Pro</a>!</p>
 					<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
 				</form>
 				</div>
@@ -190,15 +192,15 @@ class ikFacebookOptions
 				//example shortcodes
 				
 				_e("<h4>Example Shortcodes</h4>");
-				_e('<p>To output the custom Facebook Feed, place <code>[ik_fb_feed colorscheme="light" use_thumb="true" width="250" num_posts="5" id="123456789"]</code> in the body of a post.</p>');
+				_e('<p>To output the custom Facebook Feed, place <code>[ik_fb_feed]</code> in the body of a post.  To further customize the feed via the shortcode, available attributes include: <code>colorscheme="light" use_thumb="true" width="250" num_posts="5" id="123456789"</code>.</p>');
 				_e('<p><em>Valid choices for "colorscheme" are "light" and "dark". If "use_thumb" is set to true, the value of "width" will be ignored.  If "use_thumb" or "width" are not set, the values from the Options page will be used.  If id is not set, the shortcode will use the Page ID from your Settings page.</em></p>');
-				_e('<p>To output the Like Button, place <code>[ik_fb_like_button url="http://some_url" height="desired_iframe_height" colorscheme="light"]</code> in the body of a post.</p>');
-				_e('<p><em>Valid options for colorscheme are "light" and "dark".</em></p>');
+				_e('<p>To output the Like Button, place <code>[ik_fb_like_button url="http://www.facebook.com"]</code> in the body of a post.  Valid attributes include: <code>url="" height="" colorscheme="light"</code>.</p>');
+				_e('<p><em>Valid options for colorscheme are "light" and "dark".  Valid values for height are integers.  URL must be a valid website URL.</em></p>');
 				_e('<p>To output a Photo Gallery, place <code>[ik_fb_gallery id="539627829386059" num_photos="25" size="130x73" title="Hello World!"]</code> in the body of a post.</p>');
-				_e('<p><em>If no size is passed, it will default to 320 x 180.  Size options are 2048x1152, 960x540, 720x405, 600x337, 480x270, 320x180, and 130x73.  If num_photos is not passed, the Gallery will default to the amount set on the Dashboard - if no amount is set there, it will display up to 25 photos.  The ID number is found by looking at the URL of the link to the Album on Facebook.</em></p>');
+				_e('<p><em>If no size is passed, it will default to 320 x 180.  Size options are 2048x1152, 960x540, 720x405, 600x337, 480x270, 320x180, and 130x73.  If num_photos is not passed, the Gallery will default to the amount set on the Dashboard - if no amount is set there, it will display up to 25 photos.  The ID number is found by looking at the URL of the link to the Album on Facebook - you can read more on our FAQs <a href="http://goldplugins.com/documentation/wp-social-pro-documentation/frequently-asked-questions/">here</a>.</em></p>');
 								
 				_e("<h4>Configuration Settings</h4>");
-				_e("<p>If you need to contact us for help, please be sure to include these settings in your message.</p>");
+				_e("<p>If you need to contact us for help, please be sure to include these settings in your message, as well as a functional description of how you have the feed implemented on your site.</p>");
 				echo "<table><tbody>";
 				_e("<tr><td align='right'>Page ID:</td><td>" . get_option("ik_fb_page_id") . "</td></tr>");
 				_e("<tr><td align='right'>App ID:</td><td>" . get_option("ik_fb_app_id") . "</td></tr>");
@@ -210,7 +212,7 @@ class ikFacebookOptions
 				_e("<strong>How to use:</strong>");
 				echo "<ol>";
 				_e("<li>If both feeds are showing up, everything is working!  Hooray!</li>");
-				_e("<li>If neither feed is showing up, and cURL is enabled, then your App ID or Secret Key is incorrect.  Please verify you have entered the correct information.</li>");
+				_e("<li>If neither feed is showing up then your App ID or Secret Key is incorrect.  Please verify you have entered the correct information.</li>");
 				_e("<li>If our feed is showing up, but your feed is not, then either:");
 					_e("<ol><li>Your Page ID is Incorrect.  Please verify you have entered the correct information.</li>");
 					_e("<li>Your Page is not configured to be publically viewable.  Please verify that you are using a Facebook Page, not a Personal Profile, and that the page has no Country, Age, or other restrictions placed on it.</li></ol></li></ol>");
@@ -242,7 +244,7 @@ class ikFacebookOptions
 				<tr valign="top">
 					<th scope="row"><label for="ik_fb_app_id"><?php _e("Facebook App ID");?></label></th>
 					<td><input type="text" name="ik_fb_app_id" id="ik_fb_app_id" value="<?php echo get_option('ik_fb_app_id'); ?>" style="width: 250px" />
-					<p class="description"><?php _e('This is the App ID you acquired when you <a href="http://iksocialpro.com/installation-usage-instructions/how-to-get-an-app-id-and-secret-key-from-facebook/?ikfbsettings" target="_blank" title="How To Get An App ID and Secret Key From Facebook">setup your Facebook app</a>.');?></p></td>
+					<p class="description"><?php _e('This is the App ID you acquired when you <a href="http://goldplugins.com/documentation/wp-social-pro-documentation/how-to-get-an-app-id-and-secret-key-from-facebook/" target="_blank" title="How To Get An App ID and Secret Key From Facebook">setup your Facebook app</a>.');?></p></td>
 				</tr>
 			</table>
 			
@@ -250,7 +252,7 @@ class ikFacebookOptions
 				<tr valign="top">
 					<th scope="row"><label for="ik_fb_secret_key"><?php _e("Facebook Secret Key");?></label></th>
 					<td><input type="text" name="ik_fb_secret_key" id="ik_fb_secret_key" value="<?php echo get_option('ik_fb_secret_key'); ?>" style="width: 250px" />
-					<p class="description"><?php _e('This is the App Secret you acquired when you <a href="http://iksocialpro.com/installation-usage-instructions/how-to-get-an-app-id-and-secret-key-from-facebook/?ikfbsettings" target="_blank" title="How To Get An App ID and Secret Key From Facebook">setup your Facebook app</a>.');?></p></td>
+					<p class="description"><?php _e('This is the App Secret you acquired when you <a href="http://goldplugins.com/documentation/wp-social-pro-documentation/how-to-get-an-app-id-and-secret-key-from-facebook/" target="_blank" title="How To Get An App ID and Secret Key From Facebook">setup your Facebook app</a>.');?></p></td>
 				</tr>
 			</table>	
 			
@@ -461,6 +463,22 @@ class ikFacebookOptions
 				</tr>
 			
 				<tr valign="top">
+					<th scope="row"><label for="ik_fb_date_font_size"><?php _e('Date Font Size');?></label></th>
+					<td><input type="text" name="ik_fb_date_font_size" id="ik_fb_date_font_size" value="<?php echo get_option('ik_fb_date_font_size'); ?>" style="width: 250px" />
+					<p class="description"><?php _e('Input your font pixel size.');?></p></td>
+				</tr>
+				
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_date_font_color"><?php _e('Date Font Color');?></label></th>
+					<td>
+					<div class="color-picker" style="position: relative;">				
+						<input type="text" name="ik_fb_date_font_color" id="ik_fb_date_font_color" value="<?php echo strlen(get_option('ik_fb_date_font_color'))>2 ? get_option('ik_fb_date_font_color') : ' '; ?>" class="color" />
+						<div style="z-index: 100; background: none repeat scroll 0% 0% rgb(238, 238, 238); border: 1px solid rgb(204, 204, 204); position: absolute;" class="colorpicker"></div>
+					</div>						
+					<p class="description"><?php _e('Input your hex color code, by clicking and using the Colorpicker or typing it in.  Erase the contents of this field to use the default color.');?></p></td>
+				</tr>
+			
+				<tr valign="top">
 					<th scope="row"><label for="ik_fb_posted_by_font_size"><?php _e('Posted By Font Size');?></label></th>
 					<td><input type="text" name="ik_fb_posted_by_font_size" id="ik_fb_posted_by_font_size" value="<?php echo get_option('ik_fb_posted_by_font_size'); ?>" style="width: 250px" />
 					<p class="description"><?php _e('Input your font pixel size.');?></p></td>
@@ -634,19 +652,19 @@ class ikFacebookOptions
 				?>
 					<div class="updated" id="message">
 						<h2><?php _e('Want More Features?'); ?></h2>
-						<p><a href="http://iksocialpro.com/purchase-ik-social-pro/?ikfbbottomtext"><?php _e('Upgrade to IK Social Pro now;'); ?></a><?php _e(' and get tons of new features and settings.'); ?> </p>
+						<p><a href="http://goldplugins.com/our-plugins/wp-social-pro/"><?php _e('Upgrade to WP Social Pro now;'); ?></a><?php _e(' and get tons of new features and settings.'); ?> </p>
 						<h3><?php _e('Pro Features Include:');?></h3>
 						<ul>
 							<li><strong><?php _e('Unbranded Admin screens:</strong> Remove all IK FB branding from your Wordpress admin.');?></li>
 							<li><strong><?php _e('Hide non-page-owner posts from your feed:</strong> With this option, your feed will only show the posts from your own account.');?></li>
 							<li><strong><?php _e("Custom HTML Output:</strong> Use any HTML tags you want for the feed. You'll be able to specify a custom HTML template for your feed.");?></li>
-							<li><strong><?php _e("Fanatical Support:</strong> We're here to help!  Purchase IK Social Pro and receive prompt, responsive, and professional support.");?></li>
-							<li><strong><?php _e("Free Updates For Life:</strong> Get IK Social Pro now, and you'll get free updates for life!");?></li>
+							<li><strong><?php _e("Fanatical Support:</strong> We're here to help!  Purchase WP Social Pro and receive prompt, responsive, and professional support.");?></li>
+							<li><strong><?php _e("Free Updates For Life:</strong> Get WP Social Pro now, and you'll get free updates for life!");?></li>
 						</ul>
 							
-						<p><?php _e('More to come! IK Social Pro plugin owners get new updates automatically by email. New features land in the Pro version first, so be sure to upgrade today.');?></p>
+						<p><?php _e('More to come! WP Social Pro plugin owners get new updates automatically by email. New features land in the Pro version first, so be sure to upgrade today.');?></p>
 									
-						<a href="http://iksocialpro.com/purchase-ik-social-pro/?ikfbbottom" target="_blank" title="<?php _e('Learn More About IK Social Pro');?>"><img src="<?php echo plugins_url('/img/ik_social_pro.jpg', __FILE__); ?>" alt="IK Social Pro" /><p class="description"><?php _e('Click Here To Learn About IK Social Pro');?></p></a>
+						<a href="http://goldplugins.com/our-plugins/wp-social-pro/" target="_blank" title="<?php _e('Learn More About WP Social Pro');?>"><img src="<?php echo plugins_url('/img/ik_social_pro.jpg', __FILE__); ?>" alt="WP Social Pro" /><p class="description"><?php _e('Click Here To Learn About WP Social Pro');?></p></a>
 					</div>
 				<?php
 					endif;

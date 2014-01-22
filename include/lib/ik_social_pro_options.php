@@ -40,14 +40,14 @@ class ikSocialProOptions
 		if(get_option('ik_fb_unbranded') && is_valid_key(get_option('ik_fb_pro_key'))){
 			$title = "Additional Settings";
 		} else {
-			$title = "IK Social Pro Settings";
+			$title = "WP Social Pro Settings";
 		}			
 		
 		?>
 		<h3><?php echo $title; ?></h3>
 		<p><?php _e('These additional settings provide even more control over the output of your Facebook feed.');?></p>
 		<?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?>
-			<p><a href="http://iksocialpro.com/purchase-ik-social-pro/?ikfbprotop"><?php _e('Upgrade to IK Social Pro now');?></a> <?php _e('and get access to tons of new features and settings.');?> </p>
+			<p><a href="http://goldplugins.com/our-plugins/wp-social-pro/"><?php _e('Upgrade to WP Social Pro now');?></a> <?php _e('and get access to tons of new features and settings.');?> </p>
 		<?php endif; ?>
 		
 		<?php if ( isset ( $_GET['tabtab'] ) ) $this->ikfb_admin_tabs($_GET['tabtab']); else $this->ikfb_admin_tabs('display_options'); ?>
