@@ -25,7 +25,6 @@ _"Looks great, easy to use. Better than any of the other Facebook feed plugins I
 
 = The IK Facebook Plugin is a great plugin for many uses, including: =
 
-* Adding SEO friendly content to your website
 * Powering your blog with your Facebook Feed - avoid the need to maintain content in multiple locations!
 * Embed a Custom Facebook Feed Widget in your Sidebar or Footer
 * Styling a Custom Facebook Feed, without the need for CSS!
@@ -165,7 +164,7 @@ In this case, the Facebook Album ID is '539627829386059'.
 
 = 2.6.3 =
 * Update: change various links / wording to match new website
-* Feature: adds ability to control the color and font size of the Posted On Date in the Feed.
+* Feature: adds ability to control the color and font size of the Posted On Date in the Facebook Feed.
 
 = 2.6.2.2 =
 * Fix: Address issue with improperly set default feed item limit affecting multiple different situations.
