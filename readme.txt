@@ -48,7 +48,7 @@ The IK Facebook Plugin includes options to set the Title of the custom Facebook 
 
 = Professional Development =
 
-The IK Facebook Plugin is a free version of [WP Social Pro](http://http://goldplugins.com/our-plugins/wp-social-pro/ "WP Social Pro") - WP Social Pro is a professionally developed WordPress plugin that integrates your Facebook Feed into your WordPress website as a custom widget.  The IK Facebook Plugin receives regular updates with new features and tweaks to the custom Facebook Feed.  With the IK Facebook Plugin, you can easily add **Search Engine Optimization friendly** content to your website without extra effort -- no iframe means the content exists on your site and is crawlable by search engines like Google!  Our Professional Developers are currently working on things like Multi Lingual Translations, Transient API Caching, and coming up with new unique ways to integrate Facebook into your website.
+The IK Facebook Plugin is a free version of [WP Social Pro](http://http://goldplugins.com/our-plugins/wp-social-pro/ "WP Social Pro") - WP Social Pro is a professionally developed WordPress plugin that integrates your Facebook Feed into your WordPress website as a custom widget.  The IK Facebook Plugin receives regular updates with new features and tweaks to the custom Facebook Feed.  With the IK Facebook Plugin, you can easily add **Search Engine Optimization friendly** content to your website -- no iframe means the content exists on your site and is crawlable by search engines like Google!  Our Professional Developers are currently working on things like Multi Lingual Translations, Transient API Caching, and coming up with new unique ways to integrate Facebook into your website.
 
 = Powerful Customization =
 
@@ -90,7 +90,7 @@ Follow the information on that page to create a Simple Facebook App - you'll be 
 
 = Ack!  All I see is 'IK FB: Please check your settings.' - What do I do? =
 
-It's all good!  This just means there is no feed data - this could be due to bad settings, including a bad Page ID, App ID, or Secret Key, or it could be due to some other error such as not having cUrl installed.  Be sure to check your Facebook Page's Privacy Settings, too!  Check the plugin instructions for help (or send us a message if you think it's an error.)
+It's all good!  This just means there is no feed data - this could be due to bad settings, including a bad Page ID, App ID, or Secret Key, or it could be due to some other error.  Be sure to check your Facebook Page's Privacy Settings, too!  Check the plugin instructions for help (or send us a message if you think it's an error.)
 
 = So what's up with this 'Publicly Accessible Page' thing? =
 
@@ -155,7 +155,7 @@ In this case, the Facebook Album ID is '539627829386059'.
 
 == Screenshots ==
 
-1. This is the Plugin Status & Help Tab.  This tab provides example shortcodes, a quick summary of some important settings, and other means of help and support.
+1. This is the Plugin Status & Help Tab.  This tab provides example shortcodes, a quick summary of settings, and other means of help and support.
 2. This is the Configuration Options Settings page of the IK Facebook Plugin.
 3. This is the Style Options Settings page of the IK Facebook Plugin.  These settings help you control the visible appearance of your custom facebook feed.
 4. This is the Display Options Settings page of the IK Facebook Plugin.  These settings help you control what content appears in your custom facebook feed.
