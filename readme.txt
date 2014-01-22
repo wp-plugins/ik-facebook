@@ -32,25 +32,23 @@ _"Looks great, easy to use. Better than any of the other Facebook feed plugins I
 * Custom HTML Options allow Facebook Feed Shortcode and Facebook Feed Widget to be displayed any way you like!
 * Adding a Facebook Like Button to your website, anywhere!
 * Showing Facebook Comments in your Custom Facebook Feed!
-* Show a Feed of Only Facebook Events!
 * Adding a Facebook-powered Photo Gallery to your website!
 * Show multiple different custom Facebook Feeds!
 * Display Facebook Events in your Feed!
 * Use a Facebook Event instead of a Page - Widget will output a customized Feed from the Facebook Event's Wall!
 * Custom Facebook Feed Widget allows user to override Site Wide Options
 * Ability to Pass Page ID Via Shortcode and Widget Allows Multiple Facebook Feeds on One Page!
-* And our quality documentation won't leave you hanging!
 
 = Outstanding Support =
 
-We pride ourselves on taking customer support seriously. In fact, [send us an email](http://iksocialpro.com/contact-us/ "Send Us an Email") now if you have any questions at all. You’ll get a quick response directly from the developers.  Our developers have been making Facebook apps for years and are well versed in all things Facebook.
+We pride ourselves on taking customer support seriously. In fact, [send us an email](http://goldplugins.com/contact/ "Send Us an Email") now if you have any questions at all. You’ll get a quick response directly from the developers.  Our developers have been making Facebook apps for years and are well versed in all things Facebook.
 
 = User Friendly Features =
 The IK Facebook Plugin includes options to set the Title of the custom Facebook Feed widget, whether or not to show the Like Button above the custom Facebook Feed widget, and whether or not to show the Profile Picture.  The IK Facebook Plugin supports both the Light and Dark color schemes for the Like Button widget and has multiple color schemes for the custom Facebook Feed widget.  The IK Facebook Plugin allows you to pass the ID of the Facebook page via the shortcode - allowing you to display the feeds from multiple accounts on one page!  Many plugins require you to know CSS to style your custom Facebook Feed widget - ours gives you full control over the output of your custom Facebook Feed, with Themes, Colorpickers, Options, and more!
 
 = Professional Development =
 
-The IK Facebook Plugin is a free version of [IK Social Pro](http://iksocialpro.com/ "IK Social Pro") - IK Social Pro is a professionally developed WordPress plugin that integrates your Facebook Feed into your WordPress website as a custom widget.  The IK Facebook Plugin receives regular updates with new features and tweaks to the custom Facebook Feed.  With the IK Facebook Plugin, you can easily add **Search Engine Optimization friendly** content to your website without extra effort -- no iframe means the content exists on your site and is crawlable by search engines like Google!  Our Professional Developers are currently working on things like Multi Lingual Translations, Transient API Caching, and coming up with new unique ways to integrate Facebook into your website.
+The IK Facebook Plugin is a free version of [WP Social Pro](http://http://goldplugins.com/our-plugins/wp-social-pro/ "WP Social Pro") - WP Social Pro is a professionally developed WordPress plugin that integrates your Facebook Feed into your WordPress website as a custom widget.  The IK Facebook Plugin receives regular updates with new features and tweaks to the custom Facebook Feed.  With the IK Facebook Plugin, you can easily add **Search Engine Optimization friendly** content to your website without extra effort -- no iframe means the content exists on your site and is crawlable by search engines like Google!  Our Professional Developers are currently working on things like Multi Lingual Translations, Transient API Caching, and coming up with new unique ways to integrate Facebook into your website.
 
 = Powerful Customization =
 
@@ -58,7 +56,7 @@ The IK Facebook Plugin includes the option to set your own custom CSS for stylin
 
 = More Than Just A Custom Facebook Feed - Events and Photo Galleries, too! =
 
-The IK Facebook Plugin intends to support all types Facebook content - not just standard Feeds.  Currently, we have support for Facebook Events and Facebook Photo Galleries.  More features and functionality are added very regularly.  Don't see something you need?  Let us know!
+The IK Facebook Plugin intends to support all types Facebook content - not just standard Feeds.  Currently, we have support for Facebook Events and Facebook Photo Galleries.
 
 == Installation ==
 
@@ -72,7 +70,7 @@ This section describes how to install the plugin and get it working.
 * This is no different than outputting a normal Page Feed!  Just follow the instructions below and our plugin will detect what type of feed is being displayed.
 
 = Outputting the Facebook Feed =
-* To output the custom Facebook Feed, place `[ik_fb_feed colorscheme="light" use_thumb="true" width="250" num_posts="5" id="123456789"]` in the body of a post, or use the Appearance section to add the The IK Facebook Plugin Widget to your Widgets area.  Valid choices for colorscheme are "light" and "dark"  If 'use_thumb' is set to true, the value of 'width' will be ignored.  If 'use_thumb' or 'width’ is not set, the values from the Options page will be used.  If id is not set, the shortcode will use the Page ID from your Settings page.  All of the options on the widget will use the defaults, drawn from the Settings page, if they aren't passed via the widget.
+* To output the custom Facebook Feed, place `[ik_fb_feed colorscheme="light" use_thumb="true" width="250" num_posts="5"]` in the body of a post, or use the Appearance section to add the The IK Facebook Plugin Widget to your Widgets area.  Valid choices for colorscheme are "light" and "dark"  If 'use_thumb' is set to true, the value of 'width' will be ignored.  If 'use_thumb' or 'width’ is not set, the values from the Options page will be used.  If id is not set, the shortcode will use the Page ID from your Settings page.  All of the options on the widget will use the defaults, drawn from the Settings page, if they aren't passed via the widget.
 * You can also use the function `ik_fb_display_feed($colorscheme,$use_thumb,$width)` to display the custom facebook feed in your theme.
 
 = Outputting the Facebook Like Button = 
@@ -86,7 +84,7 @@ This section describes how to install the plugin and get it working.
 
 = Help!  I need a Facebook App ID / Facebook Secret Key! =
 
-OK!  We have a great page with some helpful information [here](http://iksocialpro.com/installation-usage-instructions/how-to-get-an-app-id-and-secret-key-from-facebook/ "Configuration Options and Instructions").
+OK!  We have a great page with some helpful information [here](goldplugins.com/documentation/wp-social-pro-documentation/how-to-get-an-app-id-and-secret-key-from-facebook/ "Configuration Options and Instructions").
 
 Follow the information on that page to create a Simple Facebook App - you'll be guided along the way to get your App ID, Secret Key, and any other info you may need.
 
@@ -114,11 +112,11 @@ That probably means the URL you've given the Like Button is invalid.  Sometimes 
 
 = Other people's posts are showing up on my wall!  How do I stop it? =
 
-If you are using the Free version of the plugin, you'll need to [purchase IK Social Pro](http://iksocialpro.com/purchase-ik-social-pro/ "Purchase IK Social Pro") first.  Once installed, look for the option titled "Only Show Page Owner's Posts".  When that is checked, these posts will be hidden from view.
+If you are using the Free version of the plugin, you'll need to [purchase WP Social Pro](http://goldplugins.com/our-plugins/wp-social-pro/ "Purchase WP Social Pro") first.  Once installed, look for the option titled "Only Show Page Owner's Posts".  When that is checked, these posts will be hidden from view.
 
 = Hey!  I need more control over the styling of my feed, but I don't know CSS! =
 
-If you are using the Free version of the plugin, you'll need to [purchase IK Social Pro](http://iksocialpro.com/purchase-ik-social-pro/ "Purchase IK Social Pro") first.  Once installed, look for the long list of options under the heading "Display Options".  You will be able to use these to control font size and color for all of the different text elements, feed width and height for the in page and sidebar versions each, and more being added all the time!
+If you are using the Free version of the plugin, you'll need to [purchase WP Social Pro](http://goldplugins.com/our-plugins/wp-social-pro/ "Purchase WP Social Pro") first.  Once installed, look for the long list of options under the heading "Display Options".  You will be able to use these to control font size and color for all of the different text elements, feed width and height for the in page and sidebar versions each, and more being added all the time!
 
 = I see this plugin uses caching. Do I need to do anything for this? =
 
@@ -134,19 +132,19 @@ Try using the "No Style" theme -- this will output everything in a list.  You ca
 
 = I Want Even More Themes To Choose From For My Feed =
 
-The Pro version of IK Facebook has tons of themes!  [purchase IK Social Pro](http://iksocialpro.com/purchase-ik-social-pro/ "Purchase IK Social Pro")
+The Pro version of IK Facebook has tons of themes!  [purchase WP Social Pro](http://goldplugins.com/our-plugins/wp-social-pro/ "Purchase WP Social Pro")
 
 = I Want All To Show The Number of Likes In My Facebook Feed! =
 
-The Pro version of IK Facebook has this functionality - [purchase IK Social Pro](http://iksocialpro.com/purchase-ik-social-pro/ "Purchase IK Social Pro")
+The Pro version of IK Facebook has this functionality - [purchase WP Social Pro](http://goldplugins.com/our-plugins/wp-social-pro/ "Purchase WP Social Pro")
 
 = I Want All To Show Avatars In My Facebook Feed! =
 
-The Pro version of IK Facebook has this functionality - [purchase IK Social Pro](http://iksocialpro.com/purchase-ik-social-pro/ "Purchase IK Social Pro")
+The Pro version of IK Facebook has this functionality - [purchase WP Social Pro](http://goldplugins.com/our-plugins/wp-social-pro/ "Purchase WP Social Pro")
 
 = I Want All To Show Comments In My Facebook Feed! =
 
-The Pro version of IK Facebook has this functionality - [purchase IK Social Pro](http://iksocialpro.com/purchase-ik-social-pro/ "Purchase IK Social Pro")
+The Pro version of IK Facebook has this functionality - [purchase WP Social Pro](http://goldplugins.com/our-plugins/wp-social-pro/ "Purchase WP Social Pro")
 
 = Urk!  How to find my Album's ID for outputting a photo gallery? =
 
