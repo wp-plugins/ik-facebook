@@ -32,9 +32,9 @@ class ikFacebookLikeButtonWidget extends WP_Widget
 		$page_id = $instance['page_id'];
 		$height = $instance['height'];
 		?>
-			<p><label for="<?php echo $this->get_field_id('title'); ?>">Title: </label><input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo attribute_escape($title); ?>" /></p>
-			<p><label for="<?php echo $this->get_field_id('page_id'); ?>">URL to Like (defaults to Site URL): </label><input class="widefat" id="<?php echo $this->get_field_id('page_id'); ?>" name="<?php echo $this->get_field_name('page_id'); ?>" type="text" value="<?php echo attribute_escape($page_id); ?>" /></p>
-			<p><label for="<?php echo $this->get_field_id('height'); ?>">Height (defaults to 45px): </label><input class="widefat" id="<?php echo $this->get_field_id('height'); ?>" name="<?php echo $this->get_field_name('height'); ?>" type="text" value="<?php echo attribute_escape($height); ?>" /></p>
+			<p><label for="<?php echo $this->get_field_id('title'); ?>">Title: </label><input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr($title); ?>" /></p>
+			<p><label for="<?php echo $this->get_field_id('page_id'); ?>">URL to Like (defaults to Site URL): </label><input class="widefat" id="<?php echo $this->get_field_id('page_id'); ?>" name="<?php echo $this->get_field_name('page_id'); ?>" type="text" value="<?php echo esc_attr($page_id); ?>" /></p>
+			<p><label for="<?php echo $this->get_field_id('height'); ?>">Height (defaults to 45px): </label><input class="widefat" id="<?php echo $this->get_field_id('height'); ?>" name="<?php echo $this->get_field_name('height'); ?>" type="text" value="<?php echo esc_attr($height); ?>" /></p>
 			<p><label for="<?php echo $this->get_field_id('colorscheme'); ?>">Like Button Color Scheme: </label><select class="widefat" id="<?php echo $this->get_field_id('colorscheme'); ?>" name="<?php echo $this->get_field_name('colorscheme'); ?>"><option <?php if($colorscheme == "light"): ?> selected="SELECTED" <?php endif; ?> value="light" >Light</option><option <?php if($colorscheme == "dark"): ?> selected="SELECTED" <?php endif; ?> value="dark">Dark</option></select></p>
 		<?php
 	}

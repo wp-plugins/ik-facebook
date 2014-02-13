@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.6.3
+Version: 2.6.3.1
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -122,7 +122,7 @@ class ikFacebook
 	
 	//generates the like button HTML
 	function ik_fb_like_button($url, $height = "45", $colorscheme = "light"){
-		return '<iframe id="like_button" src="//www.facebook.com/plugins/like.php?href='.urlencode($url).'&amp;layout=standard&amp;show_faces=false&amp;action=like&amp;colorscheme='.$colorscheme.'&amp;height='.$height.'" scrolling="no" frameborder="0" allowTransparency="true"></iframe>';//add facebook like button
+		return '<iframe id="like_button" src="//www.facebook.com/plugins/like.php?href='.htmlentities(urlencode($url).'&layout=standard&show_faces=false&action=like&colorscheme='.$colorscheme.'&height='.$height).'" frameborder="0" ></iframe>';//add facebook like button
 	}
 	
 	//output the like button
@@ -234,7 +234,7 @@ class ikFacebook
 			foreach($gallery->data as $gallery_item){
 				echo '<div class="ik_fb_gallery_item" style="width:'.$width_array[$size].';height:'.$height_array[$size].';">';					
 				
-					echo '<a href="'.$gallery_item->source.'" target="_blank" title="'. __('Click to View Full Sized Photo', $this->textdomain) . '"><img class="ik_fb_standard_image" src="'.$gallery_item->images[$position]->source.'" /></a>';
+					echo '<a href="'.htmlentities($gallery_item->source).'" target="_blank" title="'. __('Click to View Full Sized Photo', $this->textdomain) . '"><img class="ik_fb_standard_image" src="'.$gallery_item->images[$position]->source.'" alt="' . htmlentities($gallery_item->name) . '" /></a>';
 					
 					if($show_name){
 						echo '<p class="ik_fb_standard_image_name">' . $gallery_item->name . '</p>';
@@ -265,7 +265,7 @@ class ikFacebook
 		//load facebook data
 		$fbData = $this->loadFacebook($id, $num_posts, $content_type);
 				
-		$feed = $fbData['feed'];
+		$feed = isset($fbData['feed']) ? $fbData['feed'] : array();
 		
 		$page_data = $fbData['page_data'];
 		
@@ -341,11 +341,13 @@ class ikFacebook
 		if(get_option('ik_fb_show_profile_picture')){
 			//use the username if available, otherwise fallback to page ID
 			if(isset($page_data->username)){
-				$replace = '<img src="//graph.facebook.com/'.$page_data->username.'/picture" />';
+				$replace = '<img src="//graph.facebook.com/'.$page_data->username.'/picture" alt="profile picture"/>';
 				$output = str_replace('{ikfb:image}', $replace, $output);
-			} else {
-				$replace = '<img src="//graph.facebook.com/'.$page_data->id.'/picture" />';
+			} else if(isset($page_data->id)){
+				$replace = '<img src="//graph.facebook.com/'.$page_data->id.'/picture" alt="profile picture"/>';
 				$output = str_replace('{ikfb:image}', $replace, $output);
+			} else { //bad ID has been input, lets try not to crap out
+				$output = str_replace('{ikfb:image}', '', $output);
 			}
 		} else {
 			$output = str_replace('{ikfb:image}', '', $output);
@@ -353,15 +355,17 @@ class ikFacebook
 		
 		
 		//only display title if option is set
-		if(get_option('ik_fb_show_page_title')){
-			$the_link = "https://www.facebook.com/pages/".$page_data->name."/".$page_data->id;
+		if(get_option('ik_fb_show_page_title') && isset($page_data->name)){
+			$the_link = "https://www.facebook.com/pages/".urlencode($page_data->name)."/".urlencode($page_data->id);
 			
 			$replace = '<a target="_blank" href="'.$the_link.'"><span class="ik_fb_name">'.$page_data->name.'</span></a>';	
 			$output = str_replace('{ikfb:link}', $replace, $output);	
-		} else {
-			$the_link = "https://www.facebook.com/pages/".$page_data->name."/".$page_data->id;
+		} else if(isset($page_data->name)) {
+			$the_link = "https://www.facebook.com/pages/".urlencode($page_data->name)."/".urlencode($page_data->id);
 			
 			$output = str_replace('{ikfb:link}', '', $output);	
+		} else { //bad ID has been input, lets try not to crap out
+			$output = str_replace('{ikfb:link}', '', $output);
 		}
 
 		//events don't have a like button, so display datetime and location
@@ -461,7 +465,7 @@ class ikFacebook
 					$replace = $ik_social_pro->pro_user_avatars($replace, $item) . " ";
 				}
 				
-				$replace = $replace . $item->message;
+				$replace = $replace . htmlspecialchars($item->message);
 				
 				//if a character limit is set, here is the logic to handle that
 				$limit = get_option('ik_fb_character_limit');
@@ -518,7 +522,7 @@ class ikFacebook
 				
 				if(get_option('ik_fb_link_photo_to_feed_item')){
 					$item_id = explode("_",$item->id);
-					$photo_link = "https://www.facebook.com/permalink.php?id=".$page_id."&story_fbid=". $item_id[1];
+					$photo_link = "https://www.facebook.com/permalink.php?id=".urlencode($page_id)."&story_fbid=".urlencode($item_id[1]);
 				}
 				
 				//output the images
@@ -557,8 +561,11 @@ class ikFacebook
 							$shortened = true;
 						}
 					}
-									
-					$replace = '<a href="'.$photo_link.'" title="'.$title.'" target="_blank"><img width="'.$width.'" height="'.$height.'" src="'.$photo_source.'" /></a>';
+					
+					//replace ampersands and equal signs, and whatever else
+					$photo_link = str_replace("&","&amp;",$photo_link);
+					
+					$replace = '<a href="'.$photo_link.'" title="'.htmlspecialchars($title, ENT_QUOTES).'" target="_blank"><img width="'.$width.'" height="'.$height.'" src="'.$photo_source.'" alt="'.htmlspecialchars($title, ENT_QUOTES).'"/></a>';
 					
 					//if set, hide feed images	
 					if(get_option('ik_fb_hide_feed_images')){
@@ -567,8 +574,11 @@ class ikFacebook
 						
 					$line_item .= str_replace('{ikfb:feed_item:image}', $replace, $image_html);						
 				} else {						
+					//ampersands!
+					$item->picture = str_replace("&","&amp;",$item->picture);
+					
 					//otherwise, use thumbnail
-					$replace = '<a href="'.$photo_link.'" target="_blank"><img src="'.$item->picture.'" /></a>';
+					$replace = '<a href="'.$photo_link.'" target="_blank"><img src="'.$item->picture.'" alt="Click for fullsize photo"/></a>';
 					
 					//if set, hide feed images
 					if(get_option('ik_fb_hide_feed_images')){
@@ -606,7 +616,7 @@ class ikFacebook
 			
 			if($shortened){
 				$item_id = explode("_",$item->id);
-				$the_link = "https://www.facebook.com/permalink.php?id=".$page_id."&story_fbid=". $item_id[1];				
+				$the_link = "https://www.facebook.com/permalink.php?id=".urlencode($page_id)."&story_fbid=".urlencode($item_id[1]);				
 				$line_item .= ' <a href="'.$the_link.'" class="ikfb_read_more" target="_blank">'.__('Read More...', $this->textdomain).'</a>';
 			}	
 
@@ -621,7 +631,10 @@ class ikFacebook
 				
 				//don't add the line item if the link text isn't set
 				if(strlen($link_text) > 1){
-					$replace_front = '<a href="'.$item->link.'" target="_blank">';
+					//prevent validation errors
+					$item->link = str_replace("&","&amp;",$item->link);
+					
+					$replace_front = '<a href="'.htmlentities($item->link).'" target="_blank">';
 					$replace_back = $link_text.'</a>';				
 				
 					//add custom link styling from pro options
@@ -757,7 +770,7 @@ class ikFacebook
 						$replace .= '</p>';
 						
 						//event image					
-						$replace .= '<img class="ikfb_event_image" src="' . $event_image . '" />';					
+						$replace .= '<img class="ikfb_event_image" src="' . $event_image . '" alt="Event Image"/>';					
 						
 						//event description
 						if(isset($event_data->description)){
@@ -768,7 +781,7 @@ class ikFacebook
 						}
 						
 						//event read more link
-						$replace .= '<p class="ikfb_event_link"><a href="http://facebook.com/events/'.$event_id.'" title="Click Here To Read More" target="_blank">Read More...</a></p>';
+						$replace .= '<p class="ikfb_event_link"><a href="http://facebook.com/events/'.urlencode($event_id).'" title="Click Here To Read More" target="_blank">Read More...</a></p>';
 					}
 					
 					$output = str_replace('{ikfb:feed_item}', $replace, $feed_item_html);	
