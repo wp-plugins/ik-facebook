@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.6.3.1
+Version: 2.6.3.2
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -122,7 +122,8 @@ class ikFacebook
 	
 	//generates the like button HTML
 	function ik_fb_like_button($url, $height = "45", $colorscheme = "light"){
-		return '<iframe id="like_button" src="//www.facebook.com/plugins/like.php?href='.htmlentities(urlencode($url).'&layout=standard&show_faces=false&action=like&colorscheme='.$colorscheme.'&height='.$height).'" frameborder="0" ></iframe>';//add facebook like button
+		return '<iframe id="like_button" src="//www.facebook.com/plugins/like.php?href='.htmlentities(urlencode($url).'&layout=standard&show_faces=false&action=like&colorscheme='.$colorscheme.'&height='.$height).'" 
+		></iframe>';//add facebook like button
 	}
 	
 	//output the like button
@@ -565,7 +566,10 @@ class ikFacebook
 					//replace ampersands and equal signs, and whatever else
 					$photo_link = str_replace("&","&amp;",$photo_link);
 					
-					$replace = '<a href="'.$photo_link.'" title="'.htmlspecialchars($title, ENT_QUOTES).'" target="_blank"><img width="'.$width.'" height="'.$height.'" src="'.$photo_source.'" alt="'.htmlspecialchars($title, ENT_QUOTES).'"/></a>';
+					$width = strlen($width)>0 ? 'width="'.$width.'"' : '';
+					$height = strlen($height)>0 ? 'height="'.$height.'"' : '';
+					
+					$replace = '<a href="'.$photo_link.'" title="'.htmlspecialchars($title, ENT_QUOTES).'" target="_blank"><img '.$width.' '.$height.' src="'.$photo_source.'" alt="'.htmlspecialchars($title, ENT_QUOTES).'"/></a>';
 					
 					//if set, hide feed images	
 					if(get_option('ik_fb_hide_feed_images')){
@@ -616,7 +620,7 @@ class ikFacebook
 			
 			if($shortened){
 				$item_id = explode("_",$item->id);
-				$the_link = "https://www.facebook.com/permalink.php?id=".urlencode($page_id)."&story_fbid=".urlencode($item_id[1]);				
+				$the_link = "https://www.facebook.com/permalink.php" . htmlentities("?id=".urlencode($page_id)."&story_fbid=".urlencode($item_id[1]));				
 				$line_item .= ' <a href="'.$the_link.'" class="ikfb_read_more" target="_blank">'.__('Read More...', $this->textdomain).'</a>';
 			}	
 

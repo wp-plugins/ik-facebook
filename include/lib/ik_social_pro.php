@@ -43,7 +43,7 @@ class ikSocialPro
 				$ik_fb->authToken = $ik_fb->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
 			}	
 			
-			$content .= '<img src="https://graph.facebook.com/' . $item->from->id .'/picture?' . $ik_fb->authToken . '" class="ikfb_user_avatar" />';
+			$content .= '<img src="https://graph.facebook.com/' . $item->from->id .'/picture?' . $ik_fb->authToken . '" class="ikfb_user_avatar" alt="avatar"/>';
 		}
 		
 		return $content;
@@ -93,12 +93,12 @@ class ikSocialPro
 										$ik_fb->authToken = $ik_fb->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
 									}	
 									
-									$comment_avatar = '<img src="https://graph.facebook.com/' . $comment->from->id .'/picture?' . $ik_fb->authToken . '" class="ikfb_user_comment_avatar" />';
+									$comment_avatar = '<img src="https://graph.facebook.com/' . $comment->from->id .'/picture?' . $ik_fb->authToken . '" class="ikfb_user_comment_avatar" alt="avatar"/>';									
 									
 									$comment_list .= $comment_avatar;
 								}
 								$comment_list .= '<p class="ikfb_comment_message"><span class="ikfb_comment_author">' . $comment->from->name . ' says:</span> ';
-								$comment_list .= $comment->message . '</p>';
+								$comment_list .= htmlentities($comment->message) . '</p>';
 								
 								//output date, if option to display it is enabled
 								if(get_option('ik_fb_show_date')){
