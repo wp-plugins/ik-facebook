@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.6.3.2
+Version: 2.6.3.3
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -47,7 +47,7 @@ class ikFacebook
 
 		//add CSS
 		add_action( 'wp_enqueue_scripts', array($this, 'ik_fb_setup_css'));
-		add_action( 'wp_footer', array($this, 'ik_fb_setup_custom_css'));
+		add_action( 'wp_head', array($this, 'ik_fb_setup_custom_css'));
 		add_action( 'wp_enqueue_scripts', array($this, 'ik_fb_setup_custom_theme_css'));
 
 		//register sidebar widgets
@@ -106,7 +106,7 @@ class ikFacebook
 		if($ikfb_footer_css_output){
 			return;
 		} else {
-			echo '<style type="text/css" media="screen">' . get_option('ik_fb_custom_css') . "</style>";
+			echo '<!--IKFB CSS--> <style type="text/css" media="screen">' . get_option('ik_fb_custom_css') . "</style>";
 			$ikfb_footer_css_output = true;
 		}
 	}
@@ -122,8 +122,7 @@ class ikFacebook
 	
 	//generates the like button HTML
 	function ik_fb_like_button($url, $height = "45", $colorscheme = "light"){
-		return '<iframe id="like_button" src="//www.facebook.com/plugins/like.php?href='.htmlentities(urlencode($url).'&layout=standard&show_faces=false&action=like&colorscheme='.$colorscheme.'&height='.$height).'" 
-		></iframe>';//add facebook like button
+		return '<iframe id="like_button" src="//www.facebook.com/plugins/like.php?href='.htmlentities(urlencode($url).'&layout=standard&show_faces=false&action=like&colorscheme='.$colorscheme.'&height='.$height).'"></iframe>';//add facebook like button
 	}
 	
 	//output the like button
