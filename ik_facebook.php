@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.6.3.3
+Version: 2.6.3.4
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -232,15 +232,24 @@ class ikFacebook
 		
 		if(isset($gallery->data)){
 			foreach($gallery->data as $gallery_item){
-				echo '<div class="ik_fb_gallery_item" style="width:'.$width_array[$size].';height:'.$height_array[$size].';">';					
-				
-					echo '<a href="'.htmlentities($gallery_item->source).'" target="_blank" title="'. __('Click to View Full Sized Photo', $this->textdomain) . '"><img class="ik_fb_standard_image" src="'.$gallery_item->images[$position]->source.'" alt="' . htmlentities($gallery_item->name) . '" /></a>';
+				if(isset($gallery_item->images[$position]->source)){	
+					//	echo '<div class="ik_fb_gallery_item" style="width:'.$width_array[$size].';height:'.$height_array[$size].';">';			
+					echo '<div class="ik_fb_gallery_item ik_fb_gallery_'.$size.'">';
 					
-					if($show_name){
-						echo '<p class="ik_fb_standard_image_name">' . $gallery_item->name . '</p>';
+					$name = "";
+					if(isset($gallery_item->name)){
+						$name = $gallery_item->name;
 					}
 				
-				echo '</div>';
+					echo '<a href="'.htmlentities($gallery_item->source).'" target="_blank" title="'. __('Click to View Full Sized Photo', $this->textdomain) . '"><img class="ik_fb_standard_image" src="'.$gallery_item->images[$position]->source.'" alt="' . htmlentities($name) . '" /></a>';
+				
+					if($show_name){
+						echo '<p class="ik_fb_standard_image_name">' . $name . '</p>';
+					}
+					
+					echo '</div>';
+				}
+				
 			}
 		} else {
 			echo '<p class="ik_fb_error">'.__('IK FB: Unable to load photos.', $this->textdomain).'</p>';
