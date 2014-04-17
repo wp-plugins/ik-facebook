@@ -3,7 +3,7 @@ Contributors: richardgabriel
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V7HR8DP4EJSYN
 Tags: facebook, facebook feed, facebook embed, facebook feed widget, facebook feed embed, like button widget, facebook events
 Requires at least: 3.0.1
-Tested up to: 3.8.1
+Tested up to: 3.9
 Stable tag: 2.6.3.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
