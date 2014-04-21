@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.6.3.4
+Version: 2.6.3.5
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -895,12 +895,12 @@ class ikFacebook
 			
 			//handle events
 			if($content_type == "events") {
-				$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/events?limit={$limit}&{$this->authToken}", true);//the feed data
+				$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/events?summary=1&limit={$limit}&{$this->authToken}", true);//the feed data
 			} else {
-				$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/feed?limit={$limit}&{$this->authToken}", true);//the feed data
+				$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/feed?summary=1&limit={$limit}&{$this->authToken}", true);//the feed data
 			}	
 						
-			$page_data = $this->fetchUrl("https://graph.facebook.com/{$profile_id}?{$this->authToken}", true);//the page data
+			$page_data = $this->fetchUrl("https://graph.facebook.com/{$profile_id}?summary=1&{$this->authToken}", true);//the page data
 			
 			if(isset($feed->data)){//check to see if feed data is set				
 				$retData['feed'] = $feed->data;

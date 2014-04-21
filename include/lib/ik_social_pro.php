@@ -57,11 +57,25 @@ class ikSocialPro
 
 		if(is_valid_key(get_option('ik_fb_pro_key'))){	
 		
-			if(get_option('ik_fb_show_reply_counts')){		
-				if(isset($item->comments)){
+			if(get_option('ik_fb_show_reply_counts')){	
+				if(!isset($ik_fb->authToken)){
+					$app_id = get_option('ik_fb_app_id');
+					$app_secret = get_option('ik_fb_secret_key');
+			
+					$ik_fb->authToken = $ik_fb->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
+				}		
+			
+				$request = "https://graph.facebook.com/{$item->id}/comments?summary=1&{$ik_fb->authToken}";
+							
+				$data = $ik_fb->fetchUrl($request, true);
 				
-					$num_comments = count($item->comments->data);
-					
+				$num_comments = 0;
+				
+				if(isset($data->summary->total_count)){
+					$num_comments = $data->summary->total_count;
+				}	
+				
+				if($num_comments > 0){				
 					$comment_string = "comment";
 					
 					if($num_comments > 1){
@@ -147,14 +161,30 @@ class ikSocialPro
 	
 	//insert like info into feed, if enabled
 	function pro_likes($item, $the_link){
+		global $ik_fb;
+		
 		$likes = "";
 		
-		if(get_option('ik_fb_show_likes')){			
+		if(get_option('ik_fb_show_likes')){		
+		
+			if(!isset($ik_fb->authToken)){
+				$app_id = get_option('ik_fb_app_id');
+				$app_secret = get_option('ik_fb_secret_key');
+		
+				$ik_fb->authToken = $ik_fb->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
+			}		
+		
+			$request = "https://graph.facebook.com/{$item->id}/likes?summary=1&{$ik_fb->authToken}";
+						
+			$data = $ik_fb->fetchUrl($request, true);
 			
-			if(isset($item->likes)){
+			$num_likes = 0;
 			
-				$num_likes = count($item->likes->data);
-				
+			if(isset($data->summary->total_count)){
+				$num_likes = $data->summary->total_count;
+			}	
+			
+			if($num_likes > 0){				
 				$like_string = "like";
 				
 				if($num_likes > 1){
