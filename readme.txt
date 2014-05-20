@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, facebook feed, facebook embed, facebook feed widget, facebook feed embed, like button widget, facebook events
 Requires at least: 3.0.1
 Tested up to: 3.9.1
-Stable tag: 2.6.3.5
+Stable tag: 2.6.3.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -12,7 +12,7 @@ IK Facebook is an easy-to-use plugin for adding a Custom Facebook Feed of any Pu
 
 == Description ==
 
-The IK Facebook Plugin is an **easy-to-use** plugin that allows users to add a **custom Facebook Feed widget** to the sidebar, as a widget, or to embed the custom Facebook Feed widget into a Page or Post using the shortcode, of any Public Facebook Page.  The IK Facebook Plugin also allows you to insert a Facebook Like Button widget into the Page, Post, or theme.
+The IK Facebook Plugin is an **easy-to-use** plugin that allows users to add a **custom Facebook Feed widget** to the sidebar, as a widget, or to embed the custom Facebook Feed widget into a Page or Post using the shortcode, of any Public Facebook Page.  The IK Facebook Plugin also allows you to insert a Facebook Like Button widget into the Page, Post, or theme.  The IK Facebook Plugin allows you to add Facebook Events, Photos, and Galleries to your website, too!
 
 _"This plugin has ticked all the boxes for me - responsive and displays images and super fast replies to my support question - thanks"_
 
@@ -161,6 +161,10 @@ In this case, the Facebook Album ID is '539627829386059'.
 5. This is the Facebook Feed Widget and the Facebook Like Button Widget of the IK Facebook Plugin.  The options on this widget allow you to override the settings you have selected on your Settings panel.
 
 == Changelog ==
+
+= 2.6.3.6 =
+* Update: Add mb_substr support for users with different character sets, such as Korean.
+* Update: Output photo description or caption with thumbnails as well as with full sized photos.
 
 = 2.6.3.5 =
 * Update: Fix logic to accurately reflect the number of likes and comments on feed items.
@@ -455,5 +459,5 @@ In this case, the Facebook Album ID is '539627829386059'.
 
 == Upgrade Notice ==
 
-= 2.6.3.4 =
+= 2.6.3.6 =
 * Update available!

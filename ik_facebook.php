@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.6.3.5
+Version: 2.6.3.6
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -482,7 +482,12 @@ class ikFacebook
 					//only perform changes on posts longer than the character limit
 					if(strlen($replace) > $limit){
 						//remove characters beyond limit
-						$replace = substr($replace, 0, $limit);
+						//use mb_substr, if available, for 2 byte character support
+						if(function_exists('mb_substr')){
+								$replace = mb_substr($replace, 0, $limit);
+						} else {
+							$replace = substr($replace, 0, $limit);
+						}
 						$replace .= __('... ', $this->textdomain);
 						
 						$shortened = true;
@@ -562,9 +567,14 @@ class ikFacebook
 					$limit = get_option('ik_fb_description_character_limit');
 					
 					if(is_numeric($limit)){
-						if(strlen($limit) > $limit){
-							//remove characters beyond limit
-							$title = substr($limit, 0, $limit);
+						if(strlen($title) > $limit){
+							//remove characters beyond limit							
+							//use mb_substr, if available, for 2 byte character support
+							if(function_exists('mb_substr')){
+								$title = mb_substr($title, 0, $limit);
+							} else {
+								$title = substr($title, 0, $limit);
+							}
 							$title .= __('... ', $this->textdomain);
 
 							$shortened = true;
@@ -588,9 +598,18 @@ class ikFacebook
 				} else {						
 					//ampersands!
 					$item->picture = str_replace("&","&amp;",$item->picture);
-					
+ 
+					//courtesy of tim morozzo
+					if (isset($item->description) && strlen($item->description) >5){
+						$title = $item->description;
+					} elseif (isset($item->message)){
+						$title = $item->message;
+					} else { 
+						$title = __('Click for fullsize photo', $this->textdomain);
+					}
 					//otherwise, use thumbnail
-					$replace = '<a href="'.$photo_link.'" target="_blank"><img src="'.$item->picture.'" alt="Click for fullsize photo"/></a>';
+					$replace = '<a href="'.$photo_link.'" target="_blank"><img src="'.$item->picture.'" title="'.$title.'"></a>';
+
 					
 					//if set, hide feed images
 					if(get_option('ik_fb_hide_feed_images')){
@@ -609,8 +628,13 @@ class ikFacebook
 					if(is_numeric($limit)){
 						//only perform changes on posts longer than the character limit
 						if(strlen($replace) > $limit){
-							//remove characters beyond limit
-							$replace = substr($replace, 0, $limit);
+							//remove characters beyond limit						
+							//use mb_substr, if available, for 2 byte character support
+							if(function_exists('mb_substr')){
+								$replace = mb_substr($replace, 0, $limit);
+							} else {
+								$replace = substr($replace, 0, $limit);
+							}
 							$replace .= __('... ', $this->textdomain);
 						
 							$shortened = true;
@@ -785,8 +809,13 @@ class ikFacebook
 						$replace .= '<img class="ikfb_event_image" src="' . $event_image . '" alt="Event Image"/>';					
 						
 						//event description
-						if(isset($event_data->description)){
-							$event_description = substr($event_data->description, 0, 250);
+						if(isset($event_data->description)){	
+							//use mb_substr, if available, for 2 byte character support
+							if(function_exists('mb_substr')){
+								$event_description = mb_substr($event_data->description, 0, 250);
+							} else {
+								$event_description = substr($event_data->description, 0, 250);
+							}
 							$event_description .= __('... ', $this->textdomain);
 								
 							$replace .= '<p class="ikfb_event_description">' . $event_description . '</p>';
