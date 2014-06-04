@@ -34,7 +34,11 @@ along with The IK Facebook Plugin.  If not, see <http://www.gnu.org/licenses/>.
 			if ($result === false) {				
 				$result = wp_remote_get($url);
 				
-				$result = isset($result['body']) ? $result['body'] : '';
+				if(is_wp_error($result)){
+					$result = $result->get_error_message();
+				} else {
+					$result = isset($result['body']) ? $result['body'] : '';
+				}
 				
 				// store to cache
 				set_transient($cache_key, $result, $this->cache_time);

@@ -143,25 +143,114 @@ class ikFacebookOptions
 		<h2><?php echo $title; ?></h2>		
 		
 		<?php if(!is_valid_key(get_option('ik_fb_pro_key') )): ?>			
-			<div>			
 				<!-- Begin MailChimp Signup Form -->
-				<link href="//cdn-images.mailchimp.com/embedcode/slim-081711.css" rel="stylesheet" type="text/css">
-				<style type="text/css">
-					#mc_embed_signup{background:#EEE; color:green; clear:left; font:14px Helvetica,Arial,sans-serif; }
-					#mc_embed_signup form{padding: 10px}
-					#mc_embed_signup input.button{color:green;}
-					/* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
-					   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
-				</style>				
+			<style type="text/css">
+				/* MailChimp Form Embed Code - Slim - 08/17/2011 */
+				#mc_embed_signup form {display:block; position:relative; text-align:left; padding:10px 0 10px 3%}
+				#mc_embed_signup h2 {font-weight:bold; padding:0; margin:15px 0; font-size:1.4em;}
+				#mc_embed_signup input {border:1px solid #999; -webkit-appearance:none;}
+				#mc_embed_signup input[type=checkbox]{-webkit-appearance:checkbox;}
+				#mc_embed_signup input[type=radio]{-webkit-appearance:radio;}
+				#mc_embed_signup input:focus {border-color:#333;}
+				#mc_embed_signup .button {clear:both; background-color: #aaa; border: 0 none; border-radius:4px; color: #FFFFFF; cursor: pointer; display: inline-block; font-size:15px; font-weight: bold; height: 32px; line-height: 32px; margin: 0 5px 10px 0; padding:0; text-align: center; text-decoration: none; vertical-align: top; white-space: nowrap; width: auto;}
+				#mc_embed_signup .button:hover {background-color:#777;}
+				#mc_embed_signup .small-meta {font-size: 11px;}
+				#mc_embed_signup .nowrap {white-space:nowrap;}     
+				#mc_embed_signup .clear {clear:none; display:inline;}
+
+				#mc_embed_signup h3 { color: #008000; display:block; font-size:19px; padding-bottom:10px; font-weight:bold; margin: 0 0 10px;}
+				#mc_embed_signup .explain {
+					color: #808080;
+					width: 600px;
+				}
+				#mc_embed_signup label {
+					color: #000000;
+					display: block;
+					font-size: 15px;
+					font-weight: bold;
+					padding-bottom: 10px;
+				}
+				#mc_embed_signup input.email {display:block; padding:8px 0; margin:0 4% 10px 0; text-indent:5px; width:58%; min-width:130px;}
+
+				#mc_embed_signup div#mce-responses {float:left; top:-1.4em; padding:0em .5em 0em .5em; overflow:hidden; width:90%;margin: 0 5%; clear: both;}
+				#mc_embed_signup div.response {margin:1em 0; padding:1em .5em .5em 0; font-weight:bold; float:left; top:-1.5em; z-index:1; width:80%;}
+				#mc_embed_signup #mce-error-response {display:none;}
+				#mc_embed_signup #mce-success-response {color:#529214; display:none;}
+				#mc_embed_signup label.error {display:block; float:none; width:auto; margin-left:1.05em; text-align:left; padding:.5em 0;}		
+				#mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+					#mc_embed_signup{    
+							background-color: white;
+							border: 1px solid #DCDCDC;
+							clear: left;
+							color: #008000;
+							font: 14px Helvetica,Arial,sans-serif;
+							margin-top: 10px;
+							margin-bottom: 0px;
+							max-width: 800px;
+							padding: 5px 12px 0px;
+				}
+				#mc_embed_signup form{padding: 10px}
+
+				#mc_embed_signup .special-offer {
+					color: #808080;
+					margin: 0;
+					padding: 0 0 3px;
+					text-transform: uppercase;
+				}
+				#mc_embed_signup .button {
+				  background: #5dd934;
+				  background-image: -webkit-linear-gradient(top, #5dd934, #549e18);
+				  background-image: -moz-linear-gradient(top, #5dd934, #549e18);
+				  background-image: -ms-linear-gradient(top, #5dd934, #549e18);
+				  background-image: -o-linear-gradient(top, #5dd934, #549e18);
+				  background-image: linear-gradient(to bottom, #5dd934, #549e18);
+				  -webkit-border-radius: 5;
+				  -moz-border-radius: 5;
+				  border-radius: 5px;
+				  font-family: Arial;
+				  color: #ffffff;
+				  font-size: 20px;
+				  padding: 10px 20px 10px 20px;
+				  line-height: 1.5;
+				  height: auto;
+				  margin-top: 7px;
+				  text-decoration: none;
+				}
+
+				#mc_embed_signup .button:hover {
+				  background: #65e831;
+				  background-image: -webkit-linear-gradient(top, #65e831, #5dd934);
+				  background-image: -moz-linear-gradient(top, #65e831, #5dd934);
+				  background-image: -ms-linear-gradient(top, #65e831, #5dd934);
+				  background-image: -o-linear-gradient(top, #65e831, #5dd934);
+				  background-image: linear-gradient(to bottom, #65e831, #5dd934);
+				  text-decoration: none;
+				}
+				#signup_wrapper {
+					max-width: 800px;
+					margin-bottom: 20px;
+				}
+				#signup_wrapper .u_to_p
+				{
+					font-size: 10px;
+					margin: 0;
+					padding: 2px 0 0 3px;				
+				}
+			</style>				
+			<div id="signup_wrapper">
 				<div id="mc_embed_signup">
-				<form action="http://illuminatikarate.us2.list-manage1.com/subscribe/post?u=403e206455845b3b4bd0c08dc&amp;id=3e22ddb309" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-					<label for="mce-EMAIL"><?php _e("Subscribe to our mailing list", $this->textdomain); ?></label>
-					<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
-					<p><?php _e("New subscribers will receive a discount code good for any version of ", $this->textdomain); ?><a href="http://goldplugins.com/our-plugins/wp-social-pro/">WP Social Pro</a>!</p>
-					<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
-				</form>
+					<form action="http://illuminatikarate.us2.list-manage1.com/subscribe/post?u=403e206455845b3b4bd0c08dc&amp;id=3e22ddb309" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+						<p class="special-offer">Special Offer:</p>
+						<h3><?php _e("Sign-up for our mailing list now, and we'll give you a discount on WP Social Pro!", $this->textdomain); ?></h3>
+						<label for="mce-EMAIL">Your Email:</label>
+						<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
+						<!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+						<div style="position: absolute; left: -5000px;"><input type="text" name="b_403e206455845b3b4bd0c08dc_6ad78db648" tabindex="-1" value=""></div>
+						<div class="clear"><input type="submit" value="Subscribe Now" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+						<p class="explain"><strong><?php _e("What To Expect:", $this->textdomain); ?></strong> <?php _e("You'll receive you around one email from us each month, jam-packed with special offers and tips for getting the most out of WordPress. Of course, you can unsubscribe at any time.", $this->textdomain); ?></p>
+					</form>
 				</div>
-				<!--End mc_embed_signup-->
+				<p class="u_to_p"><a href="http://goldplugins.com/our-plugins/wp-social-pro/#buy_now"><?php _e("Upgrade to WP Social Pro now</a> to remove banners like this one.", $this->textdomain); ?></p>
 			</div>
 			
 		<?php endif; ?>
@@ -659,7 +748,7 @@ class ikFacebookOptions
 							<li><strong><?php _e('Hide non-page-owner posts from your feed:</strong> With this option, your feed will only show the posts from your own account.');?></li>
 							<li><strong><?php _e("Custom HTML Output:</strong> Use any HTML tags you want for the feed. You'll be able to specify a custom HTML template for your feed.");?></li>
 							<li><strong><?php _e("Fanatical Support:</strong> We're here to help!  Purchase WP Social Pro and receive prompt, responsive, and professional support.");?></li>
-							<li><strong><?php _e("Free Updates For Life:</strong> Get WP Social Pro now, and you'll get free updates for life!");?></li>
+							<li><strong><?php _e("Free Updates For A Year:</strong> Get WP Social Pro now, and you'll get free updates for a year!");?></li>
 						</ul>
 							
 						<p><?php _e('More to come! WP Social Pro plugin owners get new updates automatically by email. New features land in the Pro version first, so be sure to upgrade today.');?></p>
