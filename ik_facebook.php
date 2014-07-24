@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.6.3.7
+Version: 2.6.3.8
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -374,6 +374,7 @@ class ikFacebook
 			
 			$output = str_replace('{ikfb:link}', '', $output);	
 		} else { //bad ID has been input, lets try not to crap out
+			$the_link = "https://www.facebook.com/";			
 			$output = str_replace('{ikfb:link}', '', $output);
 		}
 
@@ -448,11 +449,16 @@ class ikFacebook
 		
 		$add_feed_item = false;
 		
+		//RWG 7.24.2014 Change the way we load the feed so we dont need to filter posts this way
+		// Now when we want page-owner-only, we perform a different API call altogether.
+		/*
 		if(is_valid_key(get_option('ik_fb_pro_key'))){
 			$add_feed_item = $ik_social_pro->is_page_owner($item,$page_data);
 		} else {
 			$add_feed_item = true;
 		}
+		*/
+		$add_feed_item = true;
 		
 		//parse post date for output
 		$date = "";
@@ -926,7 +932,13 @@ class ikFacebook
 			if($content_type == "events") {
 				$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/events?summary=1&limit={$limit}&{$this->authToken}", true);//the feed data
 			} else {
+				//if showing everything on the feed (3rd party and page owner)
 				$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/feed?summary=1&limit={$limit}&{$this->authToken}", true);//the feed data
+				//if showing only page owner posts
+				if(get_option('ik_fb_only_show_page_owner') && is_valid_key(get_option('ik_fb_pro_key'))){					
+					//only load page owner's posts
+					$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/posts?{$this->authToken}", true);//the feed data
+				}
 			}	
 						
 			$page_data = $this->fetchUrl("https://graph.facebook.com/{$profile_id}?summary=1&{$this->authToken}", true);//the page data

@@ -38,10 +38,12 @@ along with The IK Facebook Plugin.  If not, see <http://www.gnu.org/licenses/>.
 					$result = $result->get_error_message();
 				} else {
 					$result = isset($result['body']) ? $result['body'] : '';
-				}
 				
-				// store to cache
-				set_transient($cache_key, $result, $this->cache_time);
+					if(strlen($result)>2){
+						// store to cache
+						set_transient($cache_key, $result, $this->cache_time);
+					}
+				}
 				
 				return $result;
 			} else {
