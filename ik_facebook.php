@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.6.3.8
+Version: 2.6.4
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -471,198 +471,38 @@ class ikFacebook
 		$shortened = false;
 		
 		if($add_feed_item){
-			$replace = "";
-		
+			$replace = $message_output = $picture_output = "";
+			//for tracking whether or not we have shortened any output and therefore need Read More language
+			$shortened = false;
+			
 			//output the item message
-			if(isset($item->message)){				
-				//add avatar for pro users
-				if(is_valid_key(get_option('ik_fb_pro_key'))){		
-					$replace = $ik_social_pro->pro_user_avatars($replace, $item) . " ";
-				}
-				
-				$replace = $replace . htmlspecialchars($item->message);
-				
-				//if a character limit is set, here is the logic to handle that
-				$limit = get_option('ik_fb_character_limit');
-				if(is_numeric($limit)){
-					//only perform changes on posts longer than the character limit
-					if(strlen($replace) > $limit){
-						//remove characters beyond limit
-						//use mb_substr, if available, for 2 byte character support
-						if(function_exists('mb_substr')){
-								$replace = mb_substr($replace, 0, $limit);
-						} else {
-							$replace = substr($replace, 0, $limit);
-						}
-						$replace .= __('... ', $this->textdomain);
-						
-						$shortened = true;
-					}
-				}
-				
-				//add custom message styling from pro options
-				if(!get_option('ik_fb_use_custom_html')){		
-					$message_html = $this->ikfb_message_styling($message_html);
-				}		
-				
-				$line_item .= str_replace('{ikfb:feed_item:message}', $replace, $message_html);			
+			if(isset($item->message)){		
+				$message_output = $this->ikfb_build_message($item,$replace="",$shortened,$message_html);
 			}				
 
 			//output the item photo
 			if(isset($item->picture)){ 		
-				if(!isset($this->authToken)){
-					$this->authToken = $this->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
-				}	
-				
-				//need info about full sized photo for linking purposes
-				//get the item id
-				$item_id = isset($item->object_id) ? $item->object_id : -999;
-								
-				if($item_id != -999){
-					$photo = $this->fetchUrl("https://graph.facebook.com/{$item_id}/picture?summary=1&{$this->authToken}&redirect=false", true);	
-				}
-
-				//load arguments into array for use below
-				$parsed_url = parse_url($item->picture);
-				
-				if(isset($parsed_url['query'])){
-					parse_str($parsed_url['query'], $params);               
-				}
-				
-				if(isset($photo->data->url)){
-					$photo_link = $photo->data->url;
-					$photo_source = $photo->data->url;
-				} else if(isset($params['url'])) {
-					$photo_link = $params['url'];
-					$photo_source = $params['url'];
-				} else {
-					$photo_link = $item->picture;
-					$photo_source = $item->picture;
-				}
-				
-				if(get_option('ik_fb_link_photo_to_feed_item')){
-					$item_id = explode("_",$item->id);
-					$photo_link = "https://www.facebook.com/permalink.php?id=".urlencode($page_id)."&story_fbid=".urlencode($item_id[1]);
-				}
-				
-				//output the images
-				//if set, load the custom image width from the options page
-				if(!$use_thumb){								
-					//if using custom width, output fullsized image
-					$width = get_option('ik_fb_fix_feed_image_width') ? $width : '';
-					$height = get_option('ik_fb_fix_feed_image_height') ? $height : '';	
-					
-					if($width == "OTHER"){
-						$width = get_option('other_ik_fb_feed_image_width');
-					}
-					
-					if($height == "OTHER"){
-						$height = get_option('other_ik_fb_feed_image_height');
-					}
-					
-					//source: tim morozzo
-					if (isset($item->description) && strlen($item->description) >5){
-						$title = $item->description;
-					}elseif (isset($item->message))
-					{
-						$title = $item->message;
-					}else{ 
-						$title = __('Click for fullsize photo', $this->textdomain);
-					}
-					
-					$limit = get_option('ik_fb_description_character_limit');
-					
-					if(is_numeric($limit)){
-						if(strlen($title) > $limit){
-							//remove characters beyond limit							
-							//use mb_substr, if available, for 2 byte character support
-							if(function_exists('mb_substr')){
-								$title = mb_substr($title, 0, $limit);
-							} else {
-								$title = substr($title, 0, $limit);
-							}
-							$title .= __('... ', $this->textdomain);
-
-							$shortened = true;
-						}
-					}
-					
-					//replace ampersands and equal signs, and whatever else
-					$photo_link = str_replace("&","&amp;",$photo_link);
-					
-					$width = strlen($width)>0 ? 'width="'.$width.'"' : '';
-					$height = strlen($height)>0 ? 'height="'.$height.'"' : '';
-					
-					$replace = '<a href="'.$photo_link.'" title="'.htmlspecialchars($title, ENT_QUOTES).'" target="_blank"><img '.$width.' '.$height.' src="'.$photo_source.'" alt="'.htmlspecialchars($title, ENT_QUOTES).'"/></a>';
-					
-					//if set, hide feed images	
-					if(get_option('ik_fb_hide_feed_images')){
-						$replace = '';
-					}
-						
-					$line_item .= str_replace('{ikfb:feed_item:image}', $replace, $image_html);						
-				} else {						
-					//ampersands!
-					$item->picture = str_replace("&","&amp;",$item->picture);
- 
-					//courtesy of tim morozzo
-					if (isset($item->description) && strlen($item->description) >5){
-						$title = $item->description;
-					} elseif (isset($item->message)){
-						$title = $item->message;
-					} else { 
-						$title = __('Click for fullsize photo', $this->textdomain);
-					}
-					//otherwise, use thumbnail
-					$replace = '<a href="'.$photo_link.'" target="_blank"><img src="'.$item->picture.'" title="'.$title.'"></a>';
-
-					
-					//if set, hide feed images
-					if(get_option('ik_fb_hide_feed_images')){
-						$replace = '';
-					}
-							
-					$line_item .= str_replace('{ikfb:feed_item:image}', $replace, $image_html);	
-				}
-
-				//add the text for photo description
-				if(isset($item->description)){
-					$replace = $item->description;	
-
-					//if a character limit is set, here is the logic to handle that
-					$limit = get_option('ik_fb_description_character_limit');
-					if(is_numeric($limit)){
-						//only perform changes on posts longer than the character limit
-						if(strlen($replace) > $limit){
-							//remove characters beyond limit						
-							//use mb_substr, if available, for 2 byte character support
-							if(function_exists('mb_substr')){
-								$replace = mb_substr($replace, 0, $limit);
-							} else {
-								$replace = substr($replace, 0, $limit);
-							}
-							$replace .= __('... ', $this->textdomain);
-						
-							$shortened = true;
-						}
-					}					
-				
-					//add custom image styling from pro options
-					if(!get_option('ik_fb_use_custom_html')){		
-						$description_html = $this->ikfb_description_styling($description_html);
-					}	
-					
-					$line_item .= str_replace('{ikfb:feed_item:description}', $replace, $description_html);	
-				}
-			}			
+				$picture_output = $this->ikfb_build_photo($item,$replace="",$shortened,$image_html,$description_html,$caption_html,$use_thumb,$width,$height);
+			}		
 			
+			//if set, show the picture and it's content before you show the message
+			if(get_option('ik_fb_show_picture_before_message')){
+				$line_item .= $picture_output;
+				$line_item .= $message_output;
+			} else {
+				$line_item .= $message_output;
+				$line_item .= $picture_output;				
+			}
+			
+			//output Read More link, if the content has been shortened by this point
 			if($shortened){
 				$item_id = explode("_",$item->id);
 				$the_link = "https://www.facebook.com/permalink.php" . htmlentities("?id=".urlencode($page_id)."&story_fbid=".urlencode($item_id[1]));				
 				$line_item .= ' <a href="'.$the_link.'" class="ikfb_read_more" target="_blank">'.__('Read More...', $this->textdomain).'</a>';
 			}	
-
-			if(isset($item->link)){ //output the item link				
+			
+			//output the item link	
+			if(isset($item->link)){ 			
 				if(isset($item->caption) && isset($item->picture)){
 					$link_text = $item->caption; //some items have a caption	
 				} else if(isset($item->description)){
@@ -688,30 +528,27 @@ class ikFacebook
 				}
 			}	
 			
-			if(strlen($line_item)>2){
-				
-				//output Posted By... text, if option is set
-				if(get_option('ik_fb_show_posted_by')){
-					//only add the author if there is line item content to display
-					if(isset($item->from)){ //output the author of the item
-						if(isset($item->from->name)){
-							$from_text = $item->from->name;
-						}
-						
-						if(strlen($from_text) > 1){
-							$posted_by_text = '<p class="ikfb_item_author">' . __('Posted By ', $this->textdomain) . $from_text . '</p>';
-				
-							//add custom posted by styling from pro options
-							if(!get_option('ik_fb_use_custom_html')){		
-								$posted_by_text = $this->ikfb_posted_by_styling($posted_by_text);
-							}			
-							//TBD: make Custom HTML option for Posted By
-							$line_item .= $posted_by_text;
-						}
+			//output Posted By... text, if option is set
+			//only add the author if there is line item content to display
+			if((strlen($line_item)>2) && get_option('ik_fb_show_posted_by')){
+				if(isset($item->from)){ //output the author of the item
+					if(isset($item->from->name)){
+						$from_text = $item->from->name;
+					}
+					
+					if(strlen($from_text) > 1){
+						$posted_by_text = '<p class="ikfb_item_author">' . __('Posted By ', $this->textdomain) . $from_text . '</p>';
+			
+						//add custom posted by styling from pro options
+						if(!get_option('ik_fb_use_custom_html')){		
+							$posted_by_text = $this->ikfb_posted_by_styling($posted_by_text);
+						}			
+						//TBD: make Custom HTML option for Posted By
+						$line_item .= $posted_by_text;
 					}
 				}
 				
-				//output date, if option to display it is enabled
+				//output Posted By date, if option to display it is enabled
 				//TBD: Allow user control over date formatting
 				if(get_option('ik_fb_show_date')){
 					setlocale(LC_TIME, WPLANG);
@@ -835,6 +672,194 @@ class ikFacebook
 				}
 			}			
 		}
+		
+		return $output;
+	}
+	
+	function ikfb_build_photo($item,$replace="",&$shortened,$image_html,$description_html,$caption_html,$use_thumb,$width,$height){
+		$output = '';
+	
+		if(!isset($this->authToken)){
+			$this->authToken = $this->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
+		}	
+		
+		//need info about full sized photo for linking purposes
+		//get the item id
+		$item_id = isset($item->object_id) ? $item->object_id : -999;
+						
+		if($item_id != -999){
+			$photo = $this->fetchUrl("https://graph.facebook.com/{$item_id}/picture?summary=1&{$this->authToken}&redirect=false", true);	
+		}
+
+		//load arguments into array for use below
+		$parsed_url = parse_url($item->picture);
+		
+		if(isset($parsed_url['query'])){
+			parse_str($parsed_url['query'], $params);               
+		}
+		
+		if(isset($photo->data->url)){
+			$photo_link = $photo->data->url;
+			$photo_source = $photo->data->url;
+		} else if(isset($params['url'])) {
+			$photo_link = $params['url'];
+			$photo_source = $params['url'];
+		} else {
+			$photo_link = $item->picture;
+			$photo_source = $item->picture;
+		}
+		
+		if(get_option('ik_fb_link_photo_to_feed_item')){
+			$item_id = explode("_",$item->id);
+			$photo_link = "https://www.facebook.com/permalink.php?id=".urlencode($page_id)."&story_fbid=".urlencode($item_id[1]);
+		}
+		
+		//output the images
+		//if set, load the custom image width from the options page
+		if(!$use_thumb){								
+			//if using custom width, output fullsized image
+			$width = get_option('ik_fb_feed_image_width') ? $width : '';
+			$height = get_option('ik_fb_feed_image_height') ? $height : '';	
+			
+			if($width == "OTHER"){
+				$width = get_option('other_ik_fb_feed_image_width');
+			}
+			
+			if($height == "OTHER"){
+				$height = get_option('other_ik_fb_feed_image_height');
+			}
+			
+			//source: tim morozzo
+			if (isset($item->description) && strlen($item->description) >5){
+				$title = $item->description;
+			}elseif(isset($item->message)){
+				$title = $item->message;
+			}else{ 
+				$title = __('Click for fullsize photo', $this->textdomain);
+			}
+			
+			$limit = get_option('ik_fb_description_character_limit');
+			
+			if(is_numeric($limit)){
+				if(strlen($title) > $limit){
+					//remove characters beyond limit							
+					//use mb_substr, if available, for 2 byte character support
+					if(function_exists('mb_substr')){
+						$title = mb_substr($title, 0, $limit);
+					} else {
+						$title = substr($title, 0, $limit);
+					}
+					$title .= __('... ', $this->textdomain);
+
+					$shortened = true;
+				}
+			}
+			
+			//replace ampersands and equal signs, and whatever else
+			$photo_link = str_replace("&","&amp;",$photo_link);
+			
+			$width = strlen($width)>0 ? 'width="'.$width.'"' : '';
+			$height = strlen($height)>0 ? 'height="'.$height.'"' : '';
+			
+			$replace = '<a href="'.$photo_link.'" title="'.htmlspecialchars($title, ENT_QUOTES).'" target="_blank"><img '.$width.' '.$height.' src="'.$photo_source.'" alt="'.htmlspecialchars($title, ENT_QUOTES).'"/></a>';
+			
+			//if set, hide feed images	
+			if(get_option('ik_fb_hide_feed_images')){
+				$replace = '';
+			}
+				
+			$output .= str_replace('{ikfb:feed_item:image}', $replace, $image_html);						
+		} else {						
+			//ampersands!
+			$item->picture = str_replace("&","&amp;",$item->picture);
+
+			//courtesy of tim morozzo
+			if (isset($item->description) && strlen($item->description) >5){
+				$title = $item->description;
+			} elseif (isset($item->message)){
+				$title = $item->message;
+			} else { 
+				$title = __('Click for fullsize photo', $this->textdomain);
+			}
+			//otherwise, use thumbnail
+			$replace = '<a href="'.$photo_link.'" target="_blank"><img src="'.$item->picture.'" title="'.$title.'"></a>';
+
+			
+			//if set, hide feed images
+			if(get_option('ik_fb_hide_feed_images')){
+				$replace = '';
+			}
+					
+			$output .= str_replace('{ikfb:feed_item:image}', $replace, $image_html);	
+		}
+
+		//add the text for photo description
+		if(isset($item->description)){
+			$replace = $item->description;	
+
+			//if a character limit is set, here is the logic to handle that
+			$limit = get_option('ik_fb_description_character_limit');
+			if(is_numeric($limit)){
+				//only perform changes on posts longer than the character limit
+				if(strlen($replace) > $limit){
+					//remove characters beyond limit						
+					//use mb_substr, if available, for 2 byte character support
+					if(function_exists('mb_substr')){
+						$replace = mb_substr($replace, 0, $limit);
+					} else {
+						$replace = substr($replace, 0, $limit);
+					}
+					$replace .= __('... ', $this->textdomain);
+				
+					$shortened = true;
+				}
+			}					
+		
+			//add custom image styling from pro options
+			if(!get_option('ik_fb_use_custom_html')){		
+				$description_html = $this->ikfb_description_styling($description_html);
+			}	
+			
+			$output .= str_replace('{ikfb:feed_item:description}', $replace, $description_html);	
+		}
+		
+		return $output;
+	}
+	
+	function ikfb_build_message($item,$replace="",&$shortened,$message_html){
+		global $ik_social_pro;
+	
+		//add avatar for pro users
+		if(is_valid_key(get_option('ik_fb_pro_key'))){		
+			$replace = $ik_social_pro->pro_user_avatars($replace, $item) . " ";
+		}
+		
+		$replace = $replace . htmlspecialchars($item->message);
+		
+		//if a character limit is set, here is the logic to handle that
+		$limit = get_option('ik_fb_character_limit');
+		if(is_numeric($limit)){
+			//only perform changes on posts longer than the character limit
+			if(strlen($replace) > $limit){
+				//remove characters beyond limit
+				//use mb_substr, if available, for 2 byte character support
+				if(function_exists('mb_substr')){
+						$replace = mb_substr($replace, 0, $limit);
+				} else {
+					$replace = substr($replace, 0, $limit);
+				}
+				$replace .= __('... ', $this->textdomain);
+				
+				$shortened = true;
+			}
+		}
+		
+		//add custom message styling from pro options
+		if(!get_option('ik_fb_use_custom_html')){		
+			$message_html = $this->ikfb_message_styling($message_html);
+		}		
+		
+		$output = str_replace('{ikfb:feed_item:message}', $replace, $message_html);			
 		
 		return $output;
 	}

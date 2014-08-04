@@ -18,6 +18,7 @@ class ikSocialProOptions
 		register_setting( 'ik-fb-html-settings-group', 'ik_fb_caption_html' );
 		register_setting( 'ik-fb-html-settings-group', 'ik_fb_feed_html' );
 		register_setting( 'ik-fb-html-settings-group', 'ik_fb_use_custom_html' );
+		register_setting( 'ik-fb-html-settings-group', 'ik_fb_show_picture_before_message' );
 	}
 	
 	//function to produce tabs on admin screen
@@ -117,7 +118,15 @@ class ikSocialProOptions
 					<td><input <?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?>disabled="disabled"<?php endif; ?>  type="checkbox" name="ik_fb_use_custom_html" id="ik_fb_use_custom_html" value="1" <?php if(get_option('ik_fb_use_custom_html')){ ?> checked="CHECKED" <?php } ?>/>
 					<p class="description"><?php _e('If checked, this will disable the Style Options in the first tab and will instead use the HTML from below.');?></p>
 					</td>
-				</tr>				
+				</tr>	
+				
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_show_picture_before_message"><?php _e('Show Picture Before Message');?></label></th>
+					<td><input <?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?>disabled="disabled"<?php endif; ?>  type="checkbox" name="ik_fb_show_picture_before_message" id="ik_fb_show_picture_before_message" value="1" <?php if(get_option('ik_fb_show_picture_before_message')){ ?> checked="CHECKED" <?php } ?>/>
+					<p class="description"><?php _e('If checked, the Picture HMTL will be output before the Message HTML.');?></p>
+					</td>
+				</tr>
+				
 				<tr valign="top">
 					<th scope="row"><label for="ik_fb_feed_item_html"><?php _e('Custom Feed Item Wrapper HTML');?></a></th>
 					<td><textarea <?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?>disabled="disabled"<?php endif; ?> name="ik_fb_feed_item_html" id="ik_fb_feed_item_html" style="width: 250px; height: 250px;"><?php echo get_option('ik_fb_feed_item_html'); ?></textarea>
