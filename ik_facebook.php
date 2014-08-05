@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.6.4.1
+Version: 2.6.4.2
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -560,7 +560,7 @@ class ikFacebook
 			if(isset($item->picture)){ 		
 				$picture_data = $this->ikfb_build_photo($item,$replace,$shortened,$image_html,$description_html,$caption_html,$use_thumb,$width,$height);
 				$picture_output = $picture_data['output'];
-				$shortened = $message_data['shortened'];
+				$shortened = $picture_data['shortened'];
 			}		
 			
 			//if set, show the picture and it's content before you show the message
@@ -608,21 +608,23 @@ class ikFacebook
 			
 			//output Posted By... text, if option is set
 			//only add the author if there is line item content to display
-			if((strlen($line_item)>2) && get_option('ik_fb_show_posted_by')){
-				if(isset($item->from)){ //output the author of the item
-					if(isset($item->from->name)){
-						$from_text = $item->from->name;
-					}
-					
-					if(strlen($from_text) > 1){
-						$posted_by_text = '<p class="ikfb_item_author">' . __('Posted By ', $this->textdomain) . $from_text . '</p>';
-			
-						//add custom posted by styling from pro options
-						if(!get_option('ik_fb_use_custom_html')){		
-							$posted_by_text = $this->ikfb_posted_by_styling($posted_by_text);
-						}			
-						//TBD: make Custom HTML option for Posted By
-						$line_item .= $posted_by_text;
+			if((strlen($line_item)>2)){
+				if(get_option('ik_fb_show_posted_by')){
+					if(isset($item->from)){ //output the author of the item
+						if(isset($item->from->name)){
+							$from_text = $item->from->name;
+						}
+						
+						if(strlen($from_text) > 1){
+							$posted_by_text = '<p class="ikfb_item_author">' . __('Posted By ', $this->textdomain) . $from_text . '</p>';
+				
+							//add custom posted by styling from pro options
+							if(!get_option('ik_fb_use_custom_html')){		
+								$posted_by_text = $this->ikfb_posted_by_styling($posted_by_text);
+							}			
+							//TBD: make Custom HTML option for Posted By
+							$line_item .= $posted_by_text;
+						}
 					}
 				}
 				
