@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.6.4
+Version: 2.6.4.1
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -445,20 +445,6 @@ class ikFacebook
 		$description_html = strlen(get_option('ik_fb_description_html')) > 2 && get_option('ik_fb_use_custom_html') ? get_option('ik_fb_description_html') : $default_description_html;
 		$caption_html = strlen(get_option('ik_fb_caption_html')) > 2 && get_option('ik_fb_use_custom_html') ? get_option('ik_fb_caption_html') : $default_caption_html;
 		
-		$output = '';
-		
-		$add_feed_item = false;
-		
-		//RWG 7.24.2014 Change the way we load the feed so we dont need to filter posts this way
-		// Now when we want page-owner-only, we perform a different API call altogether.
-		/*
-		if(is_valid_key(get_option('ik_fb_pro_key'))){
-			$add_feed_item = $ik_social_pro->is_page_owner($item,$page_data);
-		} else {
-			$add_feed_item = true;
-		}
-		*/
-		$add_feed_item = true;
 		
 		//parse post date for output
 		$date = "";
@@ -467,22 +453,114 @@ class ikFacebook
 			$date = $item->created_time;
 		}
 		
+		$output = '';
 		$line_item = '';
 		$shortened = false;
 		
-		if($add_feed_item){
-			$replace = $message_output = $picture_output = "";
-			//for tracking whether or not we have shortened any output and therefore need Read More language
-			$shortened = false;
+		$replace = $message_output = $picture_output = "";
+		
+		//detect if this is an event and output one way
+		//otherwise, follow our normal formatting
+		//detect if this is an event, if so, parse and return the output differently
+		if((isset($item->link) && strpos($item->link,'http://www.facebook.com/events/') !== false) || get_option('ik_fb_show_only_events')){
+			//some event parsing				
+			$event_id = explode('/',$item->link);
+			$event_id = $event_id[4];
 			
+			if(get_option('ik_fb_show_only_events')){
+				$event_id = $item->id;
+			}
+			
+			if($event_id){
+				$app_id = get_option('ik_fb_app_id');
+				$app_secret = get_option('ik_fb_secret_key');
+				
+				if(!isset($this->authToken)){
+					$this->authToken = $this->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
+				}
+				
+				$event_data = $this->fetchUrl("https://graph.facebook.com/{$event_id}?summary=1&{$this->authToken}", true);//the event data
+				
+				$replace = '';	
+				
+				//add avatar for pro users
+				if(is_valid_key(get_option('ik_fb_pro_key'))){		
+					$replace = $ik_social_pro->pro_user_avatars($replace, $item) . " ";
+				}
+				
+				//load event image source
+				$event_image = "http://graph.facebook.com/" . $event_id . "/picture";
+				
+				if(isset($event_data->name)){
+					//event name
+					$replace = '<p class="ikfb_event_title">' . $replace . $event_data->name . '</p>';
+					
+					$start_time = isset($event_data->start_time) ? $event_data->start_time : '';
+					$end_time = isset($event_data->end_time) ? $event_data->end_time : '';			
+					
+					//TBD: Allow user control over date formatting
+					$time_object = new DateTime($start_time);
+					$start_time = $time_object->format('l, F jS, Y h:i:s a');	
+					
+					//TBD: Allow user control over date formatting
+					if(strlen($end_time)>2){
+						$time_object = new DateTime($end_time);
+						$end_time = $time_object->format('l, F jS, Y h:i:s a');						
+					}
+					
+					//event start time - event end time					
+					$event_start_time = isset($event_data->start_time) ? $start_time : '';					
+					$event_end_time = isset($event_data->end_time) ? $end_time : '';
+					
+					$replace .= '<p class="ikfb_event_date">';
+					$event_had_start = false;
+					if(strlen($event_start_time)>2){
+						$replace .= $event_start_time;
+						$event_had_start = true;
+					}
+					if($event_had_start){
+						$replace .= ' - ';
+					}
+					if(strlen($event_end_time)>2){
+						$replace .= $event_end_time; 
+					}
+					$replace .= '</p>';
+					
+					//event image					
+					$replace .= '<img class="ikfb_event_image" src="' . $event_image . '" alt="Event Image"/>';					
+					
+					//event description
+					if(isset($event_data->description)){	
+						//use mb_substr, if available, for 2 byte character support
+						if(function_exists('mb_substr')){
+							$event_description = mb_substr($event_data->description, 0, 250);
+						} else {
+							$event_description = substr($event_data->description, 0, 250);
+						}
+						$event_description .= __('... ', $this->textdomain);
+							
+						$replace .= '<p class="ikfb_event_description">' . $event_description . '</p>';
+					}
+					
+					//event read more link
+					$replace .= '<p class="ikfb_event_link"><a href="http://facebook.com/events/'.urlencode($event_id).'" title="Click Here To Read More" target="_blank">Read More...</a></p>';
+				}
+				
+				$output = str_replace('{ikfb:feed_item}', $replace, $feed_item_html);	
+			}
+		} else {
 			//output the item message
 			if(isset($item->message)){		
-				$message_output = $this->ikfb_build_message($item,$replace="",$shortened,$message_html);
+				$message_data = $this->ikfb_build_message($item,$replace,$shortened,$message_html);
+				$message_output = $message_data['output'];
+				$shortened = $message_data['shortened'];
 			}				
 
 			//output the item photo
 			if(isset($item->picture)){ 		
-				$picture_output = $this->ikfb_build_photo($item,$replace="",$shortened,$image_html,$description_html,$caption_html,$use_thumb,$width,$height);
+				$picture_data = $this->ikfb_build_photo($item,$replace,$shortened,$image_html,$description_html,$caption_html,$use_thumb,$width,$height);
+				$picture_output = $picture_data['output'];
+				$shortened = $message_data['shortened'];
 			}		
 			
 			//if set, show the picture and it's content before you show the message
@@ -582,101 +660,15 @@ class ikFacebook
 				if(is_valid_key(get_option('ik_fb_pro_key'))){		
 					$line_item .= $ik_social_pro->pro_comments($item, $the_link);
 				}	
+			} 
 			
-				$output = str_replace('{ikfb:feed_item}', $line_item, $feed_item_html);	
-			} else if((isset($item->link) && strpos($item->link,'http://www.facebook.com/events/') !== false) || get_option('ik_fb_show_only_events')){
-				//some event parsing				
-				$event_id = explode('/',$item->link);
-				$event_id = $event_id[4];
-				
-				if(get_option('ik_fb_show_only_events')){
-					$event_id = $item->id;
-				}
-				
-				if($event_id){
-					$app_id = get_option('ik_fb_app_id');
-					$app_secret = get_option('ik_fb_secret_key');
-					
-					if(!isset($this->authToken)){
-						$this->authToken = $this->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
-					}
-					
-					$event_data = $this->fetchUrl("https://graph.facebook.com/{$event_id}?summary=1&{$this->authToken}", true);//the event data
-					
-					$replace = '';	
-					
-					//add avatar for pro users
-					if(is_valid_key(get_option('ik_fb_pro_key'))){		
-						$replace = $ik_social_pro->pro_user_avatars($replace, $item) . " ";
-					}
-					
-					//load event image source
-					$event_image = "http://graph.facebook.com/" . $event_id . "/picture";
-					
-					if(isset($event_data->name)){
-						//event name
-						$replace = '<p class="ikfb_event_title">' . $replace . $event_data->name . '</p>';
-						
-						$start_time = isset($event_data->start_time) ? $event_data->start_time : '';
-						$end_time = isset($event_data->end_time) ? $event_data->end_time : '';			
-						
-						//TBD: Allow user control over date formatting
-						$time_object = new DateTime($start_time);
-						$start_time = $time_object->format('l, F jS, Y h:i:s a');	
-						
-						//TBD: Allow user control over date formatting
-						if(strlen($end_time)>2){
-							$time_object = new DateTime($end_time);
-							$end_time = $time_object->format('l, F jS, Y h:i:s a');						
-						}
-						
-						//event start time - event end time					
-						$event_start_time = isset($event_data->start_time) ? $start_time : '';					
-						$event_end_time = isset($event_data->end_time) ? $end_time : '';
-						
-						$replace .= '<p class="ikfb_event_date">';
-						$event_had_start = false;
-						if(strlen($event_start_time)>2){
-							$replace .= $event_start_time;
-							$event_had_start = true;
-						}
-						if($event_had_start){
-							$replace .= ' - ';
-						}
-						if(strlen($event_end_time)>2){
-							$replace .= $event_end_time; 
-						}
-						$replace .= '</p>';
-						
-						//event image					
-						$replace .= '<img class="ikfb_event_image" src="' . $event_image . '" alt="Event Image"/>';					
-						
-						//event description
-						if(isset($event_data->description)){	
-							//use mb_substr, if available, for 2 byte character support
-							if(function_exists('mb_substr')){
-								$event_description = mb_substr($event_data->description, 0, 250);
-							} else {
-								$event_description = substr($event_data->description, 0, 250);
-							}
-							$event_description .= __('... ', $this->textdomain);
-								
-							$replace .= '<p class="ikfb_event_description">' . $event_description . '</p>';
-						}
-						
-						//event read more link
-						$replace .= '<p class="ikfb_event_link"><a href="http://facebook.com/events/'.urlencode($event_id).'" title="Click Here To Read More" target="_blank">Read More...</a></p>';
-					}
-					
-					$output = str_replace('{ikfb:feed_item}', $replace, $feed_item_html);	
-				}
-			}			
+			$output = str_replace('{ikfb:feed_item}', $line_item, $feed_item_html);				
 		}
 		
 		return $output;
 	}
 	
-	function ikfb_build_photo($item,$replace="",&$shortened,$image_html,$description_html,$caption_html,$use_thumb,$width,$height){
+	function ikfb_build_photo($item,$replace="",$shortened,$image_html,$description_html,$caption_html,$use_thumb,$width,$height){
 		$output = '';
 	
 		if(!isset($this->authToken)){
@@ -823,10 +815,12 @@ class ikFacebook
 			$output .= str_replace('{ikfb:feed_item:description}', $replace, $description_html);	
 		}
 		
-		return $output;
+		$retdata = array('output' => $output, 'shortened' => $shortened);
+		
+		return $retdata;
 	}
 	
-	function ikfb_build_message($item,$replace="",&$shortened,$message_html){
+	function ikfb_build_message($item,$replace="",$shortened,$message_html){
 		global $ik_social_pro;
 	
 		//add avatar for pro users
@@ -861,7 +855,9 @@ class ikFacebook
 		
 		$output = str_replace('{ikfb:feed_item:message}', $replace, $message_html);			
 		
-		return $output;
+		$retdata = array('output' => $output, 'shortened' => $shortened);
+		
+		return $retdata;
 	}
 	
 	//check to see time elapsed since given datetime
