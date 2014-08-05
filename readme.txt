@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, facebook feed, facebook embed, facebook feed widget, facebook feed embed, like button widget, facebook events
 Requires at least: 3.0.1
 Tested up to: 3.9.1
-Stable tag: 2.6.4.2
+Stable tag: 2.6.4.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -91,6 +91,8 @@ Follow the information on that page to create a Simple Facebook App - you'll be 
 
 It's all good!  This just means there is no feed data - this could be due to bad settings, including a bad Page ID, App ID, or Secret Key, or it could be due to some other error.  Be sure to check your Facebook Page's Privacy Settings, too!  Check the plugin instructions for help (or send us a message if you think it's an error.)
 
+Some people have options enabled that hide any items from being shown, such as Show Only Events.  If you have no future events scheduled and Show Only Events is enabled, you will see no feed items and an error message on the Help & Status screen.
+
 = So what's up with this 'Publicly Accessible Page' thing? =
 
 OK, so here's the deal:
@@ -161,6 +163,9 @@ In this case, the Facebook Album ID is '539627829386059'.
 5. This is the Facebook Feed Widget and the Facebook Like Button Widget of the IK Facebook Plugin.  The options on this widget allow you to override the settings you have selected on your Settings panel.
 
 == Changelog ==
+
+= 2.6.4.3 =
+* Address issue where blank line items might appear in your feed.
 
 = 2.6.4.2 =
 * Address issue with Posted Date not displaying if Show Posted By was not checked.
@@ -476,5 +481,5 @@ In this case, the Facebook Album ID is '539627829386059'.
 
 == Upgrade Notice ==
 
-= 2.6.4.1 =
-* Updates fixes available!
+= 2.6.4.3 =
+* Updates available!

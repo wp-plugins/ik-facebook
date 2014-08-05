@@ -308,7 +308,7 @@ class ikFacebookOptions
 				
 				echo "<table><tbody>";
 				_e("<tr><td><h4>Our Feed</h4></td><td><h4>Your Feed</h4></td></tr>");
-				echo "<tr><td valign='top'>" . do_shortcode('[ik_fb_feed show_errors="1" id="IlluminatiKarate" num_posts="2"]') . "</td><td valign='top'>" . do_shortcode('[ik_fb_feed show_errors="1" num_posts="2"]') . "</td></tr>";
+				echo "<tr><td valign='top'>" . do_shortcode('[ik_fb_feed show_errors="1" id="IlluminatiKarate"]') . "</td><td valign='top'>" . do_shortcode('[ik_fb_feed show_errors="1"]') . "</td></tr>";
 				echo "</tbody></table>";
 			?>
 			<?php
