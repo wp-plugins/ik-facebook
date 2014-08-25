@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.6.4.3
+Version: 2.6.4.4
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -672,6 +672,8 @@ class ikFacebook
 	
 	function ikfb_build_photo($item,$replace="",$shortened,$image_html,$description_html,$caption_html,$use_thumb,$width,$height){
 		$output = '';
+	
+		$page_id = $item->from->id;
 	
 		if(!isset($this->authToken)){
 			$this->authToken = $this->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");

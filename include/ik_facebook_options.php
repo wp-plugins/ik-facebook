@@ -247,7 +247,7 @@ class ikFacebookOptions
 						<!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
 						<div style="position: absolute; left: -5000px;"><input type="text" name="b_403e206455845b3b4bd0c08dc_6ad78db648" tabindex="-1" value=""></div>
 						<div class="clear"><input type="submit" value="Subscribe Now" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
-						<p class="explain"><strong><?php _e("What To Expect:", $this->textdomain); ?></strong> <?php _e("You'll receive you around one email from us each month, jam-packed with special offers and tips for getting the most out of WordPress. Of course, you can unsubscribe at any time.", $this->textdomain); ?></p>
+						<p class="explain"><strong><?php _e("What To Expect:", $this->textdomain); ?></strong> <?php _e("As soon as you've confirmed your subscription, you'll receive a coupon code for a big discount on WP Social Pro. After that,  receive you around one email from us each month, jam-packed with special offers and tips for getting the most out of WordPress. Of course, you can unsubscribe at any time.", $this->textdomain); ?></p>
 					</form>
 				</div>
 				<p class="u_to_p"><a href="http://goldplugins.com/our-plugins/wp-social-pro/#buy_now"><?php _e("Upgrade to WP Social Pro now</a> to remove banners like this one.", $this->textdomain); ?></p>
@@ -747,8 +747,8 @@ class ikFacebookOptions
 							<li><strong><?php _e('Unbranded Admin screens:</strong> Remove all IK FB branding from your Wordpress admin.');?></li>
 							<li><strong><?php _e('Hide non-page-owner posts from your feed:</strong> With this option, your feed will only show the posts from your own account.');?></li>
 							<li><strong><?php _e("Custom HTML Output:</strong> Use any HTML tags you want for the feed. You'll be able to specify a custom HTML template for your feed.");?></li>
+							<li><strong><?php _e("Hand Crafted Themes:</strong> Use any of our hand crafted themes to style your output!  Our Support Staff will also help you customize your CSS or styles, too!");?></li>
 							<li><strong><?php _e("Fanatical Support:</strong> We're here to help!  Purchase WP Social Pro and receive prompt, responsive, and professional support.");?></li>
-							<li><strong><?php _e("Free Updates For A Year:</strong> Get WP Social Pro now, and you'll get free updates for a year!");?></li>
 						</ul>
 							
 						<p><?php _e('More to come! WP Social Pro plugin owners get new updates automatically by email. New features land in the Pro version first, so be sure to upgrade today.');?></p>
