@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.7
+Version: 2.7.1
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -286,7 +286,7 @@ class ikFacebook
 
 		// load the width and height settings for the feed. 
 		// NOTE: the plugin uses different settings for the sidebar feed vs the normal (in-page) feed
-		list($ik_fb_feed_height, $ik_fb_feed_width) = $this->get_feed_width_and_height($is_sidebar_widget);
+		list($ik_fb_feed_width, $ik_fb_feed_height) = $this->get_feed_width_and_height($is_sidebar_widget);
 		
 		// Load the profile's feed items from the Graph API
 		// TODO: if page_data is not set, this indicates an error with the API reponse. We should handle it.
