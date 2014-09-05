@@ -29,7 +29,7 @@ class ikSocialProOptions
 		echo '<h2 class="nav-tab-wrapper">';
 			foreach( $tabs as $tab => $name ){
 				$class = ( $tab == $current ) ? ' nav-tab-active' : '';
-				echo "<a class='nav-tab$class' href='?page=ik-facebook/include/ik_facebook_options.php&tab=pro_options&tabtab=$tab'>$name</a>";
+				echo "<a class='nav-tab$class' href='?page=ikfb_pro_options&pro_tab=$tab'>$name</a>";				
 			}
 		echo '</h2>';
 	}
@@ -48,14 +48,14 @@ class ikSocialProOptions
 		<h3><?php echo $title; ?></h3>
 		<p><?php _e('These additional settings provide even more control over the output of your Facebook feed.');?></p>
 		<?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?>
-			<p><a href="http://goldplugins.com/our-plugins/wp-social-pro/"><?php _e('Upgrade to WP Social Pro now');?></a> <?php _e('and get access to tons of new features and settings.');?> </p>
+			<p><strong>These settings require WP Social Pro, the Pro version of IK Facebook. </strong><a href="http://goldplugins.com/our-plugins/wp-social-pro/"><?php _e('Upgrade to WP Social Pro now');?></a> <?php _e('to instantly unlock these features and more.');?> </p>
 		<?php endif; ?>
 		
-		<?php if ( isset ( $_GET['tabtab'] ) ) $this->ikfb_admin_tabs($_GET['tabtab']); else $this->ikfb_admin_tabs('display_options'); ?>
+		<?php if ( isset ( $_GET['pro_tab'] ) ) $this->ikfb_admin_tabs($_GET['pro_tab']); else $this->ikfb_admin_tabs('display_options'); ?>
 			
 		<?php 
-			if ( $pagenow == 'admin.php' && $_GET['page'] == 'ik-facebook/include/ik_facebook_options.php' ){
-				if ( isset ( $_GET['tabtab'] ) ) $tab = $_GET['tabtab'];
+			if ( $pagenow == 'admin.php' && $_GET['page'] == 'ikfb_pro_options' ){
+				if ( isset ( $_GET['pro_tab'] ) ) $tab = $_GET['pro_tab'];
 				else $tab = 'display_options';
 			}	
 		
@@ -69,6 +69,7 @@ class ikSocialProOptions
 			<?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?><div class="disabled"><?php endif; ?>
 		
 			<h3><?php _e('Display Options');?></h3>
+			<?php echo $this->pro_upgrade_link(); ?>
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row"><label for="ik_fb_show_avatars"><?php _e('Show Avatars');?></label></th>
@@ -110,7 +111,7 @@ class ikSocialProOptions
 			<?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?><div class="disabled"><?php endif; ?>
 			
 			<h3><?php _e('Custom HTML');?></h3>
-			
+			<?php echo $this->pro_upgrade_link(); ?>
 			<table class="form-table">
 				
 				<tr valign="top">
@@ -176,7 +177,7 @@ class ikSocialProOptions
 			<?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?><div class="disabled"><?php endif; ?>
 			
 			<h3><?php _e('Branding Options');?></h3>
-		
+			<?php echo $this->pro_upgrade_link(); ?>
 			<table class="form-table">	
 			
 				<tr valign="top">
@@ -201,5 +202,13 @@ class ikSocialProOptions
 		<?php }//end switch ?>
 	<?php } // end ik_fb_pro_settings function
 	
+	function pro_upgrade_link($text = 'Upgrade To WP Social Pro To Unlock These Features')
+	{
+		if(!is_valid_key(get_option('ik_fb_pro_key'))) {
+			return '<strong><a class="upgrade_link" href="http://goldplugins.com/our-plugins/wp-social-pro/?utm_source=pkugin_dash&utm_campaign=upgrade_to_unlock" target="_blank" />' . $text . '</a></strong>';
+		} else {
+			return '';
+		}
+	}
+	
 } // end class
-?>

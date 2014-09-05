@@ -41,13 +41,25 @@ class ikFacebookOptions
 			$page_title = __('IK Facebook Plugin Settings', $this->textdomain);
 		}
 		
+		// TODO: Any reason not to change this to ik-facebook or something? see note on http://codex.wordpress.org/Function_Reference/add_submenu_page:
+		// 		 "For $menu_slug please don't use __FILE__ it makes for an ugly URL, and is a minor security nuisance. "
+		// $top_level_menu_slug = __FILE__;
+		$top_level_menu_slug = 'ikfb_configuration_options';
+		
 		//create new top-level menu
-		add_menu_page($page_title, $title, 'administrator', __FILE__, array($this, 'settings_page'));
+		add_menu_page($page_title, $title, 'administrator', $top_level_menu_slug, array($this, 'configuration_options_page'));
+
+		//create sub menus for each tab
+		add_submenu_page( $top_level_menu_slug, 'Basic Configuration', 'Basic Configuration', 'manage_options', $top_level_menu_slug, array($this, 'configuration_options_page') ); 
+		add_submenu_page( $top_level_menu_slug, 'Style Options', 'Style Options', 'manage_options', 'ikfb_style_options', array($this, 'style_options_page') ); 
+		add_submenu_page( $top_level_menu_slug, 'Display Options', 'Display Options', 'manage_options', 'ikfb_display_options', array($this, 'display_options_page') ); 
+		add_submenu_page( $top_level_menu_slug, 'Pro Options', 'Pro Options', 'manage_options', 'ikfb_pro_options', array($this, 'pro_options_page') ); 
+		add_submenu_page( $top_level_menu_slug, 'Plugin Status &amp; Help', 'Plugin Status &amp; Help', 'manage_options', 'ikfb_plugin_status', array($this, 'plugin_status_page') ); 
 
 		//call register settings function
 		add_action( 'admin_init', array($this, 'register_settings'));	
 	}
-	
+		
 	//function to produce tabs on admin screen
 	function ik_fb_admin_tabs( $current = 'homepage' ) {
 	
@@ -64,7 +76,7 @@ class ikFacebookOptions
 	//register our settings
 	function register_settings(){
 		//register our config settings
-		register_setting( 'ik-fb-config-settings-group', 'ik_fb_page_id' );
+		register_setting( 'ik-fb-config-settings-group', 'ik_fb_page_id', array($this, 'extract_facebook_id') );
 		register_setting( 'ik-fb-config-settings-group', 'ik_fb_app_id' );
 		register_setting( 'ik-fb-config-settings-group', 'ik_fb_secret_key' );
 		register_setting( 'ik-fb-config-settings-group', 'ik_fb_pro_key' );
@@ -126,197 +138,69 @@ class ikFacebookOptions
 			ik_fb_pro_register_settings();
 		}
 	}
+	
+	function extract_facebook_id($input)
+	{
+		if (strpos($input, 'facebook.com/') !== FALSE) {
+			$pieces = explode('/', $input); // divides the string in pieces where '/' is found
+			return end($pieces); //takes the last piece
+		}
+		return $input;
+	}
 
-	function settings_page(){
+	function start_settings_page($wrap_with_form = true)
+	{
 		global $pagenow;
 		
 		if(get_option('ik_fb_unbranded') && is_valid_key(get_option('ik_fb_pro_key'))){
 			$title = __("Facebook Settings", $this->textdomain);
 			$message = __("Facebook Settings Updated.", $this->textdomain);
 		} else {
-			$title = __("IK Facebook Plugin Settings.", $this->textdomain);
+			$title = __("IK Facebook Plugin Settings", $this->textdomain);
 			$message = __("IK Facebook Plugin Settings Updated.", $this->textdomain);
 		}
-		
-	?>
-	<div class="wrap">
-		<h2><?php echo $title; ?></h2>		
-		
-		<?php if(!is_valid_key(get_option('ik_fb_pro_key') )): ?>			
-				<!-- Begin MailChimp Signup Form -->
-			<style type="text/css">
-				/* MailChimp Form Embed Code - Slim - 08/17/2011 */
-				#mc_embed_signup form {display:block; position:relative; text-align:left; padding:10px 0 10px 3%}
-				#mc_embed_signup h2 {font-weight:bold; padding:0; margin:15px 0; font-size:1.4em;}
-				#mc_embed_signup input {border:1px solid #999; -webkit-appearance:none;}
-				#mc_embed_signup input[type=checkbox]{-webkit-appearance:checkbox;}
-				#mc_embed_signup input[type=radio]{-webkit-appearance:radio;}
-				#mc_embed_signup input:focus {border-color:#333;}
-				#mc_embed_signup .button {clear:both; background-color: #aaa; border: 0 none; border-radius:4px; color: #FFFFFF; cursor: pointer; display: inline-block; font-size:15px; font-weight: bold; height: 32px; line-height: 32px; margin: 0 5px 10px 0; padding:0; text-align: center; text-decoration: none; vertical-align: top; white-space: nowrap; width: auto;}
-				#mc_embed_signup .button:hover {background-color:#777;}
-				#mc_embed_signup .small-meta {font-size: 11px;}
-				#mc_embed_signup .nowrap {white-space:nowrap;}     
-				#mc_embed_signup .clear {clear:none; display:inline;}
-
-				#mc_embed_signup h3 { color: #008000; display:block; font-size:19px; padding-bottom:10px; font-weight:bold; margin: 0 0 10px;}
-				#mc_embed_signup .explain {
-					color: #808080;
-					width: 600px;
-				}
-				#mc_embed_signup label {
-					color: #000000;
-					display: block;
-					font-size: 15px;
-					font-weight: bold;
-					padding-bottom: 10px;
-				}
-				#mc_embed_signup input.email {display:block; padding:8px 0; margin:0 4% 10px 0; text-indent:5px; width:58%; min-width:130px;}
-
-				#mc_embed_signup div#mce-responses {float:left; top:-1.4em; padding:0em .5em 0em .5em; overflow:hidden; width:90%;margin: 0 5%; clear: both;}
-				#mc_embed_signup div.response {margin:1em 0; padding:1em .5em .5em 0; font-weight:bold; float:left; top:-1.5em; z-index:1; width:80%;}
-				#mc_embed_signup #mce-error-response {display:none;}
-				#mc_embed_signup #mce-success-response {color:#529214; display:none;}
-				#mc_embed_signup label.error {display:block; float:none; width:auto; margin-left:1.05em; text-align:left; padding:.5em 0;}		
-				#mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
-					#mc_embed_signup{    
-							background-color: white;
-							border: 1px solid #DCDCDC;
-							clear: left;
-							color: #008000;
-							font: 14px Helvetica,Arial,sans-serif;
-							margin-top: 10px;
-							margin-bottom: 0px;
-							max-width: 800px;
-							padding: 5px 12px 0px;
-				}
-				#mc_embed_signup form{padding: 10px}
-
-				#mc_embed_signup .special-offer {
-					color: #808080;
-					margin: 0;
-					padding: 0 0 3px;
-					text-transform: uppercase;
-				}
-				#mc_embed_signup .button {
-				  background: #5dd934;
-				  background-image: -webkit-linear-gradient(top, #5dd934, #549e18);
-				  background-image: -moz-linear-gradient(top, #5dd934, #549e18);
-				  background-image: -ms-linear-gradient(top, #5dd934, #549e18);
-				  background-image: -o-linear-gradient(top, #5dd934, #549e18);
-				  background-image: linear-gradient(to bottom, #5dd934, #549e18);
-				  -webkit-border-radius: 5;
-				  -moz-border-radius: 5;
-				  border-radius: 5px;
-				  font-family: Arial;
-				  color: #ffffff;
-				  font-size: 20px;
-				  padding: 10px 20px 10px 20px;
-				  line-height: 1.5;
-				  height: auto;
-				  margin-top: 7px;
-				  text-decoration: none;
-				}
-
-				#mc_embed_signup .button:hover {
-				  background: #65e831;
-				  background-image: -webkit-linear-gradient(top, #65e831, #5dd934);
-				  background-image: -moz-linear-gradient(top, #65e831, #5dd934);
-				  background-image: -ms-linear-gradient(top, #65e831, #5dd934);
-				  background-image: -o-linear-gradient(top, #65e831, #5dd934);
-				  background-image: linear-gradient(to bottom, #65e831, #5dd934);
-				  text-decoration: none;
-				}
-				#signup_wrapper {
-					max-width: 800px;
-					margin-bottom: 20px;
-				}
-				#signup_wrapper .u_to_p
-				{
-					font-size: 10px;
-					margin: 0;
-					padding: 2px 0 0 3px;				
-				}
-			</style>				
-			<div id="signup_wrapper">
-				<div id="mc_embed_signup">
-					<form action="http://illuminatikarate.us2.list-manage1.com/subscribe/post?u=403e206455845b3b4bd0c08dc&amp;id=3e22ddb309" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-						<p class="special-offer">Special Offer:</p>
-						<h3><?php _e("Sign-up for our mailing list now, and we'll give you a discount on WP Social Pro!", $this->textdomain); ?></h3>
-						<label for="mce-EMAIL">Your Email:</label>
-						<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
-						<!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-						<div style="position: absolute; left: -5000px;"><input type="text" name="b_403e206455845b3b4bd0c08dc_6ad78db648" tabindex="-1" value=""></div>
-						<div class="clear"><input type="submit" value="Subscribe Now" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
-						<p class="explain"><strong><?php _e("What To Expect:", $this->textdomain); ?></strong> <?php _e("As soon as you've confirmed your subscription, you'll receive a coupon code for a big discount on WP Social Pro. After that,  receive you around one email from us each month, jam-packed with special offers and tips for getting the most out of WordPress. Of course, you can unsubscribe at any time.", $this->textdomain); ?></p>
-					</form>
-				</div>
-				<p class="u_to_p"><a href="http://goldplugins.com/our-plugins/wp-social-pro/#buy_now"><?php _e("Upgrade to WP Social Pro now</a> to remove banners like this one.", $this->textdomain); ?></p>
-			</div>
-			
-		<?php endif; ?>
-	
-		<?php if (isset($_GET['settings-updated']) && $_GET['settings-updated'] == 'true') : ?>
-		<div id="message" class="updated fade"><p><?php echo $message; ?></p></div>
-		<?php endif; ?>	
-		
-		<?php if ( isset ( $_GET['tab'] ) ) $this->ik_fb_admin_tabs($_GET['tab']); else $this->ik_fb_admin_tabs('config_options'); ?>
-		<?php 
-			if ( $pagenow == 'admin.php' && $_GET['page'] == 'ik-facebook/include/ik_facebook_options.php' ){
-				if ( isset ( $_GET['tab'] ) ) $tab = $_GET['tab'];
-				else $tab = 'config_options';
-			} 
 		?>
-			<?php if($tab != 'plugin_status'): ?>
-			<form method="post" action="options.php">
-			<?php endif; ?>
+			<div class="wrap">
+				<h2><?php echo $title; ?></h2>		
 				
-			<?php 			
-				switch ( $tab ){
-					case 'plugin_status' :	
-			?>
-				<style>p{font-size:14px;}td iframe{height:45px;}ol{padding-top:10px;}em{font-size:12px;}.ik_fb_error{color:red;}</style>
-				<h3><?php _e('Plugin Status &amp; Help');?></h3>
-				<p><?php _e('This page is used to determine if your plugin and page are setup correctly.  Use the below items to help troubleshoot any issues you may have and to see example shortcodes.');?></p>
-			<?php
-				//example shortcodes
-				
-				_e("<h4>Example Shortcodes</h4>");
-				_e('<p>To output the custom Facebook Feed, place <code>[ik_fb_feed]</code> in the body of a post.  To further customize the feed via the shortcode, available attributes include: <code>colorscheme="light" use_thumb="true" width="250" num_posts="5" id="123456789"</code>.</p>');
-				_e('<p><em>Valid choices for "colorscheme" are "light" and "dark". If "use_thumb" is set to true, the value of "width" will be ignored.  If "use_thumb" or "width" are not set, the values from the Options page will be used.  If id is not set, the shortcode will use the Page ID from your Settings page.</em></p>');
-				_e('<p>To output the Like Button, place <code>[ik_fb_like_button url="http://www.facebook.com"]</code> in the body of a post.  Valid attributes include: <code>url="" height="" colorscheme="light"</code>.</p>');
-				_e('<p><em>Valid options for colorscheme are "light" and "dark".  Valid values for height are integers.  URL must be a valid website URL.</em></p>');
-				_e('<p>To output a Photo Gallery, place <code>[ik_fb_gallery id="539627829386059" num_photos="25" size="130x73" title="Hello World!"]</code> in the body of a post.</p>');
-				_e('<p><em>If no size is passed, it will default to 320 x 180.  Size options are 2048x1152, 960x540, 720x405, 600x337, 480x270, 320x180, and 130x73.  If num_photos is not passed, the Gallery will default to the amount set on the Dashboard - if no amount is set there, it will display up to 25 photos.  The ID number is found by looking at the URL of the link to the Album on Facebook - you can read more on our FAQs <a href="http://goldplugins.com/documentation/wp-social-pro-documentation/frequently-asked-questions/">here</a>.</em></p>');
-								
-				_e("<h4>Configuration Settings</h4>");
-				_e("<p>If you need to contact us for help, please be sure to include these settings in your message, as well as a functional description of how you have the feed implemented on your site.</p>");
-				echo "<table><tbody>";
-				_e("<tr><td align='right'>Page ID:</td><td>" . get_option("ik_fb_page_id") . "</td></tr>");
-				_e("<tr><td align='right'>App ID:</td><td>" . get_option("ik_fb_app_id") . "</td></tr>");
-				_e("<tr><td align='right'>Secret Key:</td><td>" . get_option("ik_fb_secret_key") . "</td></tr>");
-				echo "</tbody></table>";
-				
-				_e("<h3>Plugin Settings Test</h3>");
-				_e("<p>Use the below feeds to determine if your settings are correct.</p>");
-				_e("<strong>How to use:</strong>");
-				echo "<ol>";
-				_e("<li>If both feeds are showing up, everything is working!  Hooray!</li>");
-				_e("<li>If neither feed is showing up then your App ID or Secret Key is incorrect.  Please verify you have entered the correct information.</li>");
-				_e("<li>If our feed is showing up, but your feed is not, then either:");
-					_e("<ol><li>Your Page ID is Incorrect.  Please verify you have entered the correct information.</li>");
-					_e("<li>Your Page is not configured to be publically viewable.  Please verify that you are using a Facebook Page, not a Personal Profile, and that the page has no Country, Age, or other restrictions placed on it.</li></ol></li></ol>");
-				
-				echo "<table><tbody>";
-				_e("<tr><td><h4>Our Feed</h4></td><td><h4>Your Feed</h4></td></tr>");
-				echo "<tr><td valign='top'>" . do_shortcode('[ik_fb_feed show_errors="1" id="IlluminatiKarate"]') . "</td><td valign='top'>" . do_shortcode('[ik_fb_feed show_errors="1"]') . "</td></tr>";
-				echo "</tbody></table>";
-			?>
-			<?php
-					break;
-					case 'config_options' :	
-			?>
-			<?php settings_fields( 'ik-fb-config-settings-group' ); ?>
+				<?php if(!is_valid_key(get_option('ik_fb_pro_key') )): ?>
+				<?php $this->output_newsletter_signup_form(); ?>
+				<?php endif; ?>
 			
+				<?php if (isset($_GET['settings-updated']) && $_GET['settings-updated'] == 'true') : ?>
+				<div id="message" class="updated fade"><p><?php echo $message; ?></p></div>
+				<?php endif; ?>	
+	
+				<?php if($wrap_with_form): ?>
+				<form method="post" action="options.php">
+				<?php endif; ?>
+		<?php
+	}
+	
+	function end_settings_page($wrap_with_form = true)
+	{
+		//don't output the save button on the status screen
+		if($wrap_with_form):
+		?>			
+			<p class="submit">
+				<input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
+			</p>		
+		<?php endif; ?>
+		<?php if($wrap_with_form): ?></form><?php endif; ?>
+		<?php
+		if(!is_valid_key(get_option('ik_fb_pro_key'))):	
+			$this->output_upgrade_teaser();
+		endif;
+	}
+	
+	/*
+	 * Outputs the Basic Configuration page
+	 */
+	function configuration_options_page()
+	{
+		$this->start_settings_page();
+		settings_fields( 'ik-fb-config-settings-group' );
+		?>
 			<h3><?php _e("Configuration Options");?></h3>
 			<p><?php _e("The below options are used to configure your plugin to interact with your Facebook Page.");?></p>
 			
@@ -344,11 +228,17 @@ class ikFacebookOptions
 					<p class="description"><?php _e('This is the App Secret you acquired when you <a href="http://goldplugins.com/documentation/wp-social-pro-documentation/how-to-get-an-app-id-and-secret-key-from-facebook/" target="_blank" title="How To Get An App ID and Secret Key From Facebook">setup your Facebook app</a>.');?></p></td>
 				</tr>
 			</table>	
-			
-				<?php
-					break;
-					case 'style_options' :					
-						$ikfb_themes = array(
+		<?php
+		$this->end_settings_page();		
+	}
+	
+	/*
+	 * Outputs the Style Options page
+	 */
+	function style_options_page()
+	{
+		$this->start_settings_page();
+		$ikfb_themes = array(
 							'style' => 'Default Style',
 							'dark_style' => 'Dark Style',
 							'light_style' => 'Light Style',
@@ -356,19 +246,19 @@ class ikFacebookOptions
 							'no_style' => 'No Style',
 						);
 						
-						if(is_valid_key(get_option('ik_fb_pro_key'))){
-							$ikfb_themes['cobalt_style'] = 'Cobalt Style';
-							$ikfb_themes['green_gray_style'] = 'Green Gray Style';
-							$ikfb_themes['halloween_style'] = 'Halloween Style';
-							$ikfb_themes['indigo_style'] = 'Indigo Style';
-							$ikfb_themes['orange_style'] = 'Orange Style';			
-						}
-				?>
-				<?php settings_fields( 'ik-fb-style-settings-group' ); ?>
+		if(is_valid_key(get_option('ik_fb_pro_key'))){
+			$ikfb_themes['cobalt_style'] = 'Cobalt Style';
+			$ikfb_themes['green_gray_style'] = 'Green Gray Style';
+			$ikfb_themes['halloween_style'] = 'Halloween Style';
+			$ikfb_themes['indigo_style'] = 'Indigo Style';
+			$ikfb_themes['orange_style'] = 'Orange Style';			
+		}
+		?>
+		<?php settings_fields( 'ik-fb-style-settings-group' ); ?>
 			
 			<h3><?php _e('Style Options');?></h3>
 			<p><?php _e('The below options are used to modify, or fully change, the style of your Facebook Feed displayed on your website.');?></p>
-			
+		
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row"><label for="ik_fb_feed_theme"><?php _e('Feed Theme');?></a></th>
@@ -589,11 +479,18 @@ class ikFacebookOptions
 					<p class="description"><?php _e('Input your font pixel size.');?></p></td>
 				</tr>
 			</table>
-				<?php
-					break;
-					case 'display_options' :
-				?>
-				<?php settings_fields( 'ik-fb-display-settings-group' ); ?>
+		<?php			
+		$this->end_settings_page();		
+	}
+	
+	/*
+	 * Outputs the Basic Configuration page
+	 */
+	function display_options_page()
+	{
+		$this->start_settings_page();
+		?>
+		<?php settings_fields( 'ik-fb-display-settings-group' ); ?>
 			
 			<h3><?php _e('Display Options');?></h3>
 			<p><?php _e('The below options are used to control the type and amount of content that is displayed in your Facebook Feed.');?></p>
@@ -717,49 +614,298 @@ class ikFacebookOptions
 					<p class="description"><?php _e('Love this plugin but are unable to donate?  Show your love by displaying our inconspicuous "Powered By IK Facebook" link in the footer of your site.');?></p></td>
 				</tr>
 			</table>
-				<?php
-					break;
-					case 'pro_options' :
-						global $ik_social_pro_options;
+				<?php	
+		$this->end_settings_page();		
+	}
+	
+	/*
+	 * Outputs the Basic Configuration page
+	 */
+	function pro_options_page()
+	{
+		$this->start_settings_page();
+		global $ik_social_pro_options;		
+		$ik_social_pro_options->output_settings();	
+		$this->end_settings_page();		
+	}
+	
+	/*
+	 * Outputs the Basic Configuration page
+	 */
+	function plugin_status_page()
+	{
+		$this->start_settings_page(false);
+			?>	
+				<style>p{font-size:14px;}td iframe{height:45px;}ol{padding-top:10px;}em{font-size:12px;}.ik_fb_error{color:red;}</style>
+				<h3><?php _e('Plugin Status &amp; Help');?></h3>
+				<p><?php _e('This page is used to determine if your plugin and page are setup correctly.  Use the below items to help troubleshoot any issues you may have and to see example shortcodes.');?></p>
+			<?php
+				//example shortcodes
+				
+				_e("<h4>Example Shortcodes</h4>");
+				_e('<p>To output the custom Facebook Feed, place <code>[ik_fb_feed]</code> in the body of a post.  To further customize the feed via the shortcode, available attributes include: <code>colorscheme="light" use_thumb="true" width="250" num_posts="5" id="123456789"</code>.</p>');
+				_e('<p><em>Valid choices for "colorscheme" are "light" and "dark". If "use_thumb" is set to true, the value of "width" will be ignored.  If "use_thumb" or "width" are not set, the values from the Options page will be used.  If id is not set, the shortcode will use the Page ID from your Settings page.</em></p>');
+				_e('<p>To output the Like Button, place <code>[ik_fb_like_button url="http://www.facebook.com"]</code> in the body of a post.  Valid attributes include: <code>url="" height="" colorscheme="light"</code>.</p>');
+				_e('<p><em>Valid options for colorscheme are "light" and "dark".  Valid values for height are integers.  URL must be a valid website URL.</em></p>');
+				_e('<p>To output a Photo Gallery, place <code>[ik_fb_gallery id="539627829386059" num_photos="25" size="130x73" title="Hello World!"]</code> in the body of a post.</p>');
+				_e('<p><em>If no size is passed, it will default to 320 x 180.  Size options are 2048x1152, 960x540, 720x405, 600x337, 480x270, 320x180, and 130x73.  If num_photos is not passed, the Gallery will default to the amount set on the Dashboard - if no amount is set there, it will display up to 25 photos.  The ID number is found by looking at the URL of the link to the Album on Facebook - you can read more on our FAQs <a href="http://goldplugins.com/documentation/wp-social-pro-documentation/frequently-asked-questions/">here</a>.</em></p>');
+								
+				_e("<h4>Configuration Settings</h4>");
+				_e("<p>If you need to contact us for help, please be sure to include these settings in your message, as well as a functional description of how you have the feed implemented on your site.</p>");
+				echo "<table><tbody>";
+				_e("<tr><td align='right'>Page ID:</td><td>" . get_option("ik_fb_page_id") . "</td></tr>");
+				_e("<tr><td align='right'>App ID:</td><td>" . get_option("ik_fb_app_id") . "</td></tr>");
+				_e("<tr><td align='right'>Secret Key:</td><td>" . get_option("ik_fb_secret_key") . "</td></tr>");
+				echo "</tbody></table>";
+				
+				_e("<h3>Plugin Settings Test</h3>");
+				_e("<p>Use the below feeds to determine if your settings are correct.</p>");
+				_e("<strong>How to use:</strong>");
+				echo "<ol>";
+				_e("<li>If both feeds are showing up, everything is working!  Hooray!</li>");
+				_e("<li>If neither feed is showing up then your App ID or Secret Key is incorrect.  Please verify you have entered the correct information.</li>");
+				_e("<li>If our feed is showing up, but your feed is not, then either:");
+					_e("<ol><li>Your Page ID is Incorrect.  Please verify you have entered the correct information.</li>");
+					_e("<li>Your Page is not configured to be publically viewable.  Please verify that you are using a Facebook Page, not a Personal Profile, and that the page has no Country, Age, or other restrictions placed on it.</li></ol></li></ol>");
+				
+				echo "<table><tbody>";
+				_e("<tr><td><h4>Our Feed</h4></td><td><h4>Your Feed</h4></td></tr>");
+				echo "<tr><td valign='top'>" . do_shortcode('[ik_fb_feed show_errors="1" id="IlluminatiKarate"]') . "</td><td valign='top'>" . do_shortcode('[ik_fb_feed show_errors="1"]') . "</td></tr>";
+				echo "</tbody></table>";
+		$this->end_settings_page(false);		
+	}
+	
+	/*
+	 * Outputs a Mailchimp signup form
+	 */
+	function output_newsletter_signup_form()
+	{
+?>
+			<!-- Begin MailChimp Signup Form -->
+			<style type="text/css">
+			
+				/* signup box */
+.green_bg {				
+background: #009b21; /* Old browsers */
+background: -moz-linear-gradient(top,  #009b21 0%, #007719 50%, #009b21 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#009b21), color-stop(50%,#007719), color-stop(100%,#009b21)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  #009b21 0%,#007719 50%,#009b21 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  #009b21 0%,#007719 50%,#009b21 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  #009b21 0%,#007719 50%,#009b21 100%); /* IE10+ */
+background: linear-gradient(to bottom,  #009b21 0%,#007719 50%,#009b21 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#009b21', endColorstr='#009b21',GradientType=0 ); /* IE6-9 */
+}
+			
+			
+				/* MailChimp Form Embed Code - Slim - 08/17/2011 */
+				#mc_embed_signup form {display:block; position:relative; text-align:left; padding:10px 0 10px 3%}
+				#mc_embed_signup h2 {font-weight:bold; padding:0; margin:15px 0; font-size:1.4em;}
+				#mc_embed_signup input {border:1px solid #999; -webkit-appearance:none;}
+				#mc_embed_signup input[type=checkbox]{-webkit-appearance:checkbox;}
+				#mc_embed_signup input[type=radio]{-webkit-appearance:radio;}
+				#mc_embed_signup input:focus {border-color:#333;}
+				#mc_embed_signup .button {clear:both; background-color: #aaa; border: 0 none; border-radius:4px; color: #FFFFFF; cursor: pointer; display: inline-block; font-size:15px; font-weight: bold; height: 32px; line-height: 32px; margin: 0 5px 10px 0; padding:0; text-align: center; text-decoration: none; vertical-align: top; white-space: nowrap; width: auto;}
+				#mc_embed_signup .button:hover {background-color:#777;}
+				#mc_embed_signup .small-meta {font-size: 11px;}
+				#mc_embed_signup .nowrap {white-space:nowrap;}     
+				#mc_embed_signup .clear {clear:none; display:inline;}
+
+				#mc_embed_signup h3 { color: #008000; display:block; font-size:19px; padding-bottom:10px; font-weight:bold; margin: 45px 0 6px;}
+				#mc_embed_signup .explain {
+					color: #808080;
+					width: 780px;
+					margin: 0 0 18px;
+				}
+				#mc_embed_signup label {
+					color: #000000;
+					display: block;
+					font-size: 15px;
+					font-weight: bold;
+					padding-bottom: 10px;
+				}
+				#mc_embed_signup input.email {display:block; padding:8px 0; margin:0 4% 10px 0; text-indent:5px; width:58%; min-width:130px;}
+
+				#mc_embed_signup div#mce-responses {float:left; top:-1.4em; padding:0em .5em 0em .5em; overflow:hidden; width:90%;margin: 0 5%; clear: both;}
+				#mc_embed_signup div.response {margin:1em 0; padding:1em .5em .5em 0; font-weight:bold; float:left; top:-1.5em; z-index:1; width:80%;}
+				#mc_embed_signup #mce-error-response {display:none;}
+				#mc_embed_signup #mce-success-response {color:#529214; display:none;}
+				#mc_embed_signup label.error {display:block; float:none; width:auto; margin-left:1.05em; text-align:left; padding:.5em 0;}		
+				#mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+					#mc_embed_signup{    
+							background-color: lavender;
+							border: 1px solid slategray;
+							clear: left;
+							color: #008000;
+							font: 14px Helvetica,Arial,sans-serif;
+							margin-top: 10px;
+							margin-bottom: 0px;
+							/* max-width: 800px; */
+							padding: 5px 12px 0px;
+				}
+				#mc_embed_signup form{padding: 10px}
+
+				#mc_embed_signup .special-offer {
+					border-bottom: 1px solid slategray;
+					color: #fff;
+					font-size: 16px;
+					font-weight: bold;
+					margin: 0;
+					padding: 10px 13px;
+					text-transform: uppercase;
+					left: -12px;
+					position: absolute;
+					right: -12px;
+					top: -5px;					
+				}
+				#mc_embed_signup .button {
+				  background: #5dd934;
+				  background-image: -webkit-linear-gradient(top, #5dd934, #549e18);
+				  background-image: -moz-linear-gradient(top, #5dd934, #549e18);
+				  background-image: -ms-linear-gradient(top, #5dd934, #549e18);
+				  background-image: -o-linear-gradient(top, #5dd934, #549e18);
+				  background-image: linear-gradient(to bottom, #5dd934, #549e18);
+				  -webkit-border-radius: 5;
+				  -moz-border-radius: 5;
+				  border-radius: 5px;
+				  font-family: Arial;
+				  color: #ffffff;
+				  font-size: 20px;
+				  padding: 10px 20px 10px 20px;
+				  line-height: 1.5;
+				  height: auto;
+				  margin-top: 7px;
+				  text-decoration: none;
+				}
+
+				#mc_embed_signup .button:hover {
+				  background: #65e831;
+				  background-image: -webkit-linear-gradient(top, #65e831, #5dd934);
+				  background-image: -moz-linear-gradient(top, #65e831, #5dd934);
+				  background-image: -ms-linear-gradient(top, #65e831, #5dd934);
+				  background-image: -o-linear-gradient(top, #65e831, #5dd934);
+				  background-image: linear-gradient(to bottom, #65e831, #5dd934);
+				  text-decoration: none;
+				}
+				#signup_wrapper {
+					/* max-width: 800px; */
+					margin-bottom: 20px;
+				}
+				#signup_wrapper .u_to_p
+				{
+					font-size: 10px;
+					margin: 0 0 30px;
+					padding: 2px 0 0 3px;				
+				}
+				#signup_wrapper .respect
+				{
+					color: gray;
+					font-style: italic;
+					font-weight: bold;
+					padding-left: 5px;
+				}
+			</style>				
+			<div id="signup_wrapper">
+				<div id="mc_embed_signup">
+					<form action="http://illuminatikarate.us2.list-manage1.com/subscribe/post?u=403e206455845b3b4bd0c08dc&amp;id=3e22ddb309" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+						<p class="special-offer green_bg">Special Offer: Get $30 OFF WP Social Pro</p>
+						<h3><?php _e("Subscribe to our newsletter, and save $30 on any version of WP Social Pro!", $this->textdomain); ?></h3>
+						<p class="explain"><?php _e("Once you've confirmed your email address, you'll receive a coupon code for $30 off any version of WP Social Pro. After that, you'll receive around one email from us each month, jam-packed with tips, tricks, and special offers for getting more out of WordPress.", $this->textdomain); ?></p>
+						<label for="mce-EMAIL">Your Email:</label>
+						<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
+						<!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+						<div style="position: absolute; left: -5000px;"><input type="text" name="b_403e206455845b3b4bd0c08dc_6ad78db648" tabindex="-1" value=""></div>
+						<div class="clear"><input type="submit" value="Subscribe Now" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+						<p class="respect"><em>We respect your privacy.</em></p>
+					</form>
+				</div>
+				<p class="u_to_p"><a href="http://goldplugins.com/our-plugins/wp-social-pro/#buy_now"><?php _e("Upgrade to WP Social Pro now</a> to remove banners like this one.", $this->textdomain); ?></p>
+			</div>
+		<?php
+	} // end output_newsletter_signup_form function
+	
+	function output_upgrade_teaser()
+	{
+		?>
+		<style>
+		#upgrade_teaser {
+		    border: 1px solid gray;
+			padding-top: 50px;
+			position: relative;
+			margin-top: 30px;
+		}
+		#upgrade_teaser h2
+		{
+			color: white;
+			font-size: 18px;
+			left: 0;
+			padding: 10px 12px;
+			position: absolute;
+			right: 0;
+			top: 0;
+		}
+		#upgrade_teaser h2 span {
+			font-weight: bold;
+		}
+		#upgrade_teaser p.up
+		{
+			display: block;
+			font-size: 16px;
+			margin-bottom: 18px;		
+		}
+		#upgrade_teaser ul
+		{
+			list-style: disc outside none;
+			padding-bottom: 2px;
+			padding-left: 30px;		
+		}
+		#upgrade_teaser .button
+		{
+			background: #6db3f2; /* Old browsers */
+			background: -moz-linear-gradient(top,  #6db3f2 0%, #1e69de 100%); /* FF3.6+ */
+			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#6db3f2), color-stop(100%,#1e69de)); /* Chrome,Safari4+ */
+			background: -webkit-linear-gradient(top,  #6db3f2 0%,#1e69de 100%); /* Chrome10+,Safari5.1+ */
+			background: -o-linear-gradient(top,  #6db3f2 0%,#1e69de 100%); /* Opera 11.10+ */
+			background: -ms-linear-gradient(top,  #6db3f2 0%,#1e69de 100%); /* IE10+ */
+			background: linear-gradient(to bottom,  #6db3f2 0%,#1e69de 100%); /* W3C */
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6db3f2', endColorstr='#1e69de',GradientType=0 ); /* IE6-9 */
+			-webkit-border-radius: 5;
+			-moz-border-radius: 5;
+			border-radius: 5px;
+			font-family: Arial;
+			color: #ffffff;
+			font-size: 30px;
+			font-weight: bold;
+			padding: 10px 20px 10px 20px;
+			line-height: 1.5;
+			height: auto;
+			margin-top: 7px;
+			margin-bottom: 17px;
+			text-decoration: none;
+			text-shadow: 0 0 3px darkblue;
+			border: 3px solid #289AFD;
+			box-shadow: 0 2px 3px cadetblue;
+		}
+		</style>
+		<div class="updated" id="upgrade_teaser">
+			<h2 class="green_bg"><?php _e('Want More Features? Upgrade to WP Social Pro'); ?></h2>
+			<p class="up"><a href="http://goldplugins.com/our-plugins/wp-social-pro/"><?php _e('Upgrade to WP Social Pro now and get tons of new features and customization options. Click here!'); ?></a> </p>
+			<a href="http://goldplugins.com/our-plugins/wp-social-pro/?utm_source=plugin_dash" target="_blank" title="<?php _e('Learn More About WP Social Pro');?>"><img src="<?php echo plugins_url('/img/wp_social_pro_banner.png', __FILE__); ?>" alt="WP Social Pro" /><p class="description"><?php _e('Click Here To Learn About WP Social Pro');?></p></a>
+			<h3><?php _e('Pro Features Include:');?></h3>
+			<ul>
+				<li><strong><?php _e('Unbranded Admin screens:</strong> Remove all IK FB branding from your Wordpress admin.');?></li>
+				<li><strong><?php _e('Hide non-page-owner posts from your feed:</strong> With this option, your feed will only show the posts from your own account.');?></li>
+				<li><strong><?php _e("Custom HTML Output:</strong> Use any HTML tags you want for the feed. You'll be able to specify a custom HTML template for your feed.");?></li>
+				<li><strong><?php _e("Hand Crafted Themes:</strong> Use any of our hand crafted themes to style your output!  Our Support Staff will also help you customize your CSS or styles, too!");?></li>
+				<li><strong><?php _e("Fanatical Support:</strong> We're here to help!  Purchase WP Social Pro and receive prompt, responsive, and professional support.");?></li>
+			</ul>
+				
+			<p><?php _e('And more to come! WP Social Pro plugin owners get new updates automatically by email. New features land in the Pro version first, so be sure to upgrade today.');?></p>
+			<div style="max-width: 1000px; text-align: center; padding: 25px 0 20px;"><a class="button" href="http://goldplugins.com/our-plugins/wp-social-pro/?utm_source=plugin_dash" target="_blank" title="<?php _e('Upgrade To WP Social Pro');?>"><?php _e('Upgrade Now');?></a></div>
 						
-						$ik_social_pro_options->output_settings();
-					break;
-					}//end switch
-					
-					//don't output the save button on the status screen
-					if($tab != 'plugin_status'):
-				?>			
-					<p class="submit">
-						<input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
-					</p>		
-				<?php
-					endif;
-				?>
-				<?php if($tab != 'plugin_status'): ?></form><?php endif; ?>
-				<?php
-					if(!is_valid_key(get_option('ik_fb_pro_key'))):					
-				?>
-					<div class="updated" id="message">
-						<h2><?php _e('Want More Features?'); ?></h2>
-						<p><a href="http://goldplugins.com/our-plugins/wp-social-pro/"><?php _e('Upgrade to WP Social Pro now;'); ?></a><?php _e(' and get tons of new features and settings.'); ?> </p>
-						<h3><?php _e('Pro Features Include:');?></h3>
-						<ul>
-							<li><strong><?php _e('Unbranded Admin screens:</strong> Remove all IK FB branding from your Wordpress admin.');?></li>
-							<li><strong><?php _e('Hide non-page-owner posts from your feed:</strong> With this option, your feed will only show the posts from your own account.');?></li>
-							<li><strong><?php _e("Custom HTML Output:</strong> Use any HTML tags you want for the feed. You'll be able to specify a custom HTML template for your feed.");?></li>
-							<li><strong><?php _e("Hand Crafted Themes:</strong> Use any of our hand crafted themes to style your output!  Our Support Staff will also help you customize your CSS or styles, too!");?></li>
-							<li><strong><?php _e("Fanatical Support:</strong> We're here to help!  Purchase WP Social Pro and receive prompt, responsive, and professional support.");?></li>
-						</ul>
-							
-						<p><?php _e('More to come! WP Social Pro plugin owners get new updates automatically by email. New features land in the Pro version first, so be sure to upgrade today.');?></p>
-									
-						<a href="http://goldplugins.com/our-plugins/wp-social-pro/" target="_blank" title="<?php _e('Learn More About WP Social Pro');?>"><img src="<?php echo plugins_url('/img/ik_social_pro.jpg', __FILE__); ?>" alt="WP Social Pro" /><p class="description"><?php _e('Click Here To Learn About WP Social Pro');?></p></a>
-					</div>
-				<?php
-					endif;
-				?>
-	</div>
-	<?php } // end settings_page function
+		</div>
+		<?php	
+	}
+		
 	
 } // end class
 ?>
