@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.7.1
+Version: 2.7.2
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -1062,29 +1062,64 @@ class ikFacebook
 				$limit = 25;
 			}
 			
+			// Since we'll need to throw out some posts, we will query Facebook for 
+			//  the max possible # of posts and filter down to $limit from there
+			$fb_post_limit = 250; // TODO: move to a constant
+			
 			//handle events
 			if($content_type == "events") {
-				$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/events?summary=1&limit={$limit}&{$this->authToken}", true);//the feed data
+				$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/events?summary=1&limit={$fb_post_limit}&{$this->authToken}", true);//the feed data
 			} else {
 				//if showing everything on the feed (3rd party and page owner)
-				$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/feed?summary=1&limit={$limit}&{$this->authToken}", true);//the feed data
+				$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/feed?summary=1&limit={$fb_post_limit}&{$this->authToken}", true);//the feed data
 				//if showing only page owner posts
-				if(get_option('ik_fb_only_show_page_owner') && is_valid_key(get_option('ik_fb_pro_key'))){					
+				if(get_option('ik_fb_only_show_page_owner') && is_valid_key(get_option('ik_fb_pro_key'))){
 					//only load page owner's posts
-					$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/posts?{$this->authToken}", true);//the feed data
+					$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/posts?limit={$fb_post_limit}&{$this->authToken}", true);//the feed data
 				}
-			}	
+			}
 
 			$page_data = $this->fetchUrl("https://graph.facebook.com/{$profile_id}?summary=1&{$this->authToken}", true);//the page data
-			if(isset($feed->data)){//check to see if feed data is set				
-				$retData['feed'] = $feed->data;
+			if(isset($feed->data)){ //check to see if feed data is set				
+				$retData['feed'] = $this->trim_feed($feed->data, $limit);				
 			}
-			if(isset($page_data)){//check to see if page data is set
+			if(isset($page_data)){ //check to see if page data is set
 				$retData['page_data'] = $page_data;
 			}
 		}
-		
 		return $retData;
+	}
+	
+	function trim_feed($feed_items, $limit)
+	{
+		$valid_items = array();
+		
+		foreach ($feed_items as $item)
+		{
+			// see if this item is a "keeper"; if so, add it to our list
+			if ($this->feed_item_is_valid($item)) {
+				$valid_items[] = $item;
+			}
+			// if we have enough vaild items by now, stop the loop early
+			if (count($valid_items) >= $limit) {
+				break;
+			}		
+		}
+		// return whatever we have (somewhere between 0 and $limit items)
+		return $valid_items;
+	}
+	
+	function feed_item_is_valid($item)
+	{
+		// throw out anything that's a "story" (i.e., "John Doe liked a photo")
+		if (isset($item->story)) {
+			return false;
+		}
+		
+		//  TODO: add other validation rules based on the user's settings (i.e., "Hide Photos" or "Show Only Events")
+		
+		// passed all rules, so return true
+		return true;
 	}
 	
 	/* Styling Functions */
