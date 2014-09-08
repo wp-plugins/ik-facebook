@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.7.2
+Version: 2.7.3
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -785,6 +785,7 @@ class ikFacebook
 	
 	function ikfb_build_photo($item,$replace="",$image_html,$description_html,$caption_html,$use_thumb,$width,$height){
 		$output = '';
+		$shortened = false;
 	
 		$page_id = $item->from->id;
 	
@@ -937,6 +938,7 @@ class ikFacebook
 	
 	function ikfb_build_message($item,$replace="",$message_html){
 		global $ik_social_pro;
+		$shortened = false;		
 	
 		//add avatar for pro users
 		if(is_valid_key(get_option('ik_fb_pro_key'))){		
@@ -1070,12 +1072,14 @@ class ikFacebook
 			if($content_type == "events") {
 				$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/events?summary=1&limit={$fb_post_limit}&{$this->authToken}", true);//the feed data
 			} else {
-				//if showing everything on the feed (3rd party and page owner)
-				$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/feed?summary=1&limit={$fb_post_limit}&{$this->authToken}", true);//the feed data
 				//if showing only page owner posts
 				if(get_option('ik_fb_only_show_page_owner') && is_valid_key(get_option('ik_fb_pro_key'))){
 					//only load page owner's posts
+					$fb_post_limit = 100; // there seems to be a bug with the Graph API, where we need to limit to 100 here (instead of the published limit of 250)
 					$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/posts?limit={$fb_post_limit}&{$this->authToken}", true);//the feed data
+				} else {
+					//if showing everything on the feed (3rd party and page owner)
+					$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/feed?summary=1&limit={$fb_post_limit}&{$this->authToken}", true);//the feed data				
 				}
 			}
 
@@ -1100,11 +1104,13 @@ class ikFacebook
 			if ($this->feed_item_is_valid($item)) {
 				$valid_items[] = $item;
 			}
+			
 			// if we have enough vaild items by now, stop the loop early
 			if (count($valid_items) >= $limit) {
 				break;
 			}		
-		}
+		}			
+					
 		// return whatever we have (somewhere between 0 and $limit items)
 		return $valid_items;
 	}
