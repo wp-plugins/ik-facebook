@@ -1,0 +1,7 @@
+.app_id_callout {
+	background-color: pink;
+	border: 1px solid red;
+	box-shadow: -1px 1px 0px red;
+	padding: 5px 15px 5px;
+	margin: 20px 0;
+}

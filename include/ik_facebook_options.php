@@ -161,6 +161,14 @@ class ikFacebookOptions
 		}
 		?>
 			<div class="wrap">
+			
+			
+				<?php if ( get_option('ik_fb_app_id', '') == '' ): ?>
+				<div class="app_id_callout">
+					<p><?php _e("<strong>Important:</strong> You'll need to <a href=\"http://goldplugins.com/documentation/wp-social-pro-documentation/how-to-get-an-app-id-and-secret-key-from-facebook/\">create a free Facebook app</a> so that your plugin can access your feed. Don't worry - it only takes 2 minutes, and we've even got <a href=\"http://goldplugins.com/documentation/wp-social-pro-documentation/how-to-get-an-app-id-and-secret-key-from-facebook/\">a video tutorial</a>.");?></p>
+				</div>
+				<?php endif; ?>
+				
 				<h2><?php echo $title; ?></h2>		
 				
 				<?php if(!is_valid_key(get_option('ik_fb_pro_key') )): ?>
@@ -202,13 +210,18 @@ class ikFacebookOptions
 		settings_fields( 'ik-fb-config-settings-group' );
 		?>
 			<h3><?php _e("Configuration Options");?></h3>
-			<p><?php _e("The below options are used to configure your plugin to interact with your Facebook Page.");?></p>
-			
+			<p><?php _e("These options tell the plugin how to access your Facebook Page.");?></p>
+			<?php 
+			$needs_app_id = (get_option('ik_fb_app_id', '') == '');
+			if ( needs_app_id ):
+			?>
+			<p><?php _e("<strong>Important:</strong> You'll need to <a href=\"http://goldplugins.com/documentation/wp-social-pro-documentation/how-to-get-an-app-id-and-secret-key-from-facebook/\">create a free Facebook app</a> so that your plugin can access your feed. Don't worry - it only takes 2 minutes, and we've even got <a href=\"http://goldplugins.com/documentation/wp-social-pro-documentation/how-to-get-an-app-id-and-secret-key-from-facebook/\">a video explaining the process</a>.");?></p>
+			<?php endif; ?>
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row"><label for="ik_fb_page_id"><?php _e("Page ID");?></label></th>
 					<td><input type="text" name="ik_fb_page_id" id="ik_fb_page_id" value="<?php echo get_option('ik_fb_page_id'); ?>"  style="width: 250px" />
-					<p class="description"><?php _e("This is your Username or Page ID.  For example, ours is IlluminatiKarate (the end of our Facebook Page URL), but some people's maybe an Integer (such as 199789123).  It depends on if you have a username.");?></p>
+					<p class="description"><?php _e("Your Facebook Username or Page ID. This can be a username (like IlluminatiKarate) or a number (like 189090822).<br />Tip: You can find it by visiting your Facebook profile and copying the entire URL into the box above.");?></p>
 					</td>
 				</tr>
 			</table>
@@ -217,7 +230,7 @@ class ikFacebookOptions
 				<tr valign="top">
 					<th scope="row"><label for="ik_fb_app_id"><?php _e("Facebook App ID");?></label></th>
 					<td><input type="text" name="ik_fb_app_id" id="ik_fb_app_id" value="<?php echo get_option('ik_fb_app_id'); ?>" style="width: 250px" />
-					<p class="description"><?php _e('This is the App ID you acquired when you <a href="http://goldplugins.com/documentation/wp-social-pro-documentation/how-to-get-an-app-id-and-secret-key-from-facebook/" target="_blank" title="How To Get An App ID and Secret Key From Facebook">setup your Facebook app</a>.');?></p></td>
+					<p class="description <?php echo ($needs_app_id ? 'app_id_callout' : '');?>"><?php _e('This is the App ID you acquired when you <a href="http://goldplugins.com/documentation/wp-social-pro-documentation/how-to-get-an-app-id-and-secret-key-from-facebook/" target="_blank" title="How To Get An App ID and Secret Key From Facebook">setup your Facebook app</a>.');?></p></td>
 				</tr>
 			</table>
 			
@@ -225,7 +238,7 @@ class ikFacebookOptions
 				<tr valign="top">
 					<th scope="row"><label for="ik_fb_secret_key"><?php _e("Facebook Secret Key");?></label></th>
 					<td><input type="text" name="ik_fb_secret_key" id="ik_fb_secret_key" value="<?php echo get_option('ik_fb_secret_key'); ?>" style="width: 250px" />
-					<p class="description"><?php _e('This is the App Secret you acquired when you <a href="http://goldplugins.com/documentation/wp-social-pro-documentation/how-to-get-an-app-id-and-secret-key-from-facebook/" target="_blank" title="How To Get An App ID and Secret Key From Facebook">setup your Facebook app</a>.');?></p></td>
+					<p class="description <?php echo ($needs_app_id ? 'app_id_callout' : '');?>"><?php _e('This is the App Secret you acquired when you <a href="http://goldplugins.com/documentation/wp-social-pro-documentation/how-to-get-an-app-id-and-secret-key-from-facebook/" target="_blank" title="How To Get An App ID and Secret Key From Facebook">setup your Facebook app</a>.');?></p></td>
 				</tr>
 			</table>	
 		<?php
@@ -257,7 +270,7 @@ class ikFacebookOptions
 		<?php settings_fields( 'ik-fb-style-settings-group' ); ?>
 			
 			<h3><?php _e('Style Options');?></h3>
-			<p><?php _e('The below options are used to modify, or fully change, the style of your Facebook Feed displayed on your website.');?></p>
+			<p><?php _e('These options control the style of the Facebook Feed displayed on your website. You can change fonts, colors, image sizes, and even add your own custom CSS.');?></p>
 		
 			<table class="form-table">
 				<tr valign="top">
@@ -493,7 +506,7 @@ class ikFacebookOptions
 		<?php settings_fields( 'ik-fb-display-settings-group' ); ?>
 			
 			<h3><?php _e('Display Options');?></h3>
-			<p><?php _e('The below options are used to control the type and amount of content that is displayed in your Facebook Feed.');?></p>
+			<p><?php _e('These options control the type and amount of content that is displayed in your Facebook Feed.');?></p>
 			
 			<table class="form-table">
 				<tr valign="top">
@@ -638,7 +651,7 @@ class ikFacebookOptions
 			?>	
 				<style>p{font-size:14px;}td iframe{height:45px;}ol{padding-top:10px;}em{font-size:12px;}.ik_fb_error{color:red;}</style>
 				<h3><?php _e('Plugin Status &amp; Help');?></h3>
-				<p><?php _e('This page is used to determine if your plugin and page are setup correctly.  Use the below items to help troubleshoot any issues you may have and to see example shortcodes.');?></p>
+				<p><?php _e('This page can help you determine whether your plugin and Facebook page are setup correctly. Use the tips and examples to help troubleshoot any issues you may have.');?></p>
 			<?php
 				//example shortcodes
 				
