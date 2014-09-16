@@ -83,6 +83,11 @@ class ikFacebookOptions
 		register_setting( 'ik-fb-config-settings-group', 'ik_fb_pro_url' );
 		register_setting( 'ik-fb-config-settings-group', 'ik_fb_pro_email' );
 		
+		// register pro config settings		
+		register_setting( 'ik-fb-config-settings-group', 'wp_social_pro_registered_email' );
+		register_setting( 'ik-fb-config-settings-group', 'wp_social_registered_url' );
+		register_setting( 'ik-fb-config-settings-group', 'wp_social_pro_registered_key' );		
+		
 		//register our style settings
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_custom_css' );
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_fix_feed_image_width' );
@@ -180,7 +185,7 @@ class ikFacebookOptions
 				<?php endif; ?>	
 	
 				<?php if($wrap_with_form): ?>
-				<form method="post" action="options.php">
+				<form method="post" action="options.php" class="options_form">
 				<?php endif; ?>
 		<?php
 	}
@@ -213,7 +218,7 @@ class ikFacebookOptions
 			<p><?php _e("These options tell the plugin how to access your Facebook Page.");?></p>
 			<?php 
 			$needs_app_id = (get_option('ik_fb_app_id', '') == '');
-			if ( needs_app_id ):
+			if ( $needs_app_id ):
 			?>
 			<p><?php _e("<strong>Important:</strong> You'll need to <a href=\"http://goldplugins.com/documentation/wp-social-pro-documentation/how-to-get-an-app-id-and-secret-key-from-facebook/\">create a free Facebook app</a> so that your plugin can access your feed. Don't worry - it only takes 2 minutes, and we've even got <a href=\"http://goldplugins.com/documentation/wp-social-pro-documentation/how-to-get-an-app-id-and-secret-key-from-facebook/\">a video explaining the process</a>.");?></p>
 			<?php endif; ?>
@@ -241,7 +246,8 @@ class ikFacebookOptions
 					<p class="description <?php echo ($needs_app_id ? 'app_id_callout' : '');?>"><?php _e('This is the App Secret you acquired when you <a href="http://goldplugins.com/documentation/wp-social-pro-documentation/how-to-get-an-app-id-and-secret-key-from-facebook/" target="_blank" title="How To Get An App ID and Secret Key From Facebook">setup your Facebook app</a>.');?></p></td>
 				</tr>
 			</table>	
-		<?php
+		<?php		
+		include('registration_options.php');
 		$this->end_settings_page();		
 	}
 	
