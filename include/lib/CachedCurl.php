@@ -31,8 +31,9 @@ along with The IK Facebook Plugin.  If not, see <http://www.gnu.org/licenses/>.
 			// check for a cached result
 			$result = get_transient($cache_key);
 			
-			if ($result === false) {				
-				$result = wp_remote_get($url);
+			if ($result === false) {	
+				$args = array('timeout' => 10);
+				$result = wp_remote_get($url, $args);
 				
 				if(is_wp_error($result)){
 					$result = $result->get_error_message();
