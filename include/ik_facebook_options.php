@@ -19,12 +19,16 @@ along with The IK Facebook Plugin.  If not, see <http://www.gnu.org/licenses/>.
 class ikFacebookOptions
 {
 	var $textdomain = '';
+	var $root = false;
 
-	function __construct(){
+	function __construct($root = false){
 		//may be running in non WP mode (for example from a notification)
 		if(function_exists('add_action')){
 			//add a menu item
 			add_action('admin_menu', array($this, 'add_admin_menu_item'));		
+		}
+		if ($root) {
+			$this->root = $root;
 		}
 	}
 	
@@ -153,7 +157,7 @@ class ikFacebookOptions
 		return $input;
 	}
 
-	function start_settings_page($wrap_with_form = true)
+	function start_settings_page($wrap_with_form = true, $show_newsletter_form = true, $before_title = '' )
 	{
 		global $pagenow;
 		
@@ -165,9 +169,9 @@ class ikFacebookOptions
 			$message = __("IK Facebook Plugin Settings Updated.", $this->textdomain);
 		}
 		?>
-			<div class="wrap">
+			<div class="wrap ikfb_settings">
 			
-			
+				<?php echo $before_title; ?>
 				<?php if ( get_option('ik_fb_app_id', '') == '' ): ?>
 				<div class="app_id_callout">
 					<p><?php _e("<strong>Important:</strong> You'll need to <a href=\"http://goldplugins.com/documentation/wp-social-pro-documentation/how-to-get-an-app-id-and-secret-key-from-facebook/\">create a free Facebook app</a> so that your plugin can access your feed. Don't worry - it only takes 2 minutes, and we've even got <a href=\"http://goldplugins.com/documentation/wp-social-pro-documentation/how-to-get-an-app-id-and-secret-key-from-facebook/\">a video tutorial</a>.");?></p>
@@ -176,7 +180,7 @@ class ikFacebookOptions
 				
 				<h2><?php echo $title; ?></h2>		
 				
-				<?php if(!is_valid_key(get_option('ik_fb_pro_key') )): ?>
+				<?php if( !is_valid_key(get_option('ik_fb_pro_key') ) && $show_newsletter_form ): ?>
 				<?php $this->output_newsletter_signup_form(); ?>
 				<?php endif; ?>
 			
@@ -211,7 +215,7 @@ class ikFacebookOptions
 	 */
 	function configuration_options_page()
 	{
-		$this->start_settings_page();
+		$this->start_settings_page(true, false);
 		settings_fields( 'ik-fb-config-settings-group' );
 		?>
 			<h3><?php _e("Configuration Options");?></h3>
@@ -224,7 +228,7 @@ class ikFacebookOptions
 			<?php endif; ?>
 			<table class="form-table">
 				<tr valign="top">
-					<th scope="row"><label for="ik_fb_page_id"><?php _e("Page ID");?></label></th>
+					<th scope="row"><label for="ik_fb_page_id"><?php _e("Facebook Page ID");?></label></th>
 					<td><input type="text" name="ik_fb_page_id" id="ik_fb_page_id" value="<?php echo get_option('ik_fb_page_id'); ?>"  style="width: 250px" />
 					<p class="description"><?php _e("Your Facebook Username or Page ID. This can be a username (like IlluminatiKarate) or a number (like 189090822).<br />Tip: You can find it by visiting your Facebook profile and copying the entire URL into the box above.");?></p>
 					</td>
@@ -653,46 +657,190 @@ class ikFacebookOptions
 	 */
 	function plugin_status_page()
 	{
-		$this->start_settings_page(false);
-			?>	
-				<style>p{font-size:14px;}td iframe{height:45px;}ol{padding-top:10px;}em{font-size:12px;}.ik_fb_error{color:red;}</style>
-				<h3><?php _e('Plugin Status &amp; Help');?></h3>
-				<p><?php _e('This page can help you determine whether your plugin and Facebook page are setup correctly. Use the tips and examples to help troubleshoot any issues you may have.');?></p>
-			<?php
-				//example shortcodes
+		$diagnostics_results = $this->run_diagnostics();
+		$graph_api_warning = '';
+		
+		// if their API Key and Secret work, but we can't load their profile, 
+		// let the user know that they need to make their profile public
+		if ($diagnostics_results['loaded_demo_profile'] && !$diagnostics_results['loaded_own_profile']) {
+			$graph_api_warning = '<p class="alert_important"><strong>Your Facebook page (' . get_option("ik_fb_page_id") .') cannot be accessed via the Graph API</strong>Please verify that your Facebook page is Public, that it is not a Personal account, and that it has no Country, Age or other restrictions enabled.</p>';
+		}
+
+		// start the settings page, outputting a notice about the Graph API if needed
+		$this->start_settings_page(false, false, $graph_api_warning);
+			
+		// output the Status Widget with the results of our diagnostics
+		echo '<h3>';
+		_e('Plugin Status');
+		echo'</h3>';
+		echo '<p>';
+		_e('We\'re running some quick tests, to help you troubleshoot any issues you might be running into while setting up your Facebook feed.');
+		echo '</p>';
+		$this->output_status_box($diagnostics_results);
 				
-				_e("<h4>Example Shortcodes</h4>");
-				_e('<p>To output the custom Facebook Feed, place <code>[ik_fb_feed]</code> in the body of a post.  To further customize the feed via the shortcode, available attributes include: <code>colorscheme="light" use_thumb="true" width="250" num_posts="5" id="123456789"</code>.</p>');
-				_e('<p><em>Valid choices for "colorscheme" are "light" and "dark". If "use_thumb" is set to true, the value of "width" will be ignored.  If "use_thumb" or "width" are not set, the values from the Options page will be used.  If id is not set, the shortcode will use the Page ID from your Settings page.</em></p>');
-				_e('<p>To output the Like Button, place <code>[ik_fb_like_button url="http://www.facebook.com"]</code> in the body of a post.  Valid attributes include: <code>url="" height="" colorscheme="light"</code>.</p>');
-				_e('<p><em>Valid options for colorscheme are "light" and "dark".  Valid values for height are integers.  URL must be a valid website URL.</em></p>');
-				_e('<p>To output a Photo Gallery, place <code>[ik_fb_gallery id="539627829386059" num_photos="25" size="130x73" title="Hello World!"]</code> in the body of a post.</p>');
-				_e('<p><em>If no size is passed, it will default to 320 x 180.  Size options are 2048x1152, 960x540, 720x405, 600x337, 480x270, 320x180, and 130x73.  If num_photos is not passed, the Gallery will default to the amount set on the Dashboard - if no amount is set there, it will display up to 25 photos.  The ID number is found by looking at the URL of the link to the Album on Facebook - you can read more on our FAQs <a href="http://goldplugins.com/documentation/wp-social-pro-documentation/frequently-asked-questions/">here</a>.</em></p>');
-								
-				_e("<h4>Configuration Settings</h4>");
-				_e("<p>If you need to contact us for help, please be sure to include these settings in your message, as well as a functional description of how you have the feed implemented on your site.</p>");
-				echo "<table><tbody>";
-				_e("<tr><td align='right'>Page ID:</td><td>" . get_option("ik_fb_page_id") . "</td></tr>");
-				_e("<tr><td align='right'>App ID:</td><td>" . get_option("ik_fb_app_id") . "</td></tr>");
-				_e("<tr><td align='right'>Secret Key:</td><td>" . get_option("ik_fb_secret_key") . "</td></tr>");
-				echo "</tbody></table>";
+		// show some example shortcodes				
+		_e("<h3>Example Shortcodes</h3>");
+		_e('<p>To output the custom Facebook Feed, place <code>[ik_fb_feed]</code> in the body of a post.  To further customize the feed via the shortcode, available attributes include: <code>colorscheme="light" use_thumb="true" width="250" num_posts="5" id="123456789"</code>.</p>');
+		_e('<p><em>Valid choices for "colorscheme" are "light" and "dark". If "use_thumb" is set to true, the value of "width" will be ignored.  If "use_thumb" or "width" are not set, the values from the Options page will be used.  If id is not set, the shortcode will use the Page ID from your Settings page.</em></p>');
+		_e('<p>To output the Like Button, place <code>[ik_fb_like_button url="http://www.facebook.com"]</code> in the body of a post.  Valid attributes include: <code>url="" height="" colorscheme="light"</code>.</p>');
+		_e('<p><em>Valid options for colorscheme are "light" and "dark".  Valid values for height are integers.  URL must be a valid website URL.</em></p>');
+		_e('<p>To output a Photo Gallery, place <code>[ik_fb_gallery id="539627829386059" num_photos="25" size="130x73" title="Hello World!"]</code> in the body of a post.</p>');
+		_e('<p><em>If no size is passed, it will default to 320 x 180.  Size options are 2048x1152, 960x540, 720x405, 600x337, 480x270, 320x180, and 130x73.  If num_photos is not passed, the Gallery will default to the amount set on the Dashboard - if no amount is set there, it will display up to 25 photos.  The ID number is found by looking at the URL of the link to the Album on Facebook - you can read more on our FAQs <a href="http://goldplugins.com/documentation/wp-social-pro-documentation/frequently-asked-questions/">here</a>.</em></p>');
+
+		// output the current configuration settings (e.g., Page ID, API Key, and Secret)
+		_e("<h3>Configuration Settings</h3>");
+		_e("<p>If you need to contact us for help, please be sure to include these settings in your message, as well as a functional description of how you have the feed implemented on your site.</p>");
+		echo "<table><tbody>";
+		_e("<tr><td align='right'>Page ID:</td><td>" . get_option("ik_fb_page_id") . "</td></tr>");
+		_e("<tr><td align='right'>App ID:</td><td>" . get_option("ik_fb_app_id") . "</td></tr>");
+		_e("<tr><td align='right'>Secret Key:</td><td>" . get_option("ik_fb_secret_key") . "</td></tr>");
+		echo "</tbody></table>";
 				
-				_e("<h3>Plugin Settings Test</h3>");
-				_e("<p>Use the below feeds to determine if your settings are correct.</p>");
-				_e("<strong>How to use:</strong>");
-				echo "<ol>";
-				_e("<li>If both feeds are showing up, everything is working!  Hooray!</li>");
-				_e("<li>If neither feed is showing up then your App ID or Secret Key is incorrect.  Please verify you have entered the correct information.</li>");
-				_e("<li>If our feed is showing up, but your feed is not, then either:");
-					_e("<ol><li>Your Page ID is Incorrect.  Please verify you have entered the correct information.</li>");
-					_e("<li>Your Page is not configured to be publically viewable.  Please verify that you are using a Facebook Page, not a Personal Profile, and that the page has no Country, Age, or other restrictions placed on it.</li></ol></li></ol>");
-				
-				echo "<table><tbody>";
-				_e("<tr><td><h4>Our Feed</h4></td><td><h4>Your Feed</h4></td></tr>");
-				echo "<tr><td valign='top'>" . do_shortcode('[ik_fb_feed show_errors="1" id="IlluminatiKarate"]') . "</td><td valign='top'>" . do_shortcode('[ik_fb_feed show_errors="1"]') . "</td></tr>";
-				echo "</tbody></table>";
+		// show a message about where they can get help from a human
+		_e("<h3>Get Help From A Human</h3>");
+		_e("<p>Still having trouble? Sometimes talking to another person is the best way to get moving again.</p>");
+		_e("<p>There are two great ways to get help from another human being:</p>");
+		echo "<ol>";
+		_e('<li><a href="https://wordpress.org/support/plugin/ik-facebook">Leave a message on the WordPress Support Forums</a>, and see if another member of the community can help.</li>');
+		if (!is_valid_key()) {
+			_e('<li><a href="http://goldplugins.com/our-plugins/wp-social-pro/?utm_source=help_from_a_human">Upgrade to WP Social Pro</a>, and get support directly from the developers.</li>');
+		} else {
+			_e('<li><a href="http://goldplugins.com/contact/">Contact Gold Plugins Support</a>. Please include the email address you used to purchase, and the address of this website.</li>');
+		}
+		echo "</ol>";
+		_e("<p>If nothing else works, you might also try taking a 15 minute break. You'd be surprised how well it can work!</p>");
+		
+		
 		$this->end_settings_page(false);		
 	}
+	
+	function run_diagnostics()
+	{
+		// required settings for Graph API		
+		$app_id = get_option('ik_fb_page_id', '');
+		$secret_key = get_option('ik_fb_page_id', '');
+		$page_id = get_option('ik_fb_page_id', '');
+		
+		// default all flags to false
+		$results = array( 'keys_present' => false,
+						  'keys_work' => false,
+						  'loaded_demo_profile' => false,
+						  'loaded_own_profile' => false,
+					);
+					
+		/* run tests! */
+		
+		// Test #1: make sure the keys are present
+		if ( empty($app_id) || empty($secret_key)  || empty($page_id) ) {
+			$results['keys_present'] = false;
+			return $results;
+		} else {
+			$results['keys_present'] = true;
+		}
+				  
+		// Test #2: See if we can load the demo profile
+		$demo_feed = $this->root->loadFacebook('IlluminatiKarate');		
+		if ( empty($demo_feed['feed']) ) {
+			$results['keys_work'] = false;
+			$results['loaded_demo_profile'] = false;
+			$results['loaded_own_profile'] = false;
+			return $results;
+		} else {
+			$results['keys_work'] = true;
+			$results['loaded_demo_profile'] = true;
+		}
+				  
+		// Test #3: See if we can load the owner's profile
+		$own_feed = $this->root->loadFacebook($page_id);		
+		if ( empty($own_feed['feed']) ) {
+			$results['loaded_own_profile'] = false;
+		} else {
+			$results['loaded_own_profile'] = true;
+		}
+				  
+		return $results;
+		
+	}
+	
+	/*
+	 * Outputs a plugin status box
+	 */
+	function output_status_box($diagnostics_results)
+	{		
+?>
+	
+	
+	<table class="table" id="plugin_status_table" cellpadding="0" cellspacing="0">
+		<tbody>
+			<!-- Page ID -->
+			<?php if ( $diagnostics_results['keys_present'] ): ?>
+			<tr class="success">
+				<td><img src="<?php echo plugins_url('/img/check-button.png', __FILE__); ?>" alt="SUCCESS" /></td>
+				<td>API Key and Secret Key Present</td>
+			</tr>
+			<?php else: ?>
+			<tr class="fail">
+				<td><img src="<?php echo plugins_url('/img/x-button.png', __FILE__); ?>" alt="FAIL" /></td>
+				<td>API Key and Secret Key Present</td>
+			</tr>
+			<?php endif; ?>
+			
+			<!-- Connected To Graph API -->
+			<?php if ( $diagnostics_results['keys_work'] ): ?>
+			<tr class="success">
+				<td><img src="<?php echo plugins_url('/img/check-button.png', __FILE__); ?>" alt="SUCCESS" /></td>
+				<td>Connected To Facebook Graph API</td>
+			</tr>
+			<?php else: ?>
+			<tr class="fail">
+				<td><img src="<?php echo plugins_url('/img/x-button.png', __FILE__); ?>" alt="FAIL" /></td>
+				<td>Connected To Facebook Graph API</td>
+			</tr>
+			<?php endif; ?>
+			
+			<!-- Load Their Page Data -->
+			<?php if ( $diagnostics_results['loaded_own_profile'] ): ?>
+			<tr class="success">
+				<td><img src="<?php echo plugins_url('/img/check-button.png', __FILE__); ?>" alt="FAIL" /></td>
+				<td>Loaded Your Profile</td>
+			</tr>			
+			<?php else: ?>
+			<tr class="fail">
+				<td><img src="<?php echo plugins_url('/img/x-button.png', __FILE__); ?>" alt="FAIL" /></td>
+				<td>Loaded Your Profile</td>
+			</tr>
+			<?php endif; ?>
+			
+			<!-- Load Their Page Data -->
+			<?php if ( $diagnostics_results['loaded_demo_profile'] ): ?>
+			<tr class="success">
+				<td><img src="<?php echo plugins_url('/img/check-button.png', __FILE__); ?>" alt="FAIL" /></td>
+				<td>Loaded Test Profile</td>
+			</tr>			
+			<?php else: ?>
+			<tr class="fail">
+				<td><img src="<?php echo plugins_url('/img/x-button.png', __FILE__); ?>" alt="FAIL" /></td>
+				<td>Loaded Test Profile</td>
+			</tr>
+			<?php endif; ?>
+			
+			<!-- PRO Version Activated -->
+			<?php if (is_valid_key()): ?>
+			<tr class="success">
+				<td><img src="<?php echo plugins_url('/img/check-button.png', __FILE__); ?>" alt="SUCCESS" /></td>
+				<td>PRO Features Activated</td>
+			</tr>
+			<?php else: ?>
+			<tr class="fail">
+				<td><img src="<?php echo plugins_url('/img/x-button.png', __FILE__); ?>" alt="FAIL" /></td>
+				<td>PRO Features Unlocked</td>
+			</tr>
+			<?php endif; ?>
+		</tbody>
+	</table>
+<?php	
+	}
+	
 	
 	/*
 	 * Outputs a Mailchimp signup form
@@ -701,128 +849,6 @@ class ikFacebookOptions
 	{
 ?>
 			<!-- Begin MailChimp Signup Form -->
-			<style type="text/css">
-			
-				/* signup box */
-.green_bg {				
-background: #009b21; /* Old browsers */
-background: -moz-linear-gradient(top,  #009b21 0%, #007719 50%, #009b21 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#009b21), color-stop(50%,#007719), color-stop(100%,#009b21)); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top,  #009b21 0%,#007719 50%,#009b21 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top,  #009b21 0%,#007719 50%,#009b21 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top,  #009b21 0%,#007719 50%,#009b21 100%); /* IE10+ */
-background: linear-gradient(to bottom,  #009b21 0%,#007719 50%,#009b21 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#009b21', endColorstr='#009b21',GradientType=0 ); /* IE6-9 */
-}
-			
-			
-				/* MailChimp Form Embed Code - Slim - 08/17/2011 */
-				#mc_embed_signup form {display:block; position:relative; text-align:left; padding:10px 0 10px 3%}
-				#mc_embed_signup h2 {font-weight:bold; padding:0; margin:15px 0; font-size:1.4em;}
-				#mc_embed_signup input {border:1px solid #999; -webkit-appearance:none;}
-				#mc_embed_signup input[type=checkbox]{-webkit-appearance:checkbox;}
-				#mc_embed_signup input[type=radio]{-webkit-appearance:radio;}
-				#mc_embed_signup input:focus {border-color:#333;}
-				#mc_embed_signup .button {clear:both; background-color: #aaa; border: 0 none; border-radius:4px; color: #FFFFFF; cursor: pointer; display: inline-block; font-size:15px; font-weight: bold; height: 32px; line-height: 32px; margin: 0 5px 10px 0; padding:0; text-align: center; text-decoration: none; vertical-align: top; white-space: nowrap; width: auto;}
-				#mc_embed_signup .button:hover {background-color:#777;}
-				#mc_embed_signup .small-meta {font-size: 11px;}
-				#mc_embed_signup .nowrap {white-space:nowrap;}     
-				#mc_embed_signup .clear {clear:none; display:inline;}
-
-				#mc_embed_signup h3 { color: #008000; display:block; font-size:19px; padding-bottom:10px; font-weight:bold; margin: 45px 0 6px;}
-				#mc_embed_signup .explain {
-					color: #808080;
-					width: 780px;
-					margin: 0 0 18px;
-				}
-				#mc_embed_signup label {
-					color: #000000;
-					display: block;
-					font-size: 15px;
-					font-weight: bold;
-					padding-bottom: 10px;
-				}
-				#mc_embed_signup input.email {display:block; padding:8px 0; margin:0 4% 10px 0; text-indent:5px; width:58%; min-width:130px;}
-
-				#mc_embed_signup div#mce-responses {float:left; top:-1.4em; padding:0em .5em 0em .5em; overflow:hidden; width:90%;margin: 0 5%; clear: both;}
-				#mc_embed_signup div.response {margin:1em 0; padding:1em .5em .5em 0; font-weight:bold; float:left; top:-1.5em; z-index:1; width:80%;}
-				#mc_embed_signup #mce-error-response {display:none;}
-				#mc_embed_signup #mce-success-response {color:#529214; display:none;}
-				#mc_embed_signup label.error {display:block; float:none; width:auto; margin-left:1.05em; text-align:left; padding:.5em 0;}		
-				#mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
-					#mc_embed_signup{    
-							background-color: lavender;
-							border: 1px solid slategray;
-							clear: left;
-							color: #008000;
-							font: 14px Helvetica,Arial,sans-serif;
-							margin-top: 10px;
-							margin-bottom: 0px;
-							/* max-width: 800px; */
-							padding: 5px 12px 0px;
-				}
-				#mc_embed_signup form{padding: 10px}
-
-				#mc_embed_signup .special-offer {
-					border-bottom: 1px solid slategray;
-					color: #fff;
-					font-size: 16px;
-					font-weight: bold;
-					margin: 0;
-					padding: 10px 13px;
-					text-transform: uppercase;
-					left: -12px;
-					position: absolute;
-					right: -12px;
-					top: -5px;					
-				}
-				#mc_embed_signup .button {
-				  background: #5dd934;
-				  background-image: -webkit-linear-gradient(top, #5dd934, #549e18);
-				  background-image: -moz-linear-gradient(top, #5dd934, #549e18);
-				  background-image: -ms-linear-gradient(top, #5dd934, #549e18);
-				  background-image: -o-linear-gradient(top, #5dd934, #549e18);
-				  background-image: linear-gradient(to bottom, #5dd934, #549e18);
-				  -webkit-border-radius: 5;
-				  -moz-border-radius: 5;
-				  border-radius: 5px;
-				  font-family: Arial;
-				  color: #ffffff;
-				  font-size: 20px;
-				  padding: 10px 20px 10px 20px;
-				  line-height: 1.5;
-				  height: auto;
-				  margin-top: 7px;
-				  text-decoration: none;
-				}
-
-				#mc_embed_signup .button:hover {
-				  background: #65e831;
-				  background-image: -webkit-linear-gradient(top, #65e831, #5dd934);
-				  background-image: -moz-linear-gradient(top, #65e831, #5dd934);
-				  background-image: -ms-linear-gradient(top, #65e831, #5dd934);
-				  background-image: -o-linear-gradient(top, #65e831, #5dd934);
-				  background-image: linear-gradient(to bottom, #65e831, #5dd934);
-				  text-decoration: none;
-				}
-				#signup_wrapper {
-					/* max-width: 800px; */
-					margin-bottom: 20px;
-				}
-				#signup_wrapper .u_to_p
-				{
-					font-size: 10px;
-					margin: 0 0 30px;
-					padding: 2px 0 0 3px;				
-				}
-				#signup_wrapper .respect
-				{
-					color: gray;
-					font-style: italic;
-					font-weight: bold;
-					padding-left: 5px;
-				}
-			</style>				
 			<div id="signup_wrapper">
 				<div id="mc_embed_signup">
 					<form action="http://illuminatikarate.us2.list-manage1.com/subscribe/post?u=403e206455845b3b4bd0c08dc&amp;id=3e22ddb309" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>

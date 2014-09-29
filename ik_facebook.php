@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.7.6
+Version: 2.7.7
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -28,7 +28,6 @@ include('include/ik_facebook_options.php');
 include('include/lib/CachedCurl.php');
 include('include/lib/lib.php');
 include('include/lib/ik_social_pro.php');
-$ik_fb_options = new ikFacebookOptions();
 
 //use this to track if css/powered by have been output
 global $ikfb_footer_css_output;
@@ -57,6 +56,8 @@ class ikFacebook
 		add_action('wp_footer', array($this, 'ik_fb_show_powered_by' ));
 		
 		add_action( 'admin_init', array($this, 'ikfb_admin_init') );
+		
+		$this->options = new ikFacebookOptions($this);		
 	}
 	
     function ikfb_admin_init() {

@@ -5,20 +5,7 @@
 <?php else: ?>
 <p class="plugin_is_not_registered">Your plugin has not been successfully registered and activated. <a href="http://goldplugins.com/our-plugins/wp-social-pro/?utm_source=api_key_reminder" target="_blank">Click here</a> to upgrade now!</p>
 <?php endif; ?>	
-<style type="text/css">
-.plugin_is_registered {
-    background-color: #90EE90;
-    font-weight: bold;
-    padding: 20px;
-    width: 860px;
-}
-.plugin_is_not_registered {
-	background-color: #FF8C00;
-    font-weight: bold;
-    padding: 20px;
-    min-width: 860px;
-}
-</style>
+
 <?php if(!wpsp_is_valid_multisite_key()): ?>
 <table class="form-table">
 	<tr valign="top">
