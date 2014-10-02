@@ -11,6 +11,8 @@ class ikSocialProOptions
 		register_setting( 'ik-fb-pro-display-settings-group', 'ik_fb_show_reply_counts' );
 		register_setting( 'ik-fb-pro-display-settings-group', 'ik_fb_show_likes' );
 		
+		register_setting( 'ik-fb-pro-event-settings-group', 'ik_fb_reverse_events' );
+		
 		register_setting( 'ik-fb-html-settings-group', 'ik_fb_feed_item_html' );
 		register_setting( 'ik-fb-html-settings-group', 'ik_fb_message_html' );
 		register_setting( 'ik-fb-html-settings-group', 'ik_fb_image_html' );
@@ -24,7 +26,7 @@ class ikSocialProOptions
 	//function to produce tabs on admin screen
 	function ikfb_admin_tabs( $current = 'display_options' ) {
 	
-		$tabs = array( 'display_options' => 'Display Options', 'html_options' => 'Custom HTML Options', 'branding_options' => 'Branding Options' );
+		$tabs = array( 'display_options' => 'Display Options', 'html_options' => 'Custom HTML Options', 'branding_options' => 'Branding Options', 'event_options' => 'Event Options' );
 		echo '<div id="icon-themes" class="icon32"><br></div>';
 		echo '<h2 class="nav-tab-wrapper">';
 			foreach( $tabs as $tab => $name ){
@@ -198,7 +200,30 @@ class ikSocialProOptions
 			
 			<?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?></div><?php endif; ?>
 			
-			<?php break;?>
+			<?php 
+				break;
+				case 'event_options' :	
+			?>
+			<?php settings_fields( 'ik-fb-pro-event-settings-group' ); ?>
+			
+			<?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?><div class="disabled"><?php endif; ?>
+			
+			<h3><?php _e('Event Options');?></h3>
+			<?php echo $this->pro_upgrade_link(); ?>
+			<table class="form-table">	
+			
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_reverse_events"><?php _e("Reverse Event Feed Order");?></label></th>
+					<td><input <?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?>disabled="disabled"<?php endif; ?>  type="checkbox" name="ik_fb_reverse_events" id="ik_fb_reverse_events" value="1" <?php if(get_option('ik_fb_reverse_events')){ ?> checked="CHECKED" <?php } ?>/>
+					<p class="description"><?php _e('If checked, the order of the events feed will be reversed.');?></p>
+					</td>
+				</tr>
+				
+			</table>
+			
+			<?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?></div><?php endif; ?>
+			
+			<?php break;?>?>
 		<?php }//end switch ?>
 	<?php } // end ik_fb_pro_settings function
 	

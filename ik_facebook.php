@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.7.7
+Version: 2.8
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -537,11 +537,15 @@ class ikFacebook
 	
 	public function build_event_feed_line_item_html($item)
 	{
+		global $ik_social_pro;
+		
 		$line_item = '';	
 		
-		//some event parsing				
-		$event_id = explode('/',$item->link);
-		$event_id = $event_id[4];
+		if(isset($item->link)){
+			//some event parsing				
+			$event_id = explode('/',$item->link);
+			$event_id = $event_id[4];
+		}
 		
 		if(get_option('ik_fb_show_only_events')){
 			$event_id = $item->id;
@@ -1088,7 +1092,12 @@ class ikFacebook
 
 			$page_data = $this->fetchUrl("https://graph.facebook.com/{$profile_id}?summary=1&{$this->authToken}", true);//the page data
 			if(isset($feed->data)){ //check to see if feed data is set				
-				$retData['feed'] = $this->trim_feed($feed->data, $limit);				
+				$retData['feed'] = $this->trim_feed($feed->data, $limit);
+
+				//reverse the order of the events feed, if the option is checked.
+				if(get_option('ik_fb_reverse_events', 0) && $content_type == "events" && is_valid_key(get_option('ik_fb_pro_key'))){
+					$retData['feed'] = array_reverse($retData['feed']);
+				}
 			}
 			if(isset($page_data)){ //check to see if page data is set
 				$retData['page_data'] = $page_data;

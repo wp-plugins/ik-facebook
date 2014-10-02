@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, facebook feed, facebook embed, facebook feed widget, facebook feed embed, like button widget, facebook events
 Requires at least: 3.0.1
 Tested up to: 4.0
-Stable tag: 2.7.7
+Stable tag: 2.8
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -67,6 +67,7 @@ This section describes how to install the plugin and get it working.
 
 = Outputting the Facebook Event Feed =
 * This is no different than outputting a normal Page Feed!  Just follow the instructions below and our plugin will detect what type of feed is being displayed.
+* To Reverse the Order of Events, use the Reverse Event Order option on the Pro Event Options tab.  If you are using the Free version of the plugin, you'll need to [purchase WP Social Pro](http://goldplugins.com/our-plugins/wp-social-pro/ "Purchase WP Social Pro") first.
 
 = Outputting the Facebook Feed =
 * To output the custom Facebook Feed, place `[ik_fb_feed colorscheme="light" use_thumb="true" width="250" num_posts="5"]` in the body of a post, or use the Appearance section to add the The IK Facebook Plugin Widget to your Widgets area.  Valid choices for colorscheme are "light" and "dark"  If 'use_thumb' is set to true, the value of 'width' will be ignored.  If 'use_thumb' or 'width’ is not set, the values from the Options page will be used.  If id is not set, the shortcode will use the Page ID from your Settings page.  All of the options on the widget will use the defaults, drawn from the Settings page, if they aren't passed via the widget.
@@ -163,6 +164,10 @@ In this case, the Facebook Album ID is '539627829386059'.
 5. This is the Facebook Feed Widget and the Facebook Like Button Widget of the IK Facebook Plugin.  The options on this widget allow you to override the settings you have selected on your Settings panel.
 
 == Changelog ==
+
+= 2.8 =
+* Pro Feature: Events Options tab with option to reverse the order of events in your events only feed.
+* Update: address some user reported issues with the event feed.
 
 = 2.7.7 =
 * Update: Adds new status widget to Plugin Status & Help Page.
@@ -514,5 +519,5 @@ In this case, the Facebook Album ID is '539627829386059'.
 
 == Upgrade Notice ==
 
-= 2.7.7 =
+= 2.8 =
 * Update available!
