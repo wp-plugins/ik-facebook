@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.8
+Version: 2.8.1
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -561,7 +561,6 @@ class ikFacebook
 			
 			$event_data = $this->fetchUrl("https://graph.facebook.com/{$event_id}?summary=1&{$this->authToken}", true);//the event data
 			
-			
 			//add avatar for pro users
 			if(is_valid_key(get_option('ik_fb_pro_key'))){		
 				$line_item = $ik_social_pro->pro_user_avatars($line_item, $item) . " ";
@@ -577,14 +576,23 @@ class ikFacebook
 				$start_time = isset($event_data->start_time) ? $event_data->start_time : '';
 				$end_time = isset($event_data->end_time) ? $event_data->end_time : '';			
 				
+				//default time format
+				$start_time_format = 'l, F jS, Y h:i:s a';
+				$end_time_format = 'l, F jS, Y h:i:s a';
+				
+				if(is_valid_key(get_option('ik_fb_pro_key'))){
+					$start_time_format = get_option('ik_fb_start_date_format', 'l, F jS, Y h:i:s a');
+					$end_time_format = get_option('ik_fb_end_date_format', 'l, F jS, Y h:i:s a');
+				}
+				
 				//TBD: Allow user control over date formatting
 				$time_object = new DateTime($start_time);
-				$start_time = $time_object->format('l, F jS, Y h:i:s a');	
+				$start_time = $time_object->format($start_time_format);	
 				
 				//TBD: Allow user control over date formatting
 				if(strlen($end_time)>2){
 					$time_object = new DateTime($end_time);
-					$end_time = $time_object->format('l, F jS, Y h:i:s a');						
+					$end_time = $time_object->format($end_time_format);						
 				}
 				
 				//event start time - event end time					
@@ -848,9 +856,9 @@ class ikFacebook
 			
 			//source: tim morozzo
 			if (isset($item->description) && strlen($item->description) >5){
-				$title = $item->description;
+				$title = nl2br($item->description,true);
 			}elseif(isset($item->message)){
-				$title = $item->message;
+				$title = nl2br(make_clickable($item->message),true);
 			}else{ 
 				$title = __('Click for fullsize photo', $this->textdomain);
 			}
@@ -892,9 +900,9 @@ class ikFacebook
 
 			//courtesy of tim morozzo
 			if (isset($item->description) && strlen($item->description) >5){
-				$title = $item->description;
+				$title = nl2br($item->description,true);
 			} elseif (isset($item->message)){
-				$title = $item->message;
+				$title = nl2br(make_clickable($item->message),true);
 			} else { 
 				$title = __('Click for fullsize photo', $this->textdomain);
 			}
@@ -952,7 +960,7 @@ class ikFacebook
 			$replace = $ik_social_pro->pro_user_avatars($replace, $item) . " ";
 		}
 		
-		$replace = $replace . htmlspecialchars($item->message);
+		$replace = $replace . nl2br(make_clickable(htmlspecialchars($item->message)), true);
 		
 		//if a character limit is set, here is the logic to handle that
 		$limit = get_option('ik_fb_character_limit');

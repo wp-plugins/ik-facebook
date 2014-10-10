@@ -12,6 +12,8 @@ class ikSocialProOptions
 		register_setting( 'ik-fb-pro-display-settings-group', 'ik_fb_show_likes' );
 		
 		register_setting( 'ik-fb-pro-event-settings-group', 'ik_fb_reverse_events' );
+		register_setting( 'ik-fb-pro-event-settings-group', 'ik_fb_start_date_format' );
+		register_setting( 'ik-fb-pro-event-settings-group', 'ik_fb_end_date_format' );
 		
 		register_setting( 'ik-fb-html-settings-group', 'ik_fb_feed_item_html' );
 		register_setting( 'ik-fb-html-settings-group', 'ik_fb_message_html' );
@@ -218,6 +220,22 @@ class ikSocialProOptions
 					<p class="description"><?php _e('If checked, the order of the events feed will be reversed.');?></p>
 					</td>
 				</tr>
+			
+			<table class="form-table">
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_start_date_format"><?php _e('Start Date Format');?></label></th>
+					<td><input type="text" name="ik_fb_start_date_format" id="ik_fb_start_date_format" value="<?php echo get_option('ik_fb_start_date_format', 'l, F jS, Y h:i:s a'); ?>" style="width: 250px" />
+					<p class="description"><?php _e('The format string to be used for the Event Start Date.  This follows the standard used for PHP date.  Warning: this is an advanced feature - do not change this value if you do not know what you are doing! The default setting is l, F jS, Y h:i:s a');?></p></td>
+				</tr>
+			</table>
+			
+			<table class="form-table">
+				<tr valign="top">
+					<th scope="row"><label for="ik_fb_end_date_format"><?php _e('End Date Format');?></label></th>
+					<td><input type="text" name="ik_fb_end_date_format" id="ik_fb_end_date_format" value="<?php echo get_option('ik_fb_end_date_format', 'l, F jS, Y h:i:s a'); ?>" style="width: 250px" />
+					<p class="description"><?php _e('The format string to be used for the Event End Date.  This follows the standard used for PHP date.  Warning: this is an advanced feature - do not change this value if you do not know what you are doing! The default setting is l, F jS, Y h:i:s a');?></p></td>
+				</tr>
+			</table>
 				
 			</table>
 			
