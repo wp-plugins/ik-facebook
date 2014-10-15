@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.8.1
+Version: 2.8.2
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -856,9 +856,9 @@ class ikFacebook
 			
 			//source: tim morozzo
 			if (isset($item->description) && strlen($item->description) >5){
-				$title = nl2br($item->description,true);
+				$title = nl2br($item->description);
 			}elseif(isset($item->message)){
-				$title = nl2br(make_clickable($item->message),true);
+				$title = nl2br(make_clickable($item->message));
 			}else{ 
 				$title = __('Click for fullsize photo', $this->textdomain);
 			}
@@ -900,9 +900,9 @@ class ikFacebook
 
 			//courtesy of tim morozzo
 			if (isset($item->description) && strlen($item->description) >5){
-				$title = nl2br($item->description,true);
+				$title = nl2br($item->description);
 			} elseif (isset($item->message)){
-				$title = nl2br(make_clickable($item->message),true);
+				$title = nl2br(make_clickable($item->message));
 			} else { 
 				$title = __('Click for fullsize photo', $this->textdomain);
 			}
@@ -960,7 +960,7 @@ class ikFacebook
 			$replace = $ik_social_pro->pro_user_avatars($replace, $item) . " ";
 		}
 		
-		$replace = $replace . nl2br(make_clickable(htmlspecialchars($item->message)), true);
+		$replace = $replace . nl2br(make_clickable(htmlspecialchars($item->message)));
 		
 		//if a character limit is set, here is the logic to handle that
 		$limit = get_option('ik_fb_character_limit');
