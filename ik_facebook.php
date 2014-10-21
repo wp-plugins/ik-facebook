@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.8.2
+Version: 2.8.3
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -856,9 +856,9 @@ class ikFacebook
 			
 			//source: tim morozzo
 			if (isset($item->description) && strlen($item->description) >5){
-				$title = nl2br($item->description);
+				$title = $item->description;
 			}elseif(isset($item->message)){
-				$title = nl2br(make_clickable($item->message));
+				$title = make_clickable($item->message);
 			}else{ 
 				$title = __('Click for fullsize photo', $this->textdomain);
 			}
@@ -900,9 +900,9 @@ class ikFacebook
 
 			//courtesy of tim morozzo
 			if (isset($item->description) && strlen($item->description) >5){
-				$title = nl2br($item->description);
+				$title = $item->description;
 			} elseif (isset($item->message)){
-				$title = nl2br(make_clickable($item->message));
+				$title = make_clickable($item->message);
 			} else { 
 				$title = __('Click for fullsize photo', $this->textdomain);
 			}
@@ -1117,6 +1117,11 @@ class ikFacebook
 	function trim_feed($feed_items, $limit)
 	{
 		$valid_items = array();
+		
+		// sometimes $limit comes in as -1, meaning unlimited
+		if ($limit < 0) {
+			$limit = count($feed_items);
+		}
 		
 		foreach ($feed_items as $item)
 		{
