@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.8.3
+Version: 2.8.4
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -65,6 +65,8 @@ class ikFacebook
 	    wp_enqueue_style( 'ikfb_admin_stylesheet' );
         wp_enqueue_style( 'farbtastic' );
 		wp_enqueue_script( 'farbtastic' );
+		wp_enqueue_script( 'jquery-ui-datepicker' );
+		wp_enqueue_style('jquery-style', plugins_url('include/css/jquery-ui.css', __FILE__));
 		wp_enqueue_script( 'ik_fb_pro_options', plugins_url('include/js/js.js', __FILE__), array( 'farbtastic', 'jquery' ) );
     }
 
@@ -567,7 +569,10 @@ class ikFacebook
 			}
 			
 			//load event image source
-			$event_image = "http://graph.facebook.com/" . $event_id . "/picture";
+			//acceptable parameters for type are: small, normal, large, square
+			//default is small
+			$event_image_size = get_option('ik_fb_event_image_size', 'small');
+			$event_image = "http://graph.facebook.com/" . $event_id . "/picture?type={$event_image_size}";
 			
 			if(isset($event_data->name)){
 				//event name
@@ -1085,7 +1090,20 @@ class ikFacebook
 			
 			//handle events
 			if($content_type == "events") {
-				$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/events?summary=1&limit={$fb_post_limit}&{$this->authToken}", true);//the feed data
+				//set a date range from now until a year in the future, to grab all upcoming events and no past events
+				//these are the default values used if an override isn't set
+				$now = time();
+				$end_date = $now + 31557600;
+				
+				//load the event start date from options
+				//if the event start date isn't set in the options, use now as the start date
+				$event_start_date = get_option('ik_fb_event_range_start_date', $now);		
+
+				//load the event end date from options
+				//if the event end date isn't set in the options, use now + 1 year as the end date				
+				$event_end_date = get_option('ik_fb_event_range_end_date', $end_date);
+						
+				$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/events?summary=1&limit={$fb_post_limit}&since={$event_start_date}&until={$event_end_date}&{$this->authToken}", true);//the feed data
 			} else {
 				//if showing only page owner posts
 				if(get_option('ik_fb_only_show_page_owner') && is_valid_key(get_option('ik_fb_pro_key'))){

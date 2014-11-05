@@ -24,4 +24,9 @@ jQuery(document).ready(function($) {
 				$(this).fadeOut();
 		});
 	});
+		
+	//datepicker	
+	$('.datepicker').datepicker({
+		dateFormat : 'yy-mm-dd'
+	});
 });	

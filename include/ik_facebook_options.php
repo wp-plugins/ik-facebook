@@ -215,7 +215,7 @@ class ikFacebookOptions
 	 */
 	function configuration_options_page()
 	{
-		$this->start_settings_page(true, false);
+		$this->start_settings_page(true);
 		settings_fields( 'ik-fb-config-settings-group' );
 		?>
 			<h3><?php _e("Configuration Options");?></h3>
