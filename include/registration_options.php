@@ -1,27 +1,19 @@
 <h3>Pro Registration</h3>			
-<?php if(!is_valid_key()): ?><p>Enter your Email Address and API Key here to activate additional features such as Custom HTML, Unbranded Admin Screens, Comments, Avatars, and more!</p><?php endif; ?>
-<?php if(is_valid_key()): ?>	
-<p class="plugin_is_registered">Your plugin is succesfully registered and activated!</p>
+<?php if(is_valid_key()): ?>
+<p class="plugin_is_registered">&#x2713; WP Social Pro is registered and activated. Thank you!</p>
 <?php else: ?>
-<p class="plugin_is_not_registered">Your plugin has not been successfully registered and activated. <a href="http://goldplugins.com/our-plugins/wp-social-pro/?utm_source=api_key_reminder" target="_blank">Click here</a> to upgrade now!</p>
-<?php endif; ?>	
+<p>Enter your Email Address and API Key here to activate additional features such as Custom HTML, Unbranded Admin Screens, Comments, Avatars, and more!</p>
+<p><a class="button" href="http://goldplugins.com/our-plugins/wp-social-pro/?utm_source=plugin&utm_campaign=api_key_reminder_2">Get An API Key</a></p>
+<?php endif; ?>
 
 <?php if(!wpsp_is_valid_multisite_key()): ?>
 <table class="form-table">
-	<tr valign="top">
-		<th scope="row"><label for="wp_social_pro_registered_email">Email Address</label></th>
-		<td><input type="text" name="wp_social_pro_registered_email" id="wp_social_pro_registered_email" value="<?php echo get_option('wp_social_pro_registered_email'); ?>"  style="width: 250px" />
-		<p class="description">This is the e-mail address that you used when you registered the plugin.</p>
-		</td>
-	</tr>
-</table>
-	
-<table class="form-table">
-	<tr valign="top">
-		<th scope="row"><label for="wp_social_pro_registered_key">API Key</label></th>
-		<td><input type="text" name="wp_social_pro_registered_key" id="wp_social_pro_registered_key" value="<?php echo get_option('wp_social_pro_registered_key'); ?>"  style="width: 250px" />
-		<p class="description">This is the API Key that you received after registering the plugin.</p>
-		</td>
-	</tr>
-</table>
+	<?php
+		// Registration Email
+		$this->shed->text( array('name' => 'wp_social_pro_registered_email', 'label' =>'Email Address', 'value' => get_option('wp_social_pro_registered_email'), 'description' => 'This is the e-mail address that you used when you registered the plugin.') );
+
+		// API Key
+		$this->shed->text( array('name' => 'wp_social_pro_registered_key', 'label' =>'API Key', 'value' => get_option('wp_social_pro_registered_key'), 'description' => 'This is the API Key that you received after registering the plugin.') );
+	?>
+</table>	
 <?php endif; ?>

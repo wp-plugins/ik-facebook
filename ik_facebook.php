@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Illuminati Karate, Inc.
-Version: 2.8.4
+Version: 2.9
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -28,6 +28,7 @@ include('include/ik_facebook_options.php');
 include('include/lib/CachedCurl.php');
 include('include/lib/lib.php');
 include('include/lib/ik_social_pro.php');
+include('include/lib/BikeShed/bikeshed.php');
 
 //use this to track if css/powered by have been output
 global $ikfb_footer_css_output;
@@ -48,6 +49,7 @@ class ikFacebook
 		add_action( 'wp_enqueue_scripts', array($this, 'ik_fb_setup_css'));
 		add_action( 'wp_head', array($this, 'ik_fb_setup_custom_css'));
 		add_action( 'wp_enqueue_scripts', array($this, 'ik_fb_setup_custom_theme_css'));
+		add_action( 'wp_enqueue_scripts', array($this, 'enqueue_webfonts'));
 
 		//register sidebar widgets
 		add_action( 'widgets_init', array($this, 'ik_fb_register_widgets' ));
@@ -123,6 +125,39 @@ class ikFacebook
 			wp_register_style( 'ik_facebook_custom_style', get_stylesheet_directory_uri() . '/ik_fb_custom_style.css' );
 			wp_enqueue_style( 'ik_facebook_custom_style' );
 		}
+	}
+	
+	// Enqueue any needed Google Web Fonts
+	function enqueue_webfonts()
+	{
+		$font_list = $this->list_required_google_fonts();
+		$font_list_encoded = array_map('urlencode', $this->list_required_google_fonts());
+		$font_str = implode('|', $font_list_encoded);
+		wp_register_style( 'ik_facebook_webfonts', 'http://fonts.googleapis.com/css?family=' . $font_str);
+		wp_enqueue_style( 'ik_facebook_webfonts' );
+	}
+	
+	function list_required_google_fonts()
+	{
+		// check each typography setting for google fonts, and build a list
+		$option_keys = array(	'ik_fb_font_family',
+								'ik_fb_powered_by_font_family',
+								'ik_fb_posted_by_font_family',
+								'ik_fb_date_font_family',
+								'ik_fb_description_font_family',
+								'ik_fb_link_font_family',
+								'ik_fb_font_family',
+						);
+		$fonts = array();		
+		foreach ($option_keys as $option_key) {
+			$option_value = get_option($option_key);
+			if (strpos($option_value, 'google:') !== FALSE) {
+				$option_value = str_replace('google:', '', $option_value);
+				
+			}
+			$fonts[$option_value] = $option_value;
+		}		
+		return $fonts;
 	}
 	
 	//generates the like button HTML
@@ -1173,146 +1208,175 @@ class ikFacebook
 	
 	/* Styling Functions */
 	
+	/*
+	 * Builds a CSS string corresponding to the values of a typography setting
+	 *
+	 * @param	$prefix		The prefix for the settings. We'll append font_name,
+	 *						font_size, etc to this prefix to get the actual keys
+	 *
+	 * @returns	string		The completed CSS string, with the values inlined
+	 */
+	function build_typography_css($prefix)
+	{
+		$css_rule_template = ' %s: %s;';
+		$output = '';
+		
+		/* 
+		 * Font Family
+		 */
+		$option_val = get_option($prefix . 'font_family', '');
+		if (!empty($option_val)) {
+			// strip off 'google:' prefix if needed
+			$option_val = str_replace('google:', '', $option_val);
+
+		
+			// wrap font family name in quotes
+			$option_val = '\'' . $option_val . '\'';
+			$output .= sprintf($css_rule_template, 'font-family', $option_val);
+		}
+		
+		/* 
+		 * Font Size
+		 */
+		$option_val = get_option($prefix . 'font_size', '');
+		if (!empty($option_val)) {
+			// append 'px' if needed
+			if ( is_numeric($option_val) ) {
+				$option_val .= 'px';
+			}
+			$output .= sprintf($css_rule_template, 'font-size', $option_val);
+		}		
+		
+		/* 
+		 * Font Color
+		 */
+		$option_val = get_option($prefix . 'font_color', '');
+		if (!empty($option_val)) {
+			$output .= sprintf($css_rule_template, 'color', $option_val);
+		}
+
+		/* 
+		 * Font Style - add font-style and font-weight rules
+		 * NOTE: in this special case, we are adding 2 rules!
+		 */
+		$option_val = get_option($prefix . 'font_style', '');
+
+		// Convert the value to 2 CSS rules, font-style and font-weight
+		// NOTE: we lowercase the value before comparison, for simplification
+		switch(strtolower($option_val))
+		{
+			case 'regular':
+				// not bold not italic
+				$output .= sprintf($css_rule_template, 'font-style', 'normal');
+				$output .= sprintf($css_rule_template, 'font-weight', 'normal');
+			break;
+		
+			case 'bold':
+				// bold, but not italic
+				$output .= sprintf($css_rule_template, 'font-style', 'normal');
+				$output .= sprintf($css_rule_template, 'font-weight', 'bold');
+			break;
+
+			case 'italic':
+				// italic, but not bold
+				$output .= sprintf($css_rule_template, 'font-style', 'italic');
+				$output .= sprintf($css_rule_template, 'font-weight', 'normal');
+			break;
+		
+			case 'bold italic':
+				// bold and italic
+				$output .= sprintf($css_rule_template, 'font-style', 'italic');
+				$output .= sprintf($css_rule_template, 'font-weight', 'bold');
+			break;
+			
+			default:
+				// empty string or other invalid value, ignore and move on
+			break;			
+		}			
+
+		// return the completed CSS string
+		return trim($output);		
+	}
+	
+	/*
+	 * Looks for $tag in $haystack, and inserts $replacement in its place
+	 * NOTE: this function currently assumes an HTML tag preceeds $tag
+	 *
+	 * @param	$tag		The string to match. $replace is inserted here
+	 * @param	$replace	The string to match. $replace is inserted here
+	 * @param	$haystack	The string to search, and to insert $replace into
+	 *
+	 * @returns	string		$haystack, with $tag replaced by $replace
+	 */
+	 function replace_ikfb_merge_tag($tag, $replace, $haystack)
+	{	
+		//find the position of the search string in the haystack
+		$position = strpos($haystack, $tag);
+		
+		// if we don't find it, return the original string
+		// NOTE: we would usually use === here, but in this case 0 would 
+		//		 be invalid as well, so we use == instead
+		if ($position == FALSE) {
+			return $haystack;
+		}
+		
+		// Move back one character from that position, and insert our string
+		// NOTE: we are assuming a closing bracket to some HTML tag here
+		// TODO: Let's not assume an HTML tag! (maybe add a <span> instead?)
+		return substr_replace($haystack, $replace, $position - 1, 0);
+	}
 	
 	//inserts any selected custom styling options into the feed's message html
 	//load custom style options from Pro Plugin, if available
 	function ikfb_message_styling($message_html = ""){
-		$ik_fb_font_color = strlen(get_option('ik_fb_font_color')) > 2 ? get_option('ik_fb_font_color') : '';
-		$ik_fb_font_size = strlen(get_option('ik_fb_font_size')) > 0 ? get_option('ik_fb_font_size') : '';
-
-		//load our custom styling, to insert
-		$insertion = ' style="';
-		if(strlen($ik_fb_font_size)>0){
-			$ik_fb_font_size = rtrim($ik_fb_font_size, 'px');			
-			$insertion .= "font-size: {$ik_fb_font_size}px; ";
-		}
-		if(strlen($ik_fb_font_color)>0){
-			$insertion .= "color: {$ik_fb_font_color};";
-		}
-		$insertion .= '"';					
-		//find the position of the replacement shortcode in the HTML
-		$position = strpos($message_html,'{ikfb:feed_item:message}');
-		//move back one character from that position, assuming a closing bracket to some HTML tag, and insert our custom styling
-		$message_html = substr_replace($message_html, $insertion, $position-1, 0);
-		
-		return $message_html;
+		$css = sprintf(' style="%s"', $this->build_typography_css('ik_fb_'));
+		$tag = '{ikfb:feed_item:message}';
+		return $this->replace_ikfb_merge_tag($tag, $css, $message_html);
 	}
 	
 	//inserts any selected custom styling options into the feed's link
 	//$replace = <p class="ik_fb_facebook_link">{ikfb:feed_item:link}</p>
-	function ikfb_link_styling($item_link = ""){	
-		$ik_fb_link_font_color = strlen(get_option('ik_fb_link_font_color')) > 2 ? get_option('ik_fb_link_font_color') : '';
-		$ik_fb_link_font_size = strlen(get_option('ik_fb_link_font_size')) > 0 ? get_option('ik_fb_link_font_size') : '';
-		
+	function ikfb_link_styling($item_link = "") {		
 		//load our custom styling, to insert
-		$insertion = ' style="';
-		if(strlen($ik_fb_link_font_size)>0){
-			$ik_fb_link_font_size = rtrim($ik_fb_link_font_size, 'px');
-			$insertion .= "font-size: {$ik_fb_link_font_size}px; ";
-		}
-		if(strlen($ik_fb_link_font_color)>0){
-			$insertion .= "color: {$ik_fb_link_font_color};";
-		}
-		$insertion .= '"';
-		
-		$replace = '<a href="'.$item_link.'" target="_blank" '.$insertion.'>';	
-		
-		return $replace;
+		$css = $this->build_typography_css('ik_fb_link_');
+		$style_attr = sprintf(' style="%s"', $css);
+		$template = '<a href="%s" target="_blank" %s>';
+		return sprintf($template, $item_link, $style_attr);
 	}
 	
 	//inserts any selected custom styling options into the feed's posted by attribute
 	//$line_item .= '<p class="ikfb_item_author">Posted By '.$from_text.'</p>';		
 	function ikfb_posted_by_styling($line_item = ""){	
-		$ik_fb_posted_by_font_color = strlen(get_option('ik_fb_posted_by_font_color')) > 2 ? get_option('ik_fb_posted_by_font_color') : '';
-		$ik_fb_posted_by_font_size = strlen(get_option('ik_fb_posted_by_font_size')) > 0 ? get_option('ik_fb_posted_by_font_size') : '';
-		
-		//load our custom styling, to insert
-		$insertion = ' style="';
-		if(strlen($ik_fb_posted_by_font_size)>0){
-			$ik_fb_posted_by_font_size = rtrim($ik_fb_posted_by_font_size, 'px');
-			$insertion .= "font-size: {$ik_fb_posted_by_font_size}px; ";
-		}
-		if(strlen($ik_fb_posted_by_font_color)>0){
-			$insertion .= "color: {$ik_fb_posted_by_font_color};";
-		}
-		$insertion .= '"';					
-		//find the position of the replacement shortcode in the HTML
-		$position = strpos($line_item,'Posted By');
-		//move back one character from that position, assuming a closing bracket to some HTML tag, and insert our custom styling
-		$line_item = substr_replace($line_item, $insertion, $position-1, 0);
-		
-		return $line_item;
+		$css = $this->build_typography_css('ik_fb_posted_by_');
+		$style_attr = sprintf(' style="%s"', $css);		
+		$tag = 'Posted By';
+		return $this->replace_ikfb_merge_tag($tag, $style_attr, $line_item);
 	}
 	
 	//inserts any selected custom styling options into the feed's date attribute
 	function ikfb_date_styling($line_item = ""){	
-		$ik_fb_date_font_color = strlen(get_option('ik_fb_date_font_color')) > 2 ? get_option('ik_fb_date_font_color') : '';
-		$ik_fb_date_font_size = strlen(get_option('ik_fb_date_font_size')) > 0 ? get_option('ik_fb_date_font_size') : '';
-		
-		//load our custom styling, to insert
-		$insertion = ' style="';
-		if(strlen($ik_fb_date_font_size)>0){
-			$ik_fb_date_font_size = rtrim($ik_fb_date_font_size, 'px');		
-			$insertion .= "font-size: {$ik_fb_date_font_size}px; ";
-		}
-		if(strlen($ik_fb_date_font_color)>0){
-			$insertion .= "color: {$ik_fb_date_font_color};";
-		}
-		$insertion .= '"';					
-		//find the position of the replacement shortcode in the HTML
-		$position = strpos($line_item,'class="date"');
-		//move back one character from that position, assuming a closing bracket to some HTML tag, and insert our custom styling
-		$line_item = substr_replace($line_item, $insertion, $position-1, 0);
-		
-		return $line_item;
+		$css = $this->build_typography_css('ik_fb_date_');
+		$style_attr = sprintf(' style="%s"', $css);		
+		$tag = 'class="date"';
+		return $this->replace_ikfb_merge_tag($tag, $style_attr, $line_item);
 	}
 	
 	//inserts any selected custom styling options into the feed's description
 	//$replace = $item->description;				
 	function ikfb_description_styling($replace = ""){	
-		$ik_fb_description_font_color = strlen(get_option('ik_fb_description_font_color')) > 2 ? get_option('ik_fb_description_font_color') : '';
-		$ik_fb_description_font_size = strlen(get_option('ik_fb_description_font_size')) > 0 ? get_option('ik_fb_description_font_size') : '';
-		
-		//load our custom styling, to insert
-		$insertion = ' style="';
-		if(strlen($ik_fb_description_font_size)>0){
-			$ik_fb_description_font_size = rtrim($ik_fb_description_font_size, 'px');
-			$insertion .= "font-size: {$ik_fb_description_font_size}px; ";
-		}
-		if(strlen($ik_fb_description_font_color)>0){
-			$insertion .= "color: {$ik_fb_description_font_color};";
-		}
-		$insertion .= '"';					
-		//find the position of the replacement shortcode in the HTML
-		$position = strpos($replace,'{ikfb:feed_item:description}');
-		//move back one character from that position, assuming a closing bracket to some HTML tag, and insert our custom styling
-		$replace = substr_replace($replace, $insertion, $position-1, 0);
-		
-		return $replace;
+		$css = $this->build_typography_css('ik_fb_description_');
+		$style_attr = sprintf(' style="%s"', $css);		
+		$tag = '{ikfb:feed_item:description}';
+		return $this->replace_ikfb_merge_tag($tag, $style_attr, $replace);
 	}
 	
 	//inserts any selected custom styling options into the feed's powered by attribute	
 	//$content = '<a href="https://illuminatikarate.com/ik-facebook-plugin/" target="_blank" id="ikfb_powered_by">Powered By IK Facebook Plugin</a>';	
-	function ikfb_powered_by_styling($content = ""){
-		$ik_fb_powered_by_font_color = strlen(get_option('ik_fb_powered_by_font_color')) > 2 ? get_option('ik_fb_powered_by_font_color') : '';
-		$ik_fb_powered_by_font_size = strlen(get_option('ik_fb_powered_by_font_size')) > 0 ? get_option('ik_fb_powered_by_font_size') : '';
-		
-		//load our custom styling, to insert
-		$insertion = ' style="';
-		if(strlen($ik_fb_powered_by_font_size)>0){
-			$ik_fb_powered_by_font_size = rtrim($ik_fb_powered_by_font_size, 'px');
-			$insertion .= "font-size: {$ik_fb_powered_by_font_size}px; ";
-		}
-		if(strlen($ik_fb_powered_by_font_color)>0){
-			$insertion .= "color: {$ik_fb_powered_by_font_color};";
-		}
-		$insertion .= '"';					
-		//find the position of the replacement shortcode in the HTML
-		$position = strpos($content,'id="ikfb_powered_by"');
-		//move back one character from that position, assuming a closing bracket to some HTML tag, and insert our custom styling
-		$content = substr_replace($content, $insertion, $position-1, 0);
-		
-		return $content;
+	function ikfb_powered_by_styling($content = ""){		
+		$css = $this->build_typography_css('ik_fb_powered_by_');
+		$style_attr = sprintf(' style="%s"', $css);		
+		$tag = 'id="ikfb_powered_by"';
+		return $this->replace_ikfb_merge_tag($tag, $style_attr, $content);
 	}
 }//end ikFacebook
 

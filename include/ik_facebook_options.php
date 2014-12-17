@@ -30,6 +30,9 @@ class ikFacebookOptions
 		if ($root) {
 			$this->root = $root;
 		}
+		
+		// create the BikeShed object now, so that BikeShed can add its hooks
+        $this->shed = new \GoldPlugins\BikeShed();
 	}
 	
 	function add_admin_menu_item(){
@@ -102,19 +105,31 @@ class ikFacebookOptions
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_header_bg_color' );
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_window_bg_color' );		
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_powered_by_font_color' );		
-		register_setting( 'ik-fb-style-settings-group', 'ik_fb_powered_by_font_size' );	
-		register_setting( 'ik-fb-style-settings-group', 'ik_fb_posted_by_font_color' );				
-		register_setting( 'ik-fb-style-settings-group', 'ik_fb_posted_by_font_size' );	
-		register_setting( 'ik-fb-style-settings-group', 'ik_fb_date_font_color' );				
-		register_setting( 'ik-fb-style-settings-group', 'ik_fb_date_font_size' );		
-		register_setting( 'ik-fb-style-settings-group', 'ik_fb_description_font_color' );		
-		register_setting( 'ik-fb-style-settings-group', 'ik_fb_description_font_size' );		
-		register_setting( 'ik-fb-style-settings-group', 'ik_fb_link_font_color' );		
-		register_setting( 'ik-fb-style-settings-group', 'ik_fb_link_font_size' );		
-		register_setting( 'ik-fb-style-settings-group', 'ik_fb_feed_window_height' );		
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_powered_by_font_size' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_powered_by_font_style' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_powered_by_font_family' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_posted_by_font_color' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_posted_by_font_size' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_posted_by_font_style' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_posted_by_font_family' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_date_font_color' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_date_font_size' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_date_font_style' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_date_font_family' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_description_font_color' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_description_font_size' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_description_font_style' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_description_font_family' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_link_font_color' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_link_font_size' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_link_font_style' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_link_font_family' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_feed_window_height' );
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_feed_window_width' );
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_font_color' );
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_font_size' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_font_family' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_font_style' );
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_sidebar_feed_window_height' );
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_sidebar_feed_window_width' );
 		register_setting( 'ik-fb-style-settings-group', 'other_ik_fb_feed_window_width' );
@@ -169,7 +184,11 @@ class ikFacebookOptions
 			$message = __("IK Facebook Plugin Settings Updated.", $this->textdomain);
 		}
 		?>
+			<?php if(is_valid_key()): ?>	
 			<div class="wrap ikfb_settings">
+			<?php else: ?>
+			<div class="wrap ikfb_settings not-pro">			
+			<?php endif; ?>
 			
 				<?php echo $before_title; ?>
 				<?php if ( get_option('ik_fb_app_id', '') == '' ): ?>
@@ -188,6 +207,10 @@ class ikFacebookOptions
 				<div id="message" class="updated fade"><p><?php echo $message; ?></p></div>
 				<?php endif; ?>	
 	
+				<?php if(!is_valid_key()): ?>	
+				<p class="plugin_is_not_registered">&#x2718; Your plugin is not registered and activated. You will not be able to use the PRO features until you upgrade. <a href="http://goldplugins.com/our-plugins/wp-social-pro/?utm_source=api_key_reminder" target="_blank">Click here to upgrade now!</a></p>
+				<?php endif; ?>	
+
 				<?php if($wrap_with_form): ?>
 				<form method="post" action="options.php" class="options_form">
 				<?php endif; ?>
@@ -205,9 +228,6 @@ class ikFacebookOptions
 		<?php endif; ?>
 		<?php if($wrap_with_form): ?></form><?php endif; ?>
 		<?php
-		if(!is_valid_key(get_option('ik_fb_pro_key'))):	
-			$this->output_upgrade_teaser();
-		endif;
 	}
 	
 	/*
@@ -217,41 +237,36 @@ class ikFacebookOptions
 	{
 		$this->start_settings_page(true);
 		settings_fields( 'ik-fb-config-settings-group' );
+		include('registration_options.php');		
 		?>
-			<h3><?php _e("Configuration Options");?></h3>
+			<h3><?php _e("Facebook API Settings");?></h3>
 			<p><?php _e("These options tell the plugin how to access your Facebook Page.");?></p>
 			<?php 
 			$needs_app_id = (get_option('ik_fb_app_id', '') == '');
+			$needs_secret = (get_option('ik_fb_secret_key', '') == '');
 			if ( $needs_app_id ):
 			?>
 			<p><?php _e("<strong>Important:</strong> You'll need to <a href=\"http://goldplugins.com/documentation/wp-social-pro-documentation/how-to-get-an-app-id-and-secret-key-from-facebook/\">create a free Facebook app</a> so that your plugin can access your feed. Don't worry - it only takes 2 minutes, and we've even got <a href=\"http://goldplugins.com/documentation/wp-social-pro-documentation/how-to-get-an-app-id-and-secret-key-from-facebook/\">a video explaining the process</a>.");?></p>
 			<?php endif; ?>
 			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_page_id"><?php _e("Facebook Page ID");?></label></th>
-					<td><input type="text" name="ik_fb_page_id" id="ik_fb_page_id" value="<?php echo get_option('ik_fb_page_id'); ?>"  style="width: 250px" />
-					<p class="description"><?php _e("Your Facebook Username or Page ID. This can be a username (like IlluminatiKarate) or a number (like 189090822).<br />Tip: You can find it by visiting your Facebook profile and copying the entire URL into the box above.");?></p>
-					</td>
-				</tr>
-			</table>
-
-			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_app_id"><?php _e("Facebook App ID");?></label></th>
-					<td><input type="text" name="ik_fb_app_id" id="ik_fb_app_id" value="<?php echo get_option('ik_fb_app_id'); ?>" style="width: 250px" />
-					<p class="description <?php echo ($needs_app_id ? 'app_id_callout' : '');?>"><?php _e('This is the App ID you acquired when you <a href="http://goldplugins.com/documentation/wp-social-pro-documentation/how-to-get-an-app-id-and-secret-key-from-facebook/" target="_blank" title="How To Get An App ID and Secret Key From Facebook">setup your Facebook app</a>.');?></p></td>
-				</tr>
-			</table>
 			
-			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_secret_key"><?php _e("Facebook Secret Key");?></label></th>
-					<td><input type="text" name="ik_fb_secret_key" id="ik_fb_secret_key" value="<?php echo get_option('ik_fb_secret_key'); ?>" style="width: 250px" />
-					<p class="description <?php echo ($needs_app_id ? 'app_id_callout' : '');?>"><?php _e('This is the App Secret you acquired when you <a href="http://goldplugins.com/documentation/wp-social-pro-documentation/how-to-get-an-app-id-and-secret-key-from-facebook/" target="_blank" title="How To Get An App ID and Secret Key From Facebook">setup your Facebook app</a>.');?></p></td>
-				</tr>
-			</table>	
+			<?php
+				// Facebook Page ID
+				$this->shed->text( array('name' => 'ik_fb_page_id', 'label' =>'Facebook Page ID', 'value' => get_option('ik_fb_page_id'), 'description' => 'Your Facebook Username or Page ID. This can be a username (like IlluminatiKarate) or a number (like 189090822).<br />Tip: You can find it by visiting your Facebook profile and copying the entire URL into the box above.') );
+
+				// Facebook App ID
+				$desc = 'This is the App ID you acquired when you <a href="http://goldplugins.com/documentation/wp-social-pro-documentation/how-to-get-an-app-id-and-secret-key-from-facebook/" target="_blank" title="How To Get An App ID and Secret Key From Facebook">setup your Facebook app</a>.';
+				$desc = $needs_app_id ? '<div class="app_id_callout">' . $desc . '</div>' : $desc;
+				$this->shed->text( array('name' => 'ik_fb_app_id', 'label' =>'Facebook App ID', 'value' => get_option('ik_fb_app_id'), 'description' => $desc) );
+
+				// Facebook Secret Key
+				$desc = 'This is the App Secret you acquired when you <a href="http://goldplugins.com/documentation/wp-social-pro-documentation/how-to-get-an-app-id-and-secret-key-from-facebook/" target="_blank" title="How To Get An App ID and Secret Key From Facebook">setup your Facebook app</a>.';
+				$desc = $needs_secret ? '<div class="app_id_callout">' . $desc . '</div>' : $desc;
+				$this->shed->text( array('name' => 'ik_fb_secret_key', 'label' =>'Facebook Secret Key', 'value' => get_option('ik_fb_secret_key'), 'description' => $desc) );
+			?>
+			
+			</table>
 		<?php		
-		include('registration_options.php');
 		$this->end_settings_page();		
 	}
 	
@@ -262,19 +277,19 @@ class ikFacebookOptions
 	{
 		$this->start_settings_page();
 		$ikfb_themes = array(
-							'style' => 'Default Style',
-							'dark_style' => 'Dark Style',
-							'light_style' => 'Light Style',
-							'blue_style' => 'Blue Style',
-							'no_style' => 'No Style',
+							'style' => 'Default Theme',
+							'dark_style' => 'Dark Theme',
+							'light_style' => 'Light Theme',
+							'blue_style' => 'Blue Theme',
+							'no_style' => 'No Theme',
 						);
 						
 		if(is_valid_key(get_option('ik_fb_pro_key'))){
-			$ikfb_themes['cobalt_style'] = 'Cobalt Style';
-			$ikfb_themes['green_gray_style'] = 'Green Gray Style';
-			$ikfb_themes['halloween_style'] = 'Halloween Style';
-			$ikfb_themes['indigo_style'] = 'Indigo Style';
-			$ikfb_themes['orange_style'] = 'Orange Style';			
+			$ikfb_themes['cobalt_style'] = 'Cobalt Theme';
+			$ikfb_themes['green_gray_style'] = 'Green Gray Theme';
+			$ikfb_themes['halloween_style'] = 'Halloween Theme';
+			$ikfb_themes['indigo_style'] = 'Indigo Theme';
+			$ikfb_themes['orange_style'] = 'Orange Theme';			
 		}
 		?>
 		<?php settings_fields( 'ik-fb-style-settings-group' ); ?>
@@ -283,224 +298,154 @@ class ikFacebookOptions
 			<p><?php _e('These options control the style of the Facebook Feed displayed on your website. You can change fonts, colors, image sizes, and even add your own custom CSS.');?></p>
 		
 			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_feed_theme"><?php _e('Feed Theme');?></a></th>
-					<td>
-						<select name="ik_fb_feed_theme" id="ik_fb_feed_theme">	
-							<?php foreach($ikfb_themes as $value => $name): ?>
-							<option value="<?php echo $value; ?>" <?php if(get_option('ik_fb_feed_theme') == $value): echo 'selected="SELECTED"'; endif; ?>><?php echo $name; ?></option>
-							<?php endforeach; ?>
-						</select>
-						<p class="description"><?php _e("Select which theme you want to use.  If 'No Style' is selected, only your Theme's CSS, and any Custom CSS you've added, will be used.  The settings below will override the defaults set in your selected theme.");?></p>
-					</td>
-				</tr>
-				
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_custom_css"><?php _e('Custom CSS');?></a></th>
-					<td><textarea name="ik_fb_custom_css" id="ik_fb_custom_css" style="width: 100%; height: 250px;"><?php echo get_option('ik_fb_custom_css'); ?></textarea>
-					<p class="description"><?php _e("Input any Custom CSS you want to use here.  You can also include a file in your theme's folder called 'ik_fb_custom_style.css' - any styles in that file will be loaded with the plugin.  The plugin will work without you placing anything here - this is useful in case you need to edit any styles for it to work with your theme, though.");?></p></td>
-				</tr>
+			<?php 
+				$desc = 'Select which theme you want to use.  If \'No Theme\' is selected, only your own theme\'s CSS, and any Custom CSS you\'ve added, will be used.  The settings below will override the defaults set in your selected theme.';
+				if (!is_valid_key(get_option('ik_fb_pro_key'))) {
+					$desc .= '<br /><br /><a href="http://goldplugins.com/our-plugins/wp-social-pro/#buy_now?utm_source=plugin&utm_campaign=unlock_more_themes">Tip: Upgrade to WP Social Pro to unlock more themes!</a>';
+				}
+				$this->shed->select( array('name' => 'ik_fb_feed_theme', 'options' => $ikfb_themes, 'label' =>'Feed Theme', 'value' => get_option('ik_fb_feed_theme'), 'description' => $desc) );
+			?>				
+				<?php $this->shed->textarea( array('name' => 'ik_fb_custom_css', 'label' =>'Custom CSS', 'value' => get_option('ik_fb_custom_css'), 'description' => 'Input any Custom CSS you want to use here.  You can also include a file in your theme\'s folder called \'ik_fb_custom_style.css\' - any styles in that file will be loaded with the plugin.  The plugin will work without you placing anything here - this is useful in case you need to edit any styles for it to work with your theme, though.') ); ?>
 				
 				<tr><td colspan=2><h4><?php _e('Feed Images');?></h4></td></tr>
 				
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_fix_feed_image_width"><?php _e('Fix Feed Image Width');?></label></th>
-					<td><input type="checkbox" name="ik_fb_fix_feed_image_width" id="ik_fb_fix_feed_image_width" value="1" <?php if(get_option('ik_fb_fix_feed_image_width')){ ?> checked="CHECKED" <?php } ?>/>
-					<p class="description"><?php _e("If checked, images inside the feed will all be displayed at the width set below.  If both this and 'Fix Feed Image Height' are unchecked, feed will display image thumbnails.");?></p></td>
-				</tr>
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_feed_image_width"><?php _e('Feed Image Width');?></label></th>
-					<td>
-					
-					<input type="radio" name="ik_fb_feed_image_width" id="ik_fb_feed_image_width" <?php if(get_option('ik_fb_feed_image_width')=="100%"){ ?> checked="CHECKED" <?php } ?> value="100%"> 100%<br>
-					<input type="radio" name="ik_fb_feed_image_width" id="ik_fb_feed_image_width"  <?php if(get_option('ik_fb_feed_image_width')=="OTHER"){ ?> checked="CHECKED" <?php } ?> value="OTHER"> Other Pixel Value <input type="text" style="width: 250px" value="<?php echo get_option('other_ik_fb_feed_image_width'); ?>" name="other_ik_fb_feed_image_width" />
-									
-					<p class="description"><?php _e("If 'Fix Feed Image Width' is checked, the images will be set to this width.  Choose '100%' or 'Other' and type in an integer number of pixels.  The effect of this setting may vary, based upon your theme's CSS.");?></p></td>
-				</tr>
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_fix_feed_image_height"><?php _e('Fix Feed Image Height');?></label></th>
-					<td><input type="checkbox" name="ik_fb_fix_feed_image_height" id="ik_fb_fix_feed_image_height" value="1" <?php if(get_option('ik_fb_fix_feed_image_height')){ ?> checked="CHECKED" <?php } ?>/>
-					<p class="description"><?php _e("If checked, images inside the feed will all be displayed at the height set below.  If both this and 'Fix Feed Image Width' are unchecked, feed will display image thumbnails.");?></p></td>
-				</tr>
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_feed_image_height"><?php _e('Feed Image Height');?></label></th>
-					<td>
-					
-					<input type="radio" name="ik_fb_feed_image_height" id="ik_fb_feed_image_height" <?php if(get_option('ik_fb_feed_image_height')=="100%"){ ?> checked="CHECKED" <?php } ?> value="100%"> 100%<br>
-					<input type="radio" name="ik_fb_feed_image_height" id="ik_fb_feed_image_height"  <?php if(get_option('ik_fb_feed_image_height')=="OTHER"){ ?> checked="CHECKED" <?php } ?> value="OTHER"> Other Pixel Value <input type="text" style="width: 250px" value="<?php echo get_option('other_ik_fb_feed_image_height'); ?>" name="other_ik_fb_feed_image_height" />
-					
-					<p class="description"><?php _e("If 'Fix Feed Image Height' is checked, the images will be set to this width.  Choose '100%' or 'Other' and type in an integer number of pixels.  The effect of this setting may vary, based upon your theme's CSS.");?></p></td>
-				</tr>
+				<?php
+					$checked = (get_option('ik_fb_fix_feed_image_width') == '1');
+					$this->shed->checkbox( array('name' => 'ik_fb_fix_feed_image_width', 'label' =>'Fix Feed Image Width', 'value' => 1, 'checked' => $checked, 'description' => 'If checked, images inside the feed will all be displayed at the width set below. If both this and \'Fix Feed Image Height\' are unchecked, feed will display image thumbnails.', 'inline_label' => 'Display images at the width selected below') ); 
+				?>
+				
+				<?php
+					$radio_options = array(
+						'100%' => '100%',
+						'OTHER' => sprintf('Other Pixel Value {{text|other_ik_fb_feed_image_width|%s}}', get_option('other_ik_fb_feed_image_width')),
+					);				
+					$this->shed->radio( array('name' => 'ik_fb_feed_image_width', 'value' => get_option('ik_fb_feed_image_width'), 'options' => $radio_options, 'label' =>'Feed Image Width', 'description' => "If 'Fix Feed Image Width' is checked, the images will be set to this width.  Choose '100%' or 'Other' and type in an integer number of pixels.  The effect of this setting may vary, based upon your theme's CSS.") );
+				?>
+
+				<?php
+					$checked = (get_option('ik_fb_fix_feed_image_height') == '1');
+					$this->shed->checkbox( array('name' => 'ik_fb_fix_feed_image_height', 'label' =>'Fix Feed Image Height', 'value' => 1, 'checked' => $checked, 'description' => 'If checked, images inside the feed will all be displayed at the height set below.  If both this and \'Fix Feed Image Width\' are unchecked, feed will display image thumbnails.', 'inline_label' => 'Display images at the height selected below') ); 
+				?>
+				<?php
+					$radio_options = array(
+						'100%' => '100%',
+						'OTHER' => sprintf('Other Pixel Value {{text|other_ik_fb_feed_image_height|%s}}', get_option('other_ik_fb_feed_image_height')),
+					);				
+					$this->shed->radio( array('name' => 'ik_fb_feed_image_height', 'value' => get_option('ik_fb_feed_image_height'), 'options' => $radio_options, 'label' =>'Feed Image Height', 'description' => "If 'Fix Feed Image Height' is checked, the images will be set to this height.  Choose '100%' or 'Other' and type in an integer number of pixels.  The effect of this setting may vary, based upon your theme's CSS.") );
+				?>
 				
 				<tr><td colspan=2><h4><?php _e('Feed Window Color and Dimensions');?></h4></td></tr>
 				
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_header_bg_color"><?php _e('Feed Header Background Color');?></label></th>
-					<td>
-					<div class="color-picker" style="position: relative;">
-						<input type="text" name="ik_fb_header_bg_color" id="ik_fb_header_bg_color" value="<?php echo strlen(get_option('ik_fb_header_bg_color'))>2 ? get_option('ik_fb_header_bg_color') : ' '; ?>" class="color" />
-						<div style="z-index: 100; background: none repeat scroll 0% 0% rgb(238, 238, 238); border: 1px solid rgb(204, 204, 204); position: absolute;" class="colorpicker"></div>
-					</div>		
-					
-					<p class="description"><?php _e('Input your hex color code, by clicking and using the Colorpicker or typing it in.  Erase the contents of this field to use the default color.');?></p></td>
-				</tr>
+				<?php $this->shed->color( array('name' => 'ik_fb_header_bg_color', 'label' =>'Feed Header Background Color', 'value' => get_option('ik_fb_header_bg_color'), 'description' => 'Input your hex color code, by clicking and using the Colorpicker or typing it in.  Erase the contents of this field to use the default color.') ); ?>				
+				<?php $this->shed->color( array('name' => 'ik_fb_window_bg_color', 'label' =>'Feed Window Background Color', 'value' => get_option('ik_fb_window_bg_color'), 'description' => 'Input your hex color code, by clicking and using the Colorpicker or typing it in.  Erase the contents of this field to use the default color.') ); ?>
 				
-				<tr valign="top">
-					<div class="color-picker" style="position: relative;">					
-					<th scope="row"><label for="ik_fb_window_bg_color"><?php _e('Feed Window Background Color');?></label></th>
-					<td>				
-					<div class="color-picker" style="position: relative;">
-						<input type="text" name="ik_fb_window_bg_color" id="ik_fb_window_bg_color" value="<?php echo strlen(get_option('ik_fb_window_bg_color'))>2 ? get_option('ik_fb_window_bg_color') : ' '; ?>" class="color" />
-						<div style="z-index: 100; background: none repeat scroll 0% 0% rgb(238, 238, 238); border: 1px solid rgb(204, 204, 204); position: absolute;" class="colorpicker"></div>
-					</div>		
-					<p class="description"><?php _e('Input your hex color code, by clicking and using the Colorpicker or typing it in.  Erase the contents of this field to use the default color.');?></p></td>
-				</tr>
+				<?php
+					$radio_options = array(
+						'' => 'Default',
+						'auto' => 'Auto',
+						'100%' => '100%',
+						'OTHER' => sprintf('Other Pixel Value {{text|other_ik_fb_feed_window_height|%s}}', get_option('other_ik_fb_feed_window_height')),
+					);				
+					$this->shed->radio( array('name' => 'ik_fb_feed_window_height', 'value' => get_option('ik_fb_feed_window_height'), 'options' => $radio_options, 'label' =>'Feed Window Height', 'description' => "Choose 'Auto', '100%', or 'Other' and type in an integer number of pixels. The effect of this setting may vary, based upon your theme's CSS. This option does not apply to the sidebar widget.") );
+				?>
 				
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_feed_window_height"><?php _e('Feed Window Height');?></label></th>
-					<td>
-					
-					<input type="radio" name="ik_fb_feed_window_height" id="ik_fb_feed_window_height" <?php if(get_option('ik_fb_feed_window_height')==""){ ?> checked="CHECKED" <?php } ?> value=""> Default<br>
-					<input type="radio" name="ik_fb_feed_window_height" id="ik_fb_feed_window_height" <?php if(get_option('ik_fb_feed_window_height')=="auto"){ ?> checked="CHECKED" <?php } ?> value="auto"> Auto<br>
-					<input type="radio" name="ik_fb_feed_window_height" id="ik_fb_feed_window_height" <?php if(get_option('ik_fb_feed_window_height')=="100%"){ ?> checked="CHECKED" <?php } ?> value="100%"> 100%<br>
-					<input type="radio" name="ik_fb_feed_window_height" id="ik_fb_feed_window_height"  <?php if(get_option('ik_fb_feed_window_height')=="OTHER"){ ?> checked="CHECKED" <?php } ?> value="OTHER"> Other Pixel Value <input type="text" style="width: 250px" value="<?php echo get_option('other_ik_fb_feed_window_height'); ?>" name="other_ik_fb_feed_window_height" />
-					
-					<p class="description"><?php _e("Choose 'Auto', '100%', or 'Other' and type in an integer number of pixels. The effect of this setting may vary, based upon your theme's CSS. This option does not apply to the sidebar widget.");?></p></td>
-				</tr>
+				<?php
+					$radio_options = array(
+						'' => 'Default',
+						'auto' => 'Auto',
+						'100%' => '100%',
+						'OTHER' => sprintf('Other Pixel Value {{text|other_ik_fb_feed_window_width|%s}}', get_option('other_ik_fb_feed_window_width')),
+					);				
+					$this->shed->radio( array('name' => 'ik_fb_feed_window_width', 'value' => get_option('ik_fb_feed_window_width'), 'options' => $radio_options, 'label' =>'Feed Window Width', 'description' => "Choose 'Auto', '100%', or 'Other' and type in an integer number of pixels. The effect of this setting may vary, based upon your theme's CSS. This option does not apply to the sidebar widget.") );
+				?>
 				
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_feed_window_width"><?php _e('Feed Window Width');?></label></th>
-					<td>
-					
-					<input type="radio" name="ik_fb_feed_window_width" id="ik_fb_feed_window_width" <?php if(get_option('ik_fb_feed_window_width')==""){ ?> checked="CHECKED" <?php } ?> value=""> Default<br>
-					<input type="radio" name="ik_fb_feed_window_width" id="ik_fb_feed_window_width" <?php if(get_option('ik_fb_feed_window_width')=="auto"){ ?> checked="CHECKED" <?php } ?> value="auto"> Auto<br>
-					<input type="radio" name="ik_fb_feed_window_width" id="ik_fb_feed_window_width" <?php if(get_option('ik_fb_feed_window_width')=="100%"){ ?> checked="CHECKED" <?php } ?> value="100%"> 100%<br>
-					<input type="radio" name="ik_fb_feed_window_width" id="ik_fb_feed_window_width"  <?php if(get_option('ik_fb_feed_window_width')=="OTHER"){ ?> checked="CHECKED" <?php } ?> value="OTHER"> Other Pixel Value <input type="text" style="width: 250px" value="<?php echo get_option('other_ik_fb_feed_window_width'); ?>" name="other_ik_fb_feed_window_width" />
-					
-					<p class="description"><?php _e("Choose 'Auto', '100%', or 'Other' and type in an integer number of pixels. The effect of this setting may vary, based upon your theme's CSS. This option does not apply to the sidebar widget.");?></p></td>
-				</tr>
+				<?php
+					$radio_options = array(
+						'' => 'Default',
+						'auto' => 'Auto',
+						'100%' => '100%',
+						'OTHER' => sprintf('Other Pixel Value {{text|other_ik_fb_sidebar_feed_window_height|%s}}', get_option('other_ik_fb_sidebar_feed_window_height')),
+					);				
+					$this->shed->radio( array('name' => 'ik_fb_sidebar_feed_window_height', 'value' => get_option('ik_fb_sidebar_feed_window_height'), 'options' => $radio_options, 'label' =>'Sidebar Feed Window Height', 'description' => "Choose 'Auto', '100%', or 'Other' and type in an integer number of pixels. The effect of this setting may vary, based upon your theme's CSS. This option does not apply to the sidebar widget.") );
+				?>
 				
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_sidebar_feed_window_height"><?php _e('Sidebar Feed Window Height');?></label></th>
-					<td>
-					
-					<input type="radio" name="ik_fb_sidebar_feed_window_height" id="ik_fb_sidebar_feed_window_height" <?php if(get_option('ik_fb_sidebar_feed_window_height')==""){ ?> checked="CHECKED" <?php } ?> value=""> Default<br>
-					<input type="radio" name="ik_fb_sidebar_feed_window_height" id="ik_fb_sidebar_feed_window_height" <?php if(get_option('ik_fb_sidebar_feed_window_height')=="auto"){ ?> checked="CHECKED" <?php } ?> value="auto"> Auto<br>
-					<input type="radio" name="ik_fb_sidebar_feed_window_height" id="ik_fb_sidebar_feed_window_height" <?php if(get_option('ik_fb_sidebar_feed_window_height')=="100%"){ ?> checked="CHECKED" <?php } ?> value="100%"> 100%<br>
-					<input type="radio" name="ik_fb_sidebar_feed_window_height" id="ik_fb_sidebar_feed_window_height"  <?php if(get_option('ik_fb_sidebar_feed_window_height')=="OTHER"){ ?> checked="CHECKED" <?php } ?> value="OTHER"> Other Pixel Value <input type="text" style="width: 250px" value="<?php echo get_option('other_ik_fb_sidebar_feed_window_height'); ?>" name="other_ik_fb_sidebar_feed_window_height" />
-					
-					<p class="description"><?php _e("Choose 'Auto', '100%', or 'Other' and type in an integer number of pixels. The effect of this setting may vary, based upon your theme's CSS.");?></p></td>
-				</tr>
-				
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_sidebar_feed_window_width"><?php _e('Sidebar Feed Window Width');?></label></th>
-					<td>
-					
-					<input type="radio" name="ik_fb_sidebar_feed_window_width" id="ik_fb_sidebar_feed_window_width" <?php if(get_option('ik_fb_sidebar_feed_window_width')==""){ ?> checked="CHECKED" <?php } ?> value=""> Default<br>
-					<input type="radio" name="ik_fb_sidebar_feed_window_width" id="ik_fb_sidebar_feed_window_width" <?php if(get_option('ik_fb_sidebar_feed_window_width')=="auto"){ ?> checked="CHECKED" <?php } ?> value="auto"> Auto<br>
-					<input type="radio" name="ik_fb_sidebar_feed_window_width" id="ik_fb_sidebar_feed_window_width" <?php if(get_option('ik_fb_sidebar_feed_window_width')=="100%"){ ?> checked="CHECKED" <?php } ?> value="100%"> 100%<br>
-					<input type="radio" name="ik_fb_sidebar_feed_window_width" id="ik_fb_sidebar_feed_window_width"  <?php if(get_option('ik_fb_sidebar_feed_window_width')=="OTHER"){ ?> checked="CHECKED" <?php } ?> value="OTHER"> Other Pixel Value <input type="text" style="width: 250px" value="<?php echo get_option('other_ik_fb_sidebar_feed_window_width'); ?>" name="other_ik_fb_sidebar_feed_window_width" />
-					
-					<p class="description"><?php _e("Choose 'Auto', '100%', or 'Other' and type in an integer number of pixels. The effect of this setting may vary, based upon your theme's CSS.");?></p></td>
-				</tr>
-				
-				<tr><td colspan=2><h4><?php _e('Font Styling');?></h4></td></tr>
-			
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_description_font_color"><?php _e('Description Font Color');?></label></th>
-					<td>
-					<div class="color-picker" style="position: relative;">				
-						<input type="text" name="ik_fb_description_font_color" id="ik_fb_description_font_color" value="<?php echo strlen(get_option('ik_fb_description_font_color'))>2 ? get_option('ik_fb_description_font_color') : ' '; ?>" class="color" />
-						<div style="z-index: 100; background: none repeat scroll 0% 0% rgb(238, 238, 238); border: 1px solid rgb(204, 204, 204); position: absolute;" class="colorpicker"></div>
-					</div>						
-					<p class="description"><?php _e('Input your hex color code, by clicking and using the Colorpicker or typing it in.  Erase the contents of this field to use the default color.');?></p></td>
+				<?php
+					$radio_options = array(
+						'' => 'Default',
+						'auto' => 'Auto',
+						'100%' => '100%',
+						'OTHER' => sprintf('Other Pixel Value {{text|other_ik_fb_sidebar_feed_window_width|%s}}', get_option('other_ik_fb_sidebar_feed_window_width')),
+					);				
+					$this->shed->radio( array('name' => 'ik_fb_sidebar_feed_window_width', 'value' => get_option('ik_fb_sidebar_feed_window_width'), 'options' => $radio_options, 'label' =>'Sidebar Feed Window Width', 'description' => "Choose 'Auto', '100%', or 'Other' and type in an integer number of pixels. The effect of this setting may vary, based upon your theme's CSS. This option does not apply to the sidebar widget.") );
+				?>
+								
+				<tr>
+					<td colspan="2">
+						<h4><?php _e('Font Styling');?></h4>
+						<p class="section_intro"><strong>Tip:</strong> try out the the <a href="http://www.google.com/fonts/" target="_blank">Google Web Fonts</a> for more exotic font options!</p>
+					</td>
 				</tr>
 			
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_description_font_size"><?php _e('Description Font Size');?></label></th>
-					<td><input type="text" name="ik_fb_description_font_size" id="ik_fb_description_font_size" value="<?php echo get_option('ik_fb_description_font_size'); ?>" style="width: 250px" />
-					<p class="description"><?php _e('Input your font pixel size.');?></p></td>
-				</tr>
+				<?php
+					$values = array(
+								'font_size' => get_option('ik_fb_description_font_size'),
+								'font_family' => get_option('ik_fb_description_font_family'),
+								'font_style' => get_option('ik_fb_description_font_style'),
+								'font_color' => get_option('ik_fb_description_font_color'),
+							);
+					$this->shed->typography( array('name' => 'ik_fb_description_*', 'label' =>'Description Font', 'description' => 'Choose a font size, family, style, and color.', 'google_fonts' => true, 'default_color' => '#878787', 'values' => $values) );
+				?>
+
+				<?php
+					$values = array(
+								'font_size' => get_option('ik_fb_font_size'),
+								'font_family' => get_option('ik_fb_font_family'),
+								'font_style' => get_option('ik_fb_font_style'),
+								'font_color' => get_option('ik_fb_font_color'),
+							);
+					$this->shed->typography( array('name' => 'ik_fb_*', 'label' =>'Message Font', 'description' => 'Choose a font size, family, style, and color.', 'google_fonts' => true, 'default_color' => '#878787', 'values' => $values) );
+				?>
+
+				<?php
+					$values = array(
+								'font_size' => get_option('ik_fb_link_font_size'),
+								'font_family' => get_option('ik_fb_link_font_family'),
+								'font_style' => get_option('ik_fb_link_font_style'),
+								'font_color' => get_option('ik_fb_link_font_color'),
+							);
+					$this->shed->typography( array('name' => 'ik_fb_link_*', 'label' =>'Link Font', 'description' => 'Choose a font size, family, style, and color.', 'google_fonts' => true, 'default_color' => '#878787', 'values' => $values) );
+				?>
 			
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_font_color"><?php _e('Message Font Color');?></label></th>
-					<td>
-					<div class="color-picker" style="position: relative;">				
-						<input type="text" name="ik_fb_font_color" id="ik_fb_font_color" value="<?php echo strlen(get_option('ik_fb_font_color'))>2 ? get_option('ik_fb_font_color') : ' '; ?>" class="color" />
-						<div style="z-index: 100; background: none repeat scroll 0% 0% rgb(238, 238, 238); border: 1px solid rgb(204, 204, 204); position: absolute;" class="colorpicker"></div>
-					</div>						
-					<p class="description"><?php _e('Input your hex color code, by clicking and using the Colorpicker or typing it in.  Erase the contents of this field to use the default color.');?></p></td>
-				</tr>
+				<?php
+					$values = array(
+								'font_size' => get_option('ik_fb_posted_by_font_size'),
+								'font_family' => get_option('ik_fb_posted_by_font_family'),
+								'font_style' => get_option('ik_fb_posted_by_font_style'),
+								'font_color' => get_option('ik_fb_posted_by_font_color'),
+							);
+					$this->shed->typography( array('name' => 'ik_fb_posted_by_*', 'label' =>'Posted By Font', 'description' => 'Choose a font size, family, style, and color.', 'google_fonts' => true, 'default_color' => '#878787', 'values' => $values) );
+				?>
+
+				<?php
+					$values = array(
+								'font_size' => get_option('ik_fb_date_font_size'),
+								'font_family' => get_option('ik_fb_date_font_family'),
+								'font_style' => get_option('ik_fb_date_font_style'),
+								'font_color' => get_option('ik_fb_date_font_color'),
+							);
+					$this->shed->typography( array('name' => 'ik_fb_date_*', 'label' =>'Date Font', 'description' => 'Choose a font size, family, style, and color.', 'google_fonts' => true, 'default_color' => '#878787', 'values' => $values) );
+				?>
 			
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_font_size"><?php _e('Message Font Size');?></label></th>
-					<td><input type="text" name="ik_fb_font_size" id="ik_fb_font_size" value="<?php echo get_option('ik_fb_font_size'); ?>" style="width: 250px" />
-					<p class="description"><?php _e('Input your font pixel size.');?></p></td>
-				</tr>
+				<?php
+					$values = array(
+								'font_size' => get_option('ik_fb_powered_by_font_size'),
+								'font_family' => get_option('ik_fb_powered_by_font_family'),
+								'font_style' => get_option('ik_fb_powered_by_font_style'),
+								'font_color' => get_option('ik_fb_powered_by_font_color'),
+							);
+					$this->shed->typography( array('name' => 'ik_fb_powered_by_*', 'label' =>'Powered By Font', 'description' => 'Choose a font size, family, style, and color.', 'google_fonts' => true, 'default_color' => '#878787', 'values' => $values) );
+				?>
 			
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_link_font_color"><?php _e('Link Font Color');?></label></th>
-					<td>
-					<div class="color-picker" style="position: relative;">				
-						<input type="text" name="ik_fb_link_font_color" id="ik_fb_link_font_color" value="<?php echo strlen(get_option('ik_fb_link_font_color'))>2 ? get_option('ik_fb_link_font_color') : ' '; ?>" class="color" />
-						<div style="z-index: 100; background: none repeat scroll 0% 0% rgb(238, 238, 238); border: 1px solid rgb(204, 204, 204); position: absolute;" class="colorpicker"></div>
-					</div>						
-					<p class="description"><?php _e('Input your hex color code, by clicking and using the Colorpicker or typing it in.  Erase the contents of this field to use the default color.');?></p></td>
-				</tr>
-			
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_link_font_size"><?php _e('Link Font Size');?></label></th>
-					<td><input type="text" name="ik_fb_link_font_size" id="ik_fb_link_font_size" value="<?php echo get_option('ik_fb_link_font_size'); ?>" style="width: 250px" />
-					<p class="description"><?php _e('Input your font pixel size.');?></p></td>
-				</tr>			
-			
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_posted_by_font_color"><?php _e('Posted By Font Color');?></label></th>
-					<td>
-					<div class="color-picker" style="position: relative;">				
-						<input type="text" name="ik_fb_posted_by_font_color" id="ik_fb_posted_by_font_color" value="<?php echo strlen(get_option('ik_fb_posted_by_font_color'))>2 ? get_option('ik_fb_posted_by_font_color') : ' '; ?>" class="color" />
-						<div style="z-index: 100; background: none repeat scroll 0% 0% rgb(238, 238, 238); border: 1px solid rgb(204, 204, 204); position: absolute;" class="colorpicker"></div>
-					</div>						
-					<p class="description"><?php _e('Input your hex color code, by clicking and using the Colorpicker or typing it in.  Erase the contents of this field to use the default color.');?></p></td>
-				</tr>
-			
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_date_font_size"><?php _e('Date Font Size');?></label></th>
-					<td><input type="text" name="ik_fb_date_font_size" id="ik_fb_date_font_size" value="<?php echo get_option('ik_fb_date_font_size'); ?>" style="width: 250px" />
-					<p class="description"><?php _e('Input your font pixel size.');?></p></td>
-				</tr>
-				
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_date_font_color"><?php _e('Date Font Color');?></label></th>
-					<td>
-					<div class="color-picker" style="position: relative;">				
-						<input type="text" name="ik_fb_date_font_color" id="ik_fb_date_font_color" value="<?php echo strlen(get_option('ik_fb_date_font_color'))>2 ? get_option('ik_fb_date_font_color') : ' '; ?>" class="color" />
-						<div style="z-index: 100; background: none repeat scroll 0% 0% rgb(238, 238, 238); border: 1px solid rgb(204, 204, 204); position: absolute;" class="colorpicker"></div>
-					</div>						
-					<p class="description"><?php _e('Input your hex color code, by clicking and using the Colorpicker or typing it in.  Erase the contents of this field to use the default color.');?></p></td>
-				</tr>
-			
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_posted_by_font_size"><?php _e('Posted By Font Size');?></label></th>
-					<td><input type="text" name="ik_fb_posted_by_font_size" id="ik_fb_posted_by_font_size" value="<?php echo get_option('ik_fb_posted_by_font_size'); ?>" style="width: 250px" />
-					<p class="description"><?php _e('Input your font pixel size.');?></p></td>
-				</tr>
-			
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_powered_by_font_color"><?php _e('Powered By Font Color');?></label></th>
-					<td>
-					<div class="color-picker" style="position: relative;">				
-						<input type="text" name="ik_fb_powered_by_font_color" id="ik_fb_powered_by_font_color" value="<?php echo strlen(get_option('ik_fb_powered_by_font_color'))>2 ? get_option('ik_fb_powered_by_font_color') : ' '; ?>" class="color" />
-						<div style="z-index: 100; background: none repeat scroll 0% 0% rgb(238, 238, 238); border: 1px solid rgb(204, 204, 204); position: absolute;" class="colorpicker"></div>
-					</div>						
-					<p class="description"><?php _e('Input your hex color code, by clicking and using the Colorpicker or typing it in.  Erase the contents of this field to use the default color.');?></p></td>
-				</tr>
-			
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_powered_by_font_size"><?php _e('Powered By Font Size');?></label></th>
-					<td><input type="text" name="ik_fb_powered_by_font_size" id="ik_fb_powered_by_font_size" value="<?php echo get_option('ik_fb_powered_by_font_size'); ?>" style="width: 250px" />
-					<p class="description"><?php _e('Input your font pixel size.');?></p></td>
-				</tr>
 			</table>
 		<?php			
 		$this->end_settings_page();		
@@ -519,125 +464,64 @@ class ikFacebookOptions
 			<p><?php _e('These options control the type and amount of content that is displayed in your Facebook Feed.');?></p>
 			
 			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_show_only_events"><?php _e('Show Only Events');?></label></th>
-					<td><input type="checkbox" name="ik_fb_show_only_events" id="ik_fb_show_only_events" value="1" <?php if(get_option('ik_fb_show_only_events')){ ?> checked="CHECKED" <?php } ?>/>
-					<p class="description"><?php _e('If checked, only Events will be shown in your Feed.');?></p></td>
-				</tr>
-			</table>
+			<?php
+				// Show Only Events (checkbox)
+				$checked = (get_option('ik_fb_show_only_events') == '1');
+				$this->shed->checkbox( array('name' => 'ik_fb_show_only_events', 'label' =>'Show Only Events', 'value' => 1, 'checked' => $checked, 'description' => 'If checked, only Events will be shown in your Feed.', 'inline_label' => 'Only Show Events In My Feed') ); 
+				
+				// Link Photo To Feed Item (checkbox)
+				$checked = (get_option('ik_fb_link_photo_to_feed_item') == '1');
+				$this->shed->checkbox( array('name' => 'ik_fb_link_photo_to_feed_item', 'label' =>'Link Photo to Feed Item', 'value' => 1, 'checked' => $checked, 'description' => 'If checked, the Photos in the Feed will link to the same location that the Read More text does.  If unchecked, the Photos in the Feed will link to the Full Sized version of themselves.', 'inline_label' => 'Link Photos to \'Read More\'') ); 
+
+				// Limit the number of photos in the feed (number)
+				$this->shed->text( array('name' => 'ik_fb_photo_feed_limit', 'label' =>'Number of Photo Feed Items', 'value' => get_option('ik_fb_photo_feed_limit'), 'description' => 'The default number of items displayed is 25 - set higher numbers to display more.  If set, the photo feed will be limited to this number of items.  This can be overridden via the shortcode.') );
+
+				// Limit the total number of posts in the feed (number)
+				$this->shed->text( array('name' => 'ik_fb_feed_limit', 'label' =>'Number of Feed Items', 'value' => get_option('ik_fb_feed_limit'), 'description' => 'The default number of items displayed is 25 - set higher numbers to display more.  If set, the feed will be limited to this number of items.  This can be overridden via the shortcode.') );
+
+				// Feed Item Message Character limit (number)
+				$this->shed->text( array('name' => 'ik_fb_character_limit', 'label' =>'Feed Item Message Character Limit', 'value' => get_option('ik_fb_character_limit'), 'description' => 'If set, the feed item will be limited to this number of characters.  If a feed item is shortened, a Read More link will be displayed.') );
+
+				// Feed Item Description Character Limit (number)
+				$this->shed->text( array('name' => 'ik_fb_description_character_limit', 'label' =>'Feed Item Description Character Limit', 'value' => get_option('ik_fb_description_character_limit'), 'description' => 'If set, the feed item will be limited to this number of characters.  If a feed item is shortened, a Read More link will be displayed.') );
 			
-			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_link_photo_to_feed_item"><?php _e('Link Photo to Feed Item');?></label></th>
-					<td><input type="checkbox" name="ik_fb_link_photo_to_feed_item" id="ik_fb_link_photo_to_feed_item" value="1" <?php if(get_option('ik_fb_link_photo_to_feed_item')){ ?> checked="CHECKED" <?php } ?>/>
-					<p class="description"><?php _e('If checked, the Photos in the Feed will link to the same location that the Read More text does.  If unchecked, the Photos in the Feed will link to the Full Sized version of themselves.');?></p></td>
-				</tr>
-			</table>
-			
-			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_photo_feed_limit"><?php _e('Number of Photo Feed Items');?></label></th>
-					<td><input type="text" name="ik_fb_photo_feed_limit" id="ik_fb_photo_feed_limit" value="<?php echo get_option('ik_fb_photo_feed_limit'); ?>" style="width: 250px" />
-					<p class="description"><?php _e('The default number of items displayed is 25 - set higher numbers to display more.  If set, the photo feed will be limited to this number of items.  This can be overridden via the shortcode.');?></p></td>
-				</tr>
-			</table>
-			
-			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_feed_limit"><?php _e('Number of Feed Items');?></label></th>
-					<td><input type="text" name="ik_fb_feed_limit" id="ik_fb_feed_limit" value="<?php echo get_option('ik_fb_feed_limit'); ?>" style="width: 250px" />
-					<p class="description"><?php _e('The default number of items displayed is 25 - set higher numbers to display more.  If set, the feed will be limited to this number of items.  This can be overridden via the shortcode.');?></p></td>
-				</tr>
-			</table>
-			
-			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_character_limit"><?php _e('Feed Item Message Character Limit');?></label></th>
-					<td><input type="text" name="ik_fb_character_limit" id="ik_fb_character_limit" value="<?php echo get_option('ik_fb_character_limit'); ?>" style="width: 250px" />
-					<p class="description"><?php _e('If set, the feed item will be limited to this number of characters.  If a feed item is shortened, a Read More link will be displayed.');?></p></td>
-				</tr>
-			</table>
-			
-			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_description_character_limit"><?php _e('Feed Item Description Character Limit');?></label></th>
-					<td><input type="text" name="ik_fb_description_character_limit" id="ik_fb_description_character_limit" value="<?php echo get_option('ik_fb_description_character_limit'); ?>" style="width: 250px" />
-					<p class="description"><?php _e('If set, the feed item will be limited to this number of characters.  If a feed item is shortened, a Read More link will be displayed.');?></p></td>
-				</tr>
-			</table>
-			
-			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_hide_feed_images"><?php _e('Hide Feed Images');?></label></th>
-					<td><input type="checkbox" name="ik_fb_hide_feed_images" id="ik_fb_show_feed_images" value="1" <?php if(get_option('ik_fb_hide_feed_images')){ ?> checked="CHECKED" <?php } ?>/>
-					<p class="description"><?php _e('If checked, images will be hidden from your feed.');?></p></td>
-				</tr>
-			</table>
-			
-			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_show_like_button"><?php _e('Show Like Button');?></label></th>
-					<td><input type="checkbox" name="ik_fb_show_like_button" id="ik_fb_show_like_button" value="1" <?php if(get_option('ik_fb_show_like_button')){ ?> checked="CHECKED" <?php } ?>/>
-					<p class="description"><?php _e('If checked, the Like Button and number of people who like your page will be displayed above the Feed.');?></p></td>
-				</tr>
-			</table>
-			
-			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_show_profile_picture"><?php _e('Show Profile Picture');?></label></th>
-					<td><input type="checkbox" name="ik_fb_show_profile_picture" id="ik_fb_show_profile_picture" value="1" <?php if(get_option('ik_fb_show_profile_picture')){ ?> checked="CHECKED" <?php } ?>/>
-					<p class="description"><?php _e('If checked, the Profile Picture will be shown next to the Title of the feed.');?></p></td>
-				</tr>
-			</table>
-			
-			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_show_page_title"><?php _e('Show Page Title');?></label></th>
-					<td><input type="checkbox" name="ik_fb_show_page_title" id="ik_fb_show_page_title" value="1" <?php if(get_option('ik_fb_show_page_title')){ ?> checked="CHECKED" <?php } ?>/>
-					<p class="description"><?php _e('If checked, the Title of the feed will be shown.');?></p></td>
-				</tr>
-			</table>
-			
-			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_show_posted_by"><?php _e('Show Posted By');?></label></th>
-					<td><input type="checkbox" name="ik_fb_show_posted_by" id="ik_fb_show_posted_by" value="1" <?php if(get_option('ik_fb_show_posted_by')){ ?> checked="CHECKED" <?php } ?>/>
-					<p class="description"><?php _e('If checked, the text Posted By PosterName will be displayed in the feed.');?></p></td>
-				</tr>
-			</table>
-			
-			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_show_date"><?php _e('Show Posted Date');?></label></th>
-					<td><input type="checkbox" name="ik_fb_show_date" id="ik_fb_show_date" value="1" <?php if(get_option('ik_fb_show_date')){ ?> checked="CHECKED" <?php } ?>/>
-					<p class="description"><?php _e('If checked, the date of the post will be displayed in the Feed.');?></p></td>
-				</tr>
-			</table>
-			
-			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_use_human_timing"><?php _e('Do Not Use Special Formatting for Times within 24 hours');?></label></th>
-					<td><input type="checkbox" name="ik_fb_use_human_timing" id="ik_fb_use_human_timing" value="1" <?php if(get_option('ik_fb_use_human_timing')){ ?> checked="CHECKED" <?php } ?>/>
-					<p class="description"><?php _e('If checked, the date of the post will not be displayed using XX hours ago, when within 24 hours of now.');?></p></td>
-				</tr>
-			</table>
-			
-			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_date_format"><?php _e('Date Format');?></label></th>
-					<td><input type="text" name="ik_fb_date_format" id="ik_fb_date_format" value="<?php echo get_option('ik_fb_date_format'); ?>" style="width: 250px" />
-					<p class="description"><?php _e('The format string to be used for the Post Date.  This follows the standard used for PHP strfrtime().  Warning: this is an advanced feature - do not change this value if you do not know what you are doing! The default setting is %B %d');?></p></td>
-				</tr>
-			</table>
-			
-			<table class="form-table">
-				<tr valign="top">
-					<th scope="row"><label for="ik_fb_powered_by"><?php _e('Show "Powered By IK Facebook"');?></label></th>
-					<td><input type="checkbox" name="ik_fb_powered_by" id="ik_fb_powered_by" value="1" <?php if(get_option('ik_fb_powered_by')){ ?> checked="CHECKED" <?php } ?>/>
-					<p class="description"><?php _e('Love this plugin but are unable to donate?  Show your love by displaying our inconspicuous "Powered By IK Facebook" link in the footer of your site.');?></p></td>
-				</tr>
-			</table>
-				<?php	
+				// Hide Images in Feed (checkbox)
+				$checked = (get_option('ik_fb_hide_feed_images') == '1');
+				$this->shed->checkbox( array('name' => 'ik_fb_hide_feed_images', 'label' =>'Hide Feed Images', 'value' => 1, 'checked' => $checked, 'description' => 'If checked, images will be hidden from your feed.', 'inline_label' => 'Hide All Images In My Feed') ); 
+
+				// Show the Like Button (checkbox)
+				$checked = (get_option('ik_fb_show_like_button') == '1');
+				$this->shed->checkbox( array('name' => 'ik_fb_show_like_button', 'label' =>'Show Like Button', 'value' => 1, 'checked' => $checked, 'description' => 'If checked, the Like Button and number of people who like your page will be displayed above the Feed.', 'inline_label' => 'Show the Like Button above my feed') ); 
+
+				// Show Profile Photo (checkbox)
+				$checked = (get_option('ik_fb_show_profile_picture') == '1');
+				$this->shed->checkbox( array('name' => 'ik_fb_show_profile_picture', 'label' =>'Show Profile Picture', 'value' => 1, 'checked' => $checked, 'description' => 'If checked, the Profile Picture will be shown next to the Title of the feed.', 'inline_label' => 'Show my Profile Picture above my feed ') );
+
+				// Show Page Title (checkbox)
+				$checked = (get_option('ik_fb_show_page_title') == '1');
+				$this->shed->checkbox( array('name' => 'ik_fb_show_page_title', 'label' =>'Show Page Title', 'value' => 1, 'checked' => $checked, 'description' => 'If checked, the Title of the feed will be shown.', 'inline_label' => 'Show my Page Title above my feed') );
+
+				// Show 'Posted By' text (checkbox)
+				$checked = (get_option('ik_fb_show_posted_by') == '1');
+				$this->shed->checkbox( array('name' => 'ik_fb_show_posted_by', 'label' =>'Show Posted By', 'value' => 1, 'checked' => $checked, 'description' => 'If checked, the text Posted By PosterName will be displayed in the feed.', 'inline_label' => 'Show \'Posted by PosterName\' for each item') );
+
+				// Show Posted Date (checkbox)
+				$checked = (get_option('ik_fb_show_date') == '1');
+				$this->shed->checkbox( array('name' => 'ik_fb_show_date', 'label' =>'Show Posted Date', 'value' => 1, 'checked' => $checked, 'description' => 'If checked, the date of the post will be displayed in the Feed.', 'inline_label' => 'Show the date posted for each item') );
+
+				// Disable "Human Timing" (checkbox)
+				$checked = (get_option('ik_fb_use_human_timing') == '1');
+				$this->shed->checkbox( array('name' => 'ik_fb_use_human_timing', 'label' =>'Disable "Human Timing" For Timestamps', 'value' => 1, 'checked' => $checked, 'description' => 'Check this box to always show normal timestamps, instead of "XX hours ago"', 'inline_label' => 'Disable "Human Timing" for Timestamps') );
+
+				// Date Format (text)
+				$this->shed->text( array('name' => 'ik_fb_date_format', 'label' =>'Date Format', 'value' => get_option('ik_fb_date_format'), 'description' => 'The format string to be used for the Post Date.  This follows the standard used for PHP strfrtime().  Warning: this is an advanced feature - do not change this value if you do not know what you are doing! The default setting is %B %d') );
+
+				// Show Powered By link (checkbox)
+				$checked = (get_option('ik_fb_powered_by') == '1');
+				$this->shed->checkbox( array('name' => 'ik_fb_powered_by', 'label' =>'Show Powered By IK Facebook', 'value' => 1, 'checked' => $checked, 'description' => 'Love this plugin but are unable to donate?  Show your love by displaying our inconspicuous "Powered By IK Facebook" link in the footer of your site.', 'inline_label' => 'Add a "Powered By IK Facebook" link to my website\'s footer') );
+			?>
+			</table>					
+		<?php	
 		$this->end_settings_page();		
 	}
 	
@@ -647,8 +531,8 @@ class ikFacebookOptions
 	function pro_options_page()
 	{
 		$this->start_settings_page();
-		global $ik_social_pro_options;		
-		$ik_social_pro_options->output_settings();	
+		global $ik_social_pro_options;
+		$ik_social_pro_options->output_settings($this->shed);
 		$this->end_settings_page();		
 	}
 	
@@ -852,15 +736,21 @@ class ikFacebookOptions
 			<div id="signup_wrapper">
 				<div id="mc_embed_signup">
 					<form action="http://illuminatikarate.us2.list-manage1.com/subscribe/post?u=403e206455845b3b4bd0c08dc&amp;id=3e22ddb309" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-						<p class="special-offer green_bg">Special Offer: Get $30 OFF WP Social Pro</p>
-						<h3><?php _e("Subscribe to our newsletter, and save $30 on any version of WP Social Pro!", $this->textdomain); ?></h3>
-						<p class="explain"><?php _e("Once you've confirmed your email address, you'll receive a coupon code for $30 off any version of WP Social Pro. After that, you'll receive around one email from us each month, jam-packed with tips, tricks, and special offers for getting more out of WordPress.", $this->textdomain); ?></p>
+						<p class="special-offer green_bg">Special Offer</p>
+						<h3><?php _e("Save 20% on WP Social PRO", $this->textdomain); ?></h3>
+						<p class="explain"><?php _e("Submit your name and email and we'll send you a coupon for 20% off your upgrade to the PRO version.", $this->textdomain); ?></p>
+						<label for="mce-EMAIL">Your Name:</label>
+						<input type="email" value="" name="NAME" class="email" id="mce-EMAIL" placeholder="Your Name" required>
 						<label for="mce-EMAIL">Your Email:</label>
-						<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
+						<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Your Email" required>
 						<!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
 						<div style="position: absolute; left: -5000px;"><input type="text" name="b_403e206455845b3b4bd0c08dc_6ad78db648" tabindex="-1" value=""></div>
-						<div class="clear"><input type="submit" value="Subscribe Now" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+						<div class="clear"><input type="submit" value="Send Me The Coupon" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
 						<p class="respect"><em>We respect your privacy.</em></p>
+						<p class="customer_testimonial">
+							"It's easy to use, it works, and with excellent support from it's developers - there is no reason to use any other plugin."
+							<br /><span class="author">&dash; Jake Wheat, Author &amp; Artist</span>
+						</p>
 					</form>
 				</div>
 				<p class="u_to_p"><a href="http://goldplugins.com/our-plugins/wp-social-pro/#buy_now"><?php _e("Upgrade to WP Social Pro now</a> to remove banners like this one.", $this->textdomain); ?></p>
