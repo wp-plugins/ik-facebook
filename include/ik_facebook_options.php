@@ -32,7 +32,7 @@ class ikFacebookOptions
 		}
 		
 		// create the BikeShed object now, so that BikeShed can add its hooks
-        $this->shed = new \GoldPlugins\BikeShed();
+        $this->shed = new GoldPlugins_BikeShed();
 	}
 	
 	function add_admin_menu_item(){

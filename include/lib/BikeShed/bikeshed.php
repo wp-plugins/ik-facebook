@@ -1,7 +1,8 @@
 <?php
-namespace GoldPlugins;
+// turning off namespace until WordPress bumps its requirements up to PHP 5.3
+// namespace GoldPlugins;
 
-	class BikeShed
+	class GoldPlugins_BikeShed
 	{
 		var $font_sizes = array();
 		var $font_families = array(
