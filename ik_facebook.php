@@ -3,8 +3,8 @@
 Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
-Author: Illuminati Karate, Inc.
-Version: 2.9.1
+Author: Gold Plugins
+Version: 2.9.2
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -22,6 +22,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with the IK Facebook Plugin .  If not, see <http://www.gnu.org/licenses/>.
 */
+include('include/lib/ik_notify.php');
 include('include/widgets/ik_facebook_feed_widget.php');
 include('include/widgets/ik_facebook_like_button_widget.php');
 include('include/ik_facebook_options.php');
@@ -38,8 +39,12 @@ class ikFacebook
 {
 	var $authToken;
 	var $textdomain = "iksocialpro";
-
+	var $notifications;
+	
 	function __construct(){
+		//setup notifications
+		$this->notifications = new ikNotify();
+		
 		//create shortcodes
 		add_shortcode('ik_fb_feed', array($this, 'ik_fb_output_feed_shortcode'));
 		add_shortcode('ik_fb_gallery', array($this, 'ik_fb_output_gallery_shortcode'));
@@ -59,7 +64,7 @@ class ikFacebook
 		
 		add_action( 'admin_init', array($this, 'ikfb_admin_init') );
 		
-		$this->options = new ikFacebookOptions($this);		
+		$this->options = new ikFacebookOptions($this);	
 	}
 	
     function ikfb_admin_init() {
@@ -70,6 +75,14 @@ class ikFacebook
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 		wp_enqueue_style('jquery-style', plugins_url('include/css/jquery-ui.css', __FILE__));
 		wp_enqueue_script( 'ik_fb_pro_options', plugins_url('include/js/js.js', __FILE__), array( 'farbtastic', 'jquery' ) );
+		
+		wp_enqueue_script(
+			'gp-admin',
+			plugins_url('include/js/gp-admin.js', __FILE__),
+			array( 'jquery' ),
+			false,
+			true
+		); 
     }
 
 	//register any widgets here
@@ -208,9 +221,6 @@ class ikFacebook
 	public function ik_fb_output_gallery($id = '', $size = '320x180', $show_name = true, $the_title = null, $num_photos = false){
 		$output = '';
 		
-		$app_id = get_option('ik_fb_app_id');
-		$app_secret = get_option('ik_fb_secret_key');
-		
 		$size_array = array(
 			'2048x1152' => 0,
 			'960x540' => 1,
@@ -244,7 +254,7 @@ class ikFacebook
 		$position = $size_array[$size];
 		
 		if(!isset($this->authToken)){
-			$this->authToken = $this->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
+			$this->authToken = $this->generateAccessToken();
 		}
 			
 		//see if a limit is set in the options, if one wasn't passed via shortcode
@@ -588,12 +598,9 @@ class ikFacebook
 			$event_id = $item->id;
 		}
 		
-		if($event_id) {
-			$app_id = get_option('ik_fb_app_id');
-			$app_secret = get_option('ik_fb_secret_key');
-			
+		if($event_id) {			
 			if(!isset($this->authToken)){
-				$this->authToken = $this->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
+				$this->authToken = $this->generateAccessToken();
 			}
 			
 			$event_data = $this->fetchUrl("https://graph.facebook.com/{$event_id}?summary=1&{$this->authToken}", true);//the event data
@@ -845,7 +852,7 @@ class ikFacebook
 		$page_id = $item->from->id;
 	
 		if(!isset($this->authToken)){
-			$this->authToken = $this->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
+			$this->authToken = $this->generateAccessToken();
 		}	
 		
 		//need info about full sized photo for linking purposes
@@ -1089,6 +1096,17 @@ class ikFacebook
 		return $retData;
 	}
 	
+	//loads app id and secret key from settings
+	//generates an authtoken via the graph api and sets it
+	function generateAccessToken(){
+		$app_id = get_option('ik_fb_app_id');
+		$app_secret = get_option('ik_fb_secret_key');
+			
+		$access_token = $this->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
+		
+		return $access_token;
+	}
+	
 	//loads facebook feed based on current id
 	function loadFacebook($id = false, $num_posts = -1, $content_type = ''){
 		$retData = array();
@@ -1099,12 +1117,9 @@ class ikFacebook
 			$profile_id = $id;
 		}
 	
-		if(isset($profile_id) && strlen($profile_id)>0){
-			$app_id = get_option('ik_fb_app_id');
-			$app_secret = get_option('ik_fb_secret_key');
-			
+		if(isset($profile_id) && strlen($profile_id)>0){			
 			if(!isset($this->authToken)){
-				$this->authToken = $this->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
+				$this->authToken = $this->generateAccessToken();
 			}
 			
 			//see if a limit is set in the options, if one wasn't passed via shortcode

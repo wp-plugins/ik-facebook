@@ -183,11 +183,20 @@ class ikFacebookOptions
 			$title = __("IK Facebook Plugin Settings", $this->textdomain);
 			$message = __("IK Facebook Plugin Settings Updated.", $this->textdomain);
 		}
+		global $current_user;
+		get_currentuserinfo();
 		?>
+			<script type="text/javascript">
+				jQuery(function () {
+					if (typeof(gold_plugins_init_mailchimp_form) == 'function') {
+						gold_plugins_init_mailchimp_form();
+					}
+				});
+			</script>
 			<?php if(is_valid_key()): ?>	
-			<div class="wrap ikfb_settings">
+			<div class="wrap ikfb_settings gold_plugins_settings">
 			<?php else: ?>
-			<div class="wrap ikfb_settings not-pro">			
+			<div class="wrap ikfb_settings not-pro gold_plugins_settings">			
 			<?php endif; ?>
 			
 				<?php echo $before_title; ?>
@@ -382,7 +391,7 @@ class ikFacebookOptions
 				<tr>
 					<td colspan="2">
 						<h4><?php _e('Font Styling');?></h4>
-						<p class="section_intro"><strong>Tip:</strong> try out the the <a href="http://www.google.com/fonts/" target="_blank">Google Web Fonts</a> for more exotic font options!</p>
+						<p class="section_intro"><strong>Tip:</strong> try out the <a href="http://www.google.com/fonts/" target="_blank">Google Web Fonts</a> for more exotic font options!</p>
 					</td>
 				</tr>
 			
@@ -621,20 +630,28 @@ class ikFacebookOptions
 		} else {
 			$results['keys_present'] = true;
 		}
-				  
-		// Test #2: See if we can load the demo profile
+		
+
+		// Test #2: See if we can connect to the Graph API and generate an Access Token
+		$access_token = $this->root->generateAccessToken();
+		
+		if ( empty($access_token)){
+			$results['keys_work'] = false;
+		} else {
+			$results['keys_work'] = true;
+		}
+		
+		// Test #3: See if we can load the demo profile
 		$demo_feed = $this->root->loadFacebook('IlluminatiKarate');		
 		if ( empty($demo_feed['feed']) ) {
-			$results['keys_work'] = false;
 			$results['loaded_demo_profile'] = false;
 			$results['loaded_own_profile'] = false;
 			return $results;
 		} else {
-			$results['keys_work'] = true;
 			$results['loaded_demo_profile'] = true;
 		}
 				  
-		// Test #3: See if we can load the owner's profile
+		// Test #4: See if we can load the owner's profile
 		$own_feed = $this->root->loadFacebook($page_id);		
 		if ( empty($own_feed['feed']) ) {
 			$results['loaded_own_profile'] = false;
@@ -723,6 +740,7 @@ class ikFacebookOptions
 		</tbody>
 	</table>
 <?php	
+		$this->root->notifications->outputNotifications();
 	}
 	
 	
@@ -731,22 +749,29 @@ class ikFacebookOptions
 	 */
 	function output_newsletter_signup_form()
 	{
+		global $current_user;
+		get_currentuserinfo();
 ?>
 			<!-- Begin MailChimp Signup Form -->
 			<div id="signup_wrapper">
+				<div class="topper">
+					<h3>Save 20% on WP Social Pro!</h3>
+					<p class="pitch">Submit your name and email and we’ll send you a coupon for 20% off your upgrade to the Pro version.</p>
+				</div>
 				<div id="mc_embed_signup">
 					<form action="http://illuminatikarate.us2.list-manage1.com/subscribe/post?u=403e206455845b3b4bd0c08dc&amp;id=3e22ddb309" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-						<p class="special-offer green_bg">Special Offer</p>
-						<h3><?php _e("Save 20% on WP Social PRO", $this->textdomain); ?></h3>
-						<p class="explain"><?php _e("Submit your name and email and we'll send you a coupon for 20% off your upgrade to the PRO version.", $this->textdomain); ?></p>
 						<label for="mce-EMAIL">Your Name:</label>
-						<input type="email" value="" name="NAME" class="email" id="mce-EMAIL" placeholder="Your Name" required>
+						<input type="email" value="<?php echo (!empty($current_user->display_name) ? $current_user->display_name : ''); ?>" name="NAME" class="email" id="mce-EMAIL" placeholder="Your Name" required>
 						<label for="mce-EMAIL">Your Email:</label>
-						<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Your Email" required>
+						<input type="email" value="<?php echo (!empty($current_user->user_email) ? $current_user->user_email : ''); ?>" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Your Email" required>
 						<!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
 						<div style="position: absolute; left: -5000px;"><input type="text" name="b_403e206455845b3b4bd0c08dc_6ad78db648" tabindex="-1" value=""></div>
-						<div class="clear"><input type="submit" value="Send Me The Coupon" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
-						<p class="respect"><em>We respect your privacy.</em></p>
+						<div class="clear"><input type="submit" value="Send Me The Coupon Now!" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+						<p class="secure"><img src="<?php echo plugins_url( 'img/lock.png', __FILE__ ); ?>" alt="Lock" width="16px" height="16px" />We respect your privacy.</p>
+						<input type="hidden" id="mc-upgrade-plugin-name" value="WP Social Pro" />
+						<input type="hidden" id="mc-upgrade-link-per" value="http://goldplugins.com/purchase/wp-social-pro/single?promo=newsub20" />
+						<input type="hidden" id="mc-upgrade-link-biz" value="http://goldplugins.com/purchase/wp-social-pro/business?promo=newsub20" />
+						<input type="hidden" id="mc-upgrade-link-dev" value="http://goldplugins.com/purchase/wp-social-pro/developer?promo=newsub20" />
 						<p class="customer_testimonial">
 							"It's easy to use, it works, and with excellent support from it's developers - there is no reason to use any other plugin."
 							<br /><span class="author">&dash; Jake Wheat, Author &amp; Artist</span>
