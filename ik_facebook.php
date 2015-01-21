@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Gold Plugins
-Version: 2.9.2
+Version: 2.9.3
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -82,7 +82,18 @@ class ikFacebook
 			array( 'jquery' ),
 			false,
 			true
+		);
+		
+		wp_enqueue_script(
+			'ikfb-admin',
+			plugins_url('include/js/ikfb-admin.js', __FILE__),
+			array( 'jquery' ),
+			false,
+			true
 		); 
+
+		// register the shortcode generator script
+		wp_register_script( 'gp_shortcode_generator', plugins_url('include/js/shortcode-generator.js', __FILE__), array( 'jquery') );
     }
 
 	//register any widgets here
@@ -199,10 +210,18 @@ class ikFacebook
 			'use_thumb' => !get_option('ik_fb_fix_feed_image_width') && !get_option('ik_fb_fix_feed_image_height'),
 			'num_posts' => null,
 			'id' => false,
-			'show_errors' => false
+			'show_errors' => false,
+			'show_only_events' => get_option('ik_fb_show_only_events'),
+			'ik_fb_header_bg_color' => strlen(get_option('ik_fb_header_bg_color')) > 2 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_header_bg_color') : '',
+			'ik_fb_window_bg_color' => strlen(get_option('ik_fb_window_bg_color')) > 2 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_window_bg_color') : ''
+			
 		), $atts ) );
+				
+		// Initialize the feed options
+		$show_only_events = ($show_only_events) ? 1 : 0;		
+		$content_type = ($show_only_events) ? "events" : "";
 		
-		return $this->ik_fb_output_feed($colorscheme, $use_thumb, $width, false, $height, $num_posts, $id, $show_errors);
+		return $this->ik_fb_output_feed($colorscheme, $use_thumb, $width, false, $height, $num_posts, $id, $show_errors, $show_only_events, $content_type, $ik_fb_header_bg_color, $ik_fb_window_bg_color);
 	}
 	
 	function ik_fb_output_gallery_shortcode($atts){			
@@ -213,7 +232,7 @@ class ikFacebook
 			'show_name' => true,
 			'title' => null,
 			'num_photos' => false
-		), $atts ) );
+		), $atts ));
 		
 		return $this->ik_fb_output_gallery($id, $size, $show_name, $title, $num_photos);				
 	}
@@ -318,21 +337,22 @@ class ikFacebook
 	 * Outputs a Facebook feed for an event
 	 */
 	public function ik_fb_output_single_event($colorscheme = "light", $use_thumb = true, $width = "", $is_sidebar_widget = false, $height = "", $num_posts = null, $id = false, $show_errors = false) {
-		// pass through to the ik_fb_output_feed function, with the last param ($is_event) set to true
-		return $this->ik_fb_output_feed($colorscheme, $use_thumb, $width, $is_sidebar_widget, $height, $num_posts, $id, $show_errors, true);
-	}
-		
-	/**
-	 * Outputs a Facebook feed, either for a profile or for an event
-	 */
-	public function ik_fb_output_feed($colorscheme = "light", $use_thumb = true, $width = "", $is_sidebar_widget = false, $height = "", $num_posts = null, $id = false, $show_errors = false){
-
+				
 		// Initialize the feed options
 		$show_only_events = get_option('ik_fb_show_only_events');
 		$show_only_events = ($show_only_events) ? 1 : 0;		
 		$content_type = ($show_only_events) ? "events" : "";		
 		$ik_fb_header_bg_color = strlen(get_option('ik_fb_header_bg_color')) > 2 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_header_bg_color') : '';
-		$ik_fb_window_bg_color = strlen(get_option('ik_fb_window_bg_color')) > 2 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_window_bg_color') : '';
+		$ik_fb_window_bg_color = strlen(get_option('ik_fb_window_bg_color')) > 2 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_window_bg_color') : '';		
+		
+		// pass through to the ik_fb_output_feed function, with the last param ($is_event) set to true
+		return $this->ik_fb_output_feed($colorscheme, $use_thumb, $width, $is_sidebar_widget, $height, $num_posts, $id, $show_errors, true, $content_type, $ik_fb_header_bg_color, $ik_fb_window_bg_color);
+	}
+		
+	/**
+	 * Outputs a Facebook feed, either for a profile or for an event
+	 */
+	public function ik_fb_output_feed($colorscheme = "light", $use_thumb = true, $width = "", $is_sidebar_widget = false, $height = "", $num_posts = null, $id = false, $show_errors = false, $show_only_events, $content_type, $ik_fb_header_bg_color, $ik_fb_window_bg_color){
 
 		// load the width and height settings for the feed. 
 		// NOTE: the plugin uses different settings for the sidebar feed vs the normal (in-page) feed
@@ -808,8 +828,6 @@ class ikFacebook
 					if(!get_option('ik_fb_use_custom_html')){		
 						$posted_by_text = $this->ikfb_posted_by_styling($posted_by_text);
 					}			
-					//TBD: make Custom HTML option for Posted By
-					$line_item .= $posted_by_text;
 				}
 			}
 		}
@@ -1135,8 +1153,9 @@ class ikFacebook
 			}
 			
 			// Since we'll need to throw out some posts, we will query Facebook for 
-			//  the max possible # of posts and filter down to $limit from there
-			$fb_post_limit = 250; // TODO: move to a constant
+			// the max possible # of posts and filter down to $limit from there
+			// RWG: 1.21.15 -- reduced this from 250 to 50 due to various issues with the API timing out
+			$fb_post_limit = 50; // TODO: move to a constant	
 			
 			//handle events
 			if($content_type == "events") {
@@ -1158,7 +1177,8 @@ class ikFacebook
 				//if showing only page owner posts
 				if(get_option('ik_fb_only_show_page_owner') && is_valid_key(get_option('ik_fb_pro_key'))){
 					//only load page owner's posts
-					$fb_post_limit = 100; // there seems to be a bug with the Graph API, where we need to limit to 100 here (instead of the published limit of 250)
+					//RWG: 1.21.15 -- reduced this from 250 to 50 due to various issues with the API timing out
+					$fb_post_limit = 50; // there seems to be a bug with the Graph API, where we need to limit to 100 here (instead of the published limit of 250)
 					$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/posts?limit={$fb_post_limit}&{$this->authToken}", true);//the feed data
 				} else {
 					//if showing everything on the feed (3rd party and page owner)
@@ -1174,7 +1194,14 @@ class ikFacebook
 				if(get_option('ik_fb_reverse_events', 0) && $content_type == "events" && is_valid_key(get_option('ik_fb_pro_key'))){
 					$retData['feed'] = array_reverse($retData['feed']);
 				}
+			//in this case, something didn't load correctly.  lets try and see what it is...
+			} else {
+				//NOTES: limit seems to be impacting response times, causing various versions of "Feed Not Loading" errors
+				//As FB changes over time, so do response times, and so do incidences of this error
+				//I suggest to myself implementing a method of loading, via WP Cron, a few items at a time, and paging through the requests to build the feed without loading a ton at once.
+				$retData['feed_dump'] = $feed;
 			}
+			
 			if(isset($page_data)){ //check to see if page data is set
 				$retData['page_data'] = $page_data;
 			}

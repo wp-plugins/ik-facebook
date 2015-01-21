@@ -149,6 +149,8 @@
 								   'value'			=> '',
 								   'values'			=> array(),
 								   'default_color'	=> '#fff',
+								   'class'			=> '',
+								   'disabled'		=> '',
 							);
 			}
 			if (!is_array($options)) {
@@ -345,7 +347,7 @@
 					<select name="<?php echo $font_size_name?>" id="<?php echo $font_size_id?>" class="font_size_select">
 						<?php foreach($this->font_sizes as $font_size): ?>
 						<?php $selected = ($font_size == ($values['font_size'].'px')) ? ' selected="selected"' : ''; ?>
-						<option value="<?=$font_size?>" <?=$selected?>><?=$font_size?>px</option>
+						<option value="<?php echo $font_size?>" <?php echo $selected?>><?php echo $font_size?>px</option>
 						<?php endforeach; ?>
 					</select>
 				</div>
@@ -357,7 +359,7 @@
 						<?php endif; ?>
 							<?php foreach($this->font_families as $family): ?>
 							<?php $selected = ($family == $values['font_family']) ? ' selected="selected"' : ''; ?>
-							<option value="<?=$family?>" <?=$selected?>><?=$family?></option>
+							<option value="<?php echo $family?>" <?php echo $selected?>><?php echo $family?></option>
 							<?php endforeach; ?>
 						<?php if($options['google_fonts']): ?>
 						</optgroup>
@@ -367,7 +369,7 @@
 						<optgroup label="Google Fonts">
 							<?php foreach($this->load_google_fonts() as $family): ?>
 							<?php $selected = ( 'google:'.$family == $values['font_family'] ) ? ' selected="selected"' : ''; ?>
-							<option value="google:<?=$family?>" <?=$selected?>><?=$family?></option>
+							<option value="google:<?php echo $family?>" <?php echo $selected?>><?php echo $family?></option>
 							<?php endforeach; ?>
 						</optgroup>
 						<?php endif; ?>
@@ -377,7 +379,7 @@
 					<select name="<?php echo $font_style_name?>" id="<?php echo $font_style_id?>" class="font_style_select">
 						<?php foreach($this->font_styles as $style): ?>
 						<?php $selected = ($style == $values['font_style']) ? ' selected="selected"' : ''; ?>
-						<option value="<?=$style?>" <?=$selected?>><?=$style?></option>
+						<option value="<?php echo $style?>" <?php echo $selected?>><?php echo $style?></option>
 						<?php endforeach; ?>
 					</select>
 				</div>

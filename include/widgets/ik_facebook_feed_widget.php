@@ -65,6 +65,13 @@ class ikFacebookFeedWidget extends WP_Widget
 		$num_posts = empty($instance['num_posts']) ? get_option('ikfb_num_posts') : $instance['num_posts'];
 		$height = empty($instance['height']) ? get_option('ikfb_feed_window_height') : $instance['height'];
 		$width = empty($instance['width']) ? get_option('ik_fb_feed_image_width') : $instance['width'];
+		
+		// Initialize the feed options
+		$show_only_events = get_option('ik_fb_show_only_events');
+		$show_only_events = ($show_only_events) ? 1 : 0;		
+		$content_type = ($show_only_events) ? "events" : "";		
+		$ik_fb_header_bg_color = strlen(get_option('ik_fb_header_bg_color')) > 2 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_header_bg_color') : '';
+		$ik_fb_window_bg_color = strlen(get_option('ik_fb_window_bg_color')) > 2 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_window_bg_color') : '';
 
 		if (!empty($title))
 			echo $before_title . $title . $after_title;;
@@ -73,7 +80,7 @@ class ikFacebookFeedWidget extends WP_Widget
 			$ik_fb = new ikFacebook();
 		}
 
-		echo $ik_fb->ik_fb_output_feed($colorscheme,$use_thumbs,$width,true,$height,$num_posts,$page_id);
+		echo $ik_fb->ik_fb_output_feed($colorscheme,$use_thumbs,$width,true,$height,$num_posts,$page_id,false,$show_only_events,$content_type,$ik_fb_header_bg_color,$ik_fb_window_bg_color);
 
 		echo $after_widget;
 	} 

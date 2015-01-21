@@ -3,7 +3,7 @@
 <p class="plugin_is_registered">&#x2713; WP Social Pro is registered and activated. Thank you!</p>
 <?php else: ?>
 <p>Enter your Email Address and API Key here to activate additional features such as Custom HTML, Unbranded Admin Screens, Comments, Avatars, and more!</p>
-<p><a class="button" href="http://goldplugins.com/our-plugins/wp-social-pro/?utm_source=plugin&utm_campaign=api_key_reminder_2">Get An API Key</a></p>
+<p><a class="button" href="http://goldplugins.com/our-plugins/wp-social-pro/upgrade-to-wp-social-pro/?utm_source=plugin&utm_campaign=api_key_reminder_2">Get An API Key</a></p>
 <?php endif; ?>
 
 <?php if(!wpsp_is_valid_multisite_key()): ?>

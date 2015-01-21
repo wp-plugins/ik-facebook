@@ -61,6 +61,7 @@ class ikFacebookOptions
 		add_submenu_page( $top_level_menu_slug, 'Style Options', 'Style Options', 'manage_options', 'ikfb_style_options', array($this, 'style_options_page') ); 
 		add_submenu_page( $top_level_menu_slug, 'Display Options', 'Display Options', 'manage_options', 'ikfb_display_options', array($this, 'display_options_page') ); 
 		add_submenu_page( $top_level_menu_slug, 'Pro Options', 'Pro Options', 'manage_options', 'ikfb_pro_options', array($this, 'pro_options_page') ); 
+		//add_submenu_page( $top_level_menu_slug, 'Shortcode Generator', 'Shortcode Generator', 'manage_options', 'ikfb_shortcode_generator', array($this, 'shortcode_generator_page') ); 
 		add_submenu_page( $top_level_menu_slug, 'Plugin Status &amp; Help', 'Plugin Status &amp; Help', 'manage_options', 'ikfb_plugin_status', array($this, 'plugin_status_page') ); 
 
 		//call register settings function
@@ -217,7 +218,7 @@ class ikFacebookOptions
 				<?php endif; ?>	
 	
 				<?php if(!is_valid_key()): ?>	
-				<p class="plugin_is_not_registered">&#x2718; Your plugin is not registered and activated. You will not be able to use the PRO features until you upgrade. <a href="http://goldplugins.com/our-plugins/wp-social-pro/?utm_source=api_key_reminder" target="_blank">Click here to upgrade now!</a></p>
+				<p class="plugin_is_not_registered">&#x2718; Your plugin is not registered and activated. You will not be able to use the PRO features until you upgrade. <a class="button" href="http://goldplugins.com/our-plugins/wp-social-pro/upgrade-to-wp-social-pro/?utm_source=api_key_reminder" target="_blank">Click here to upgrade now!</a></p>
 				<?php endif; ?>	
 
 				<?php if($wrap_with_form): ?>
@@ -310,7 +311,7 @@ class ikFacebookOptions
 			<?php 
 				$desc = 'Select which theme you want to use.  If \'No Theme\' is selected, only your own theme\'s CSS, and any Custom CSS you\'ve added, will be used.  The settings below will override the defaults set in your selected theme.';
 				if (!is_valid_key(get_option('ik_fb_pro_key'))) {
-					$desc .= '<br /><br /><a href="http://goldplugins.com/our-plugins/wp-social-pro/#buy_now?utm_source=plugin&utm_campaign=unlock_more_themes">Tip: Upgrade to WP Social Pro to unlock more themes!</a>';
+					$desc .= '<br /><br /><a href="http://goldplugins.com/our-plugins/wp-social-pro/upgrade-to-wp-social-pro/?utm_source=plugin&utm_campaign=unlock_more_themes">Tip: Upgrade to WP Social Pro to unlock more themes!</a>';
 				}
 				$this->shed->select( array('name' => 'ik_fb_feed_theme', 'options' => $ikfb_themes, 'label' =>'Feed Theme', 'value' => get_option('ik_fb_feed_theme'), 'description' => $desc) );
 			?>				
@@ -546,6 +547,32 @@ class ikFacebookOptions
 	}
 	
 	/*
+	 * Outputs the Shortcode Generator page
+	 */
+	function shortcode_generator_page()
+	{
+		wp_enqueue_script( 'gp_shortcode_generator');
+		wp_enqueue_script( 'ikfb-admin');
+		echo '<div id="shortcode_generator">';
+		echo '<h3>Shortcode Generator</h3>';		
+		echo '<table class="form-table">';
+			echo '<tbody>';
+			// Facebook Page ID
+			$this->shed->text( array('name' => 'profile_id', 'label' =>'Facebook Page ID', 'value' => get_option('ik_fb_page_id'), 'description' => 'Your Facebook Username or Page ID. This can be a username (like IlluminatiKarate) or a number (like 189090822).') );
+
+			// Generate button
+			echo '<th scope="row"><label>&nbsp;</label></th><td><p class="submit"><input id="generate" type="submit" value="Generate My Shortcode" class="button-primary"></p></td>';
+			
+			// shortcode output
+			$this->shed->textarea( array('name' => 'shortcode', 'label' =>'Your Shortcode') );
+			echo '</tbody>';
+		echo '</table>';
+		echo '<form>';
+		echo '</form>';
+		echo '</div>';
+	}
+	
+	/*
 	 * Outputs the Basic Configuration page
 	 */
 	function plugin_status_page()
@@ -573,11 +600,16 @@ class ikFacebookOptions
 				
 		// show some example shortcodes				
 		_e("<h3>Example Shortcodes</h3>");
-		_e('<p>To output the custom Facebook Feed, place <code>[ik_fb_feed]</code> in the body of a post.  To further customize the feed via the shortcode, available attributes include: <code>colorscheme="light" use_thumb="true" width="250" num_posts="5" id="123456789"</code>.</p>');
+		_e('<p>To output the custom Facebook Feed, place the following shortcode in the body of any page or post:</p>');
+		_e('<p><input class="gp_code_to_copy" type="text" value="[ik_fb_feed]" /></p>');
+		_e('<p>To further customize the feed via the shortcode, available attributes include: <code>colorscheme="light" use_thumb="true" width="250" num_posts="5" id="123456789"</code>.</p>');
 		_e('<p><em>Valid choices for "colorscheme" are "light" and "dark". If "use_thumb" is set to true, the value of "width" will be ignored.  If "use_thumb" or "width" are not set, the values from the Options page will be used.  If id is not set, the shortcode will use the Page ID from your Settings page.</em></p>');
-		_e('<p>To output the Like Button, place <code>[ik_fb_like_button url="http://www.facebook.com"]</code> in the body of a post.  Valid attributes include: <code>url="" height="" colorscheme="light"</code>.</p>');
+		_e('<p>To output the Like Button, place the following shortcode in the body of any page or post:</p>');
+		_e('<p><input class="gp_code_to_copy" type="text" value=\'[ik_fb_like_button url="http://www.facebook.com"]\' /></p>');
+		_e('Valid attributes include: <code>url="" height="" colorscheme="light"</code>.</p>');
 		_e('<p><em>Valid options for colorscheme are "light" and "dark".  Valid values for height are integers.  URL must be a valid website URL.</em></p>');
-		_e('<p>To output a Photo Gallery, place <code>[ik_fb_gallery id="539627829386059" num_photos="25" size="130x73" title="Hello World!"]</code> in the body of a post.</p>');
+		_e('<p>To output a Photo Gallery, place the following shortcode in the body of any page or post:</p>');
+		_e('<p><input class="gp_code_to_copy" type="text" value=\'[ik_fb_gallery id="539627829386059" num_photos="25" size="130x73" title="Hello World!"]\' /></p>');
 		_e('<p><em>If no size is passed, it will default to 320 x 180.  Size options are 2048x1152, 960x540, 720x405, 600x337, 480x270, 320x180, and 130x73.  If num_photos is not passed, the Gallery will default to the amount set on the Dashboard - if no amount is set there, it will display up to 25 photos.  The ID number is found by looking at the URL of the link to the Album on Facebook - you can read more on our FAQs <a href="http://goldplugins.com/documentation/wp-social-pro-documentation/frequently-asked-questions/">here</a>.</em></p>');
 
 		// output the current configuration settings (e.g., Page ID, API Key, and Secret)
@@ -596,7 +628,7 @@ class ikFacebookOptions
 		echo "<ol>";
 		_e('<li><a href="https://wordpress.org/support/plugin/ik-facebook">Leave a message on the WordPress Support Forums</a>, and see if another member of the community can help.</li>');
 		if (!is_valid_key()) {
-			_e('<li><a href="http://goldplugins.com/our-plugins/wp-social-pro/?utm_source=help_from_a_human">Upgrade to WP Social Pro</a>, and get support directly from the developers.</li>');
+			_e('<li><a href="http://goldplugins.com/our-plugins/wp-social-pro/upgrade-to-wp-social-pro/?utm_source=help_from_a_human">Upgrade to WP Social Pro</a>, and get support directly from the developers.</li>');
 		} else {
 			_e('<li><a href="http://goldplugins.com/contact/">Contact Gold Plugins Support</a>. Please include the email address you used to purchase, and the address of this website.</li>');
 		}
@@ -630,7 +662,6 @@ class ikFacebookOptions
 		} else {
 			$results['keys_present'] = true;
 		}
-		
 
 		// Test #2: See if we can connect to the Graph API and generate an Access Token
 		$access_token = $this->root->generateAccessToken();
@@ -654,6 +685,12 @@ class ikFacebookOptions
 		// Test #4: See if we can load the owner's profile
 		$own_feed = $this->root->loadFacebook($page_id);		
 		if ( empty($own_feed['feed']) ) {
+			//echo "<pre>";
+			
+			//print_r($own_feed);
+			
+			//echo "</pre>";
+			
 			$results['loaded_own_profile'] = false;
 		} else {
 			$results['loaded_own_profile'] = true;
@@ -702,7 +739,7 @@ class ikFacebookOptions
 			<!-- Load Their Page Data -->
 			<?php if ( $diagnostics_results['loaded_own_profile'] ): ?>
 			<tr class="success">
-				<td><img src="<?php echo plugins_url('/img/check-button.png', __FILE__); ?>" alt="FAIL" /></td>
+				<td><img src="<?php echo plugins_url('/img/check-button.png', __FILE__); ?>" alt="SUCCESS" /></td>
 				<td>Loaded Your Profile</td>
 			</tr>			
 			<?php else: ?>
@@ -715,7 +752,7 @@ class ikFacebookOptions
 			<!-- Load Their Page Data -->
 			<?php if ( $diagnostics_results['loaded_demo_profile'] ): ?>
 			<tr class="success">
-				<td><img src="<?php echo plugins_url('/img/check-button.png', __FILE__); ?>" alt="FAIL" /></td>
+				<td><img src="<?php echo plugins_url('/img/check-button.png', __FILE__); ?>" alt="SUCCESS" /></td>
 				<td>Loaded Test Profile</td>
 			</tr>			
 			<?php else: ?>
@@ -778,94 +815,9 @@ class ikFacebookOptions
 						</p>
 					</form>
 				</div>
-				<p class="u_to_p"><a href="http://goldplugins.com/our-plugins/wp-social-pro/#buy_now"><?php _e("Upgrade to WP Social Pro now</a> to remove banners like this one.", $this->textdomain); ?></p>
+				<p class="u_to_p"><a href="http://goldplugins.com/our-plugins/wp-social-pro/upgrade-to-wp-social-pro/#buy_now"><?php _e("Upgrade to WP Social Pro now</a> to remove banners like this one.", $this->textdomain); ?></p>
 			</div>
 		<?php
 	} // end output_newsletter_signup_form function
-	
-	function output_upgrade_teaser()
-	{
-		?>
-		<style>
-		#upgrade_teaser {
-		    border: 1px solid gray;
-			padding-top: 50px;
-			position: relative;
-			margin-top: 30px;
-		}
-		#upgrade_teaser h2
-		{
-			color: white;
-			font-size: 18px;
-			left: 0;
-			padding: 10px 12px;
-			position: absolute;
-			right: 0;
-			top: 0;
-		}
-		#upgrade_teaser h2 span {
-			font-weight: bold;
-		}
-		#upgrade_teaser p.up
-		{
-			display: block;
-			font-size: 16px;
-			margin-bottom: 18px;		
-		}
-		#upgrade_teaser ul
-		{
-			list-style: disc outside none;
-			padding-bottom: 2px;
-			padding-left: 30px;		
-		}
-		#upgrade_teaser .button
-		{
-			background: #6db3f2; /* Old browsers */
-			background: -moz-linear-gradient(top,  #6db3f2 0%, #1e69de 100%); /* FF3.6+ */
-			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#6db3f2), color-stop(100%,#1e69de)); /* Chrome,Safari4+ */
-			background: -webkit-linear-gradient(top,  #6db3f2 0%,#1e69de 100%); /* Chrome10+,Safari5.1+ */
-			background: -o-linear-gradient(top,  #6db3f2 0%,#1e69de 100%); /* Opera 11.10+ */
-			background: -ms-linear-gradient(top,  #6db3f2 0%,#1e69de 100%); /* IE10+ */
-			background: linear-gradient(to bottom,  #6db3f2 0%,#1e69de 100%); /* W3C */
-			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6db3f2', endColorstr='#1e69de',GradientType=0 ); /* IE6-9 */
-			-webkit-border-radius: 5;
-			-moz-border-radius: 5;
-			border-radius: 5px;
-			font-family: Arial;
-			color: #ffffff;
-			font-size: 30px;
-			font-weight: bold;
-			padding: 10px 20px 10px 20px;
-			line-height: 1.5;
-			height: auto;
-			margin-top: 7px;
-			margin-bottom: 17px;
-			text-decoration: none;
-			text-shadow: 0 0 3px darkblue;
-			border: 3px solid #289AFD;
-			box-shadow: 0 2px 3px cadetblue;
-		}
-		</style>
-		<div class="updated" id="upgrade_teaser">
-			<h2 class="green_bg"><?php _e('Want More Features? Upgrade to WP Social Pro'); ?></h2>
-			<p class="up"><a href="http://goldplugins.com/our-plugins/wp-social-pro/"><?php _e('Upgrade to WP Social Pro now and get tons of new features and customization options. Click here!'); ?></a> </p>
-			<a href="http://goldplugins.com/our-plugins/wp-social-pro/?utm_source=plugin_dash" target="_blank" title="<?php _e('Learn More About WP Social Pro');?>"><img src="<?php echo plugins_url('/img/wp_social_pro_banner.png', __FILE__); ?>" alt="WP Social Pro" /><p class="description"><?php _e('Click Here To Learn About WP Social Pro');?></p></a>
-			<h3><?php _e('Pro Features Include:');?></h3>
-			<ul>
-				<li><strong><?php _e('Unbranded Admin screens:</strong> Remove all IK FB branding from your Wordpress admin.');?></li>
-				<li><strong><?php _e('Hide non-page-owner posts from your feed:</strong> With this option, your feed will only show the posts from your own account.');?></li>
-				<li><strong><?php _e("Custom HTML Output:</strong> Use any HTML tags you want for the feed. You'll be able to specify a custom HTML template for your feed.");?></li>
-				<li><strong><?php _e("Hand Crafted Themes:</strong> Use any of our hand crafted themes to style your output!  Our Support Staff will also help you customize your CSS or styles, too!");?></li>
-				<li><strong><?php _e("Fanatical Support:</strong> We're here to help!  Purchase WP Social Pro and receive prompt, responsive, and professional support.");?></li>
-			</ul>
-				
-			<p><?php _e('And more to come! WP Social Pro plugin owners get new updates automatically by email. New features land in the Pro version first, so be sure to upgrade today.');?></p>
-			<div style="max-width: 1000px; text-align: center; padding: 25px 0 20px;"><a class="button" href="http://goldplugins.com/our-plugins/wp-social-pro/?utm_source=plugin_dash" target="_blank" title="<?php _e('Upgrade To WP Social Pro');?>"><?php _e('Upgrade Now');?></a></div>
-						
-		</div>
-		<?php	
-	}
-		
-	
 } // end class
 ?>

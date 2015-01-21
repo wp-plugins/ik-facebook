@@ -60,7 +60,7 @@ class ikSocialProOptions
 		<h3><?php echo $title; ?></h3>
 		<p><?php _e('These additional settings provide even more control over the output of your Facebook feed.');?></p>
 		<?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?>
-			<p><strong>These settings require WP Social Pro, the Pro version of IK Facebook. </strong><a href="http://goldplugins.com/our-plugins/wp-social-pro/"><?php _e('Upgrade to WP Social Pro now');?></a> <?php _e('to instantly unlock these features and more.');?> </p>
+			<p><strong>These settings require WP Social Pro, the Pro version of IK Facebook. </strong><a href="http://goldplugins.com/our-plugins/wp-social-pro/upgrade-to-wp-social-pro/"><?php _e('Upgrade to WP Social Pro now');?></a> <?php _e('to instantly unlock these features and more.');?> </p>
 		<?php endif; ?>
 		
 		<?php if ( isset ( $_GET['pro_tab'] ) ) $this->ikfb_admin_tabs($_GET['pro_tab']); else $this->ikfb_admin_tabs('display_options'); ?>
@@ -233,7 +233,7 @@ class ikSocialProOptions
 	function pro_upgrade_link($text = 'Upgrade To WP Social Pro To Unlock These Features')
 	{
 		if(!is_valid_key(get_option('ik_fb_pro_key'))) {
-			return '<strong><a class="upgrade_link" href="http://goldplugins.com/our-plugins/wp-social-pro/?utm_source=pkugin_dash&utm_campaign=upgrade_to_unlock" target="_blank" />' . $text . '</a></strong>';
+			return '<strong><a class="button" href="http://goldplugins.com/our-plugins/wp-social-pro/upgrade-to-wp-social-pro/?utm_source=pkugin_dash&utm_campaign=upgrade_to_unlock" target="_blank" />' . $text . '</a></strong>';
 		} else {
 			return '';
 		}
