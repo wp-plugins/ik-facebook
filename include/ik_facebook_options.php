@@ -61,7 +61,7 @@ class ikFacebookOptions
 		add_submenu_page( $top_level_menu_slug, 'Style Options', 'Style Options', 'manage_options', 'ikfb_style_options', array($this, 'style_options_page') ); 
 		add_submenu_page( $top_level_menu_slug, 'Display Options', 'Display Options', 'manage_options', 'ikfb_display_options', array($this, 'display_options_page') ); 
 		add_submenu_page( $top_level_menu_slug, 'Pro Options', 'Pro Options', 'manage_options', 'ikfb_pro_options', array($this, 'pro_options_page') ); 
-		//add_submenu_page( $top_level_menu_slug, 'Shortcode Generator', 'Shortcode Generator', 'manage_options', 'ikfb_shortcode_generator', array($this, 'shortcode_generator_page') ); 
+		add_submenu_page( $top_level_menu_slug, 'Shortcode Generator', 'Shortcode Generator', 'manage_options', 'ikfb_shortcode_generator', array($this, 'shortcode_generator_page') ); 
 		add_submenu_page( $top_level_menu_slug, 'Plugin Status &amp; Help', 'Plugin Status &amp; Help', 'manage_options', 'ikfb_plugin_status', array($this, 'plugin_status_page') ); 
 
 		//call register settings function
@@ -551,25 +551,206 @@ class ikFacebookOptions
 	 */
 	function shortcode_generator_page()
 	{
+		$is_pro = is_valid_key(get_option('ik_fb_pro_key'));
+		
 		wp_enqueue_script( 'gp_shortcode_generator');
 		wp_enqueue_script( 'ikfb-admin');
-		echo '<div id="shortcode_generator">';
+		echo '<form id="gold_plugins_shortcode_generator">';
+		printf('<input type="hidden" id="ik_fb_is_pro" value="%s" />', ($is_pro ? 'true': 'false')); 
 		echo '<h3>Shortcode Generator</h3>';		
 		echo '<table class="form-table">';
 			echo '<tbody>';
 			// Facebook Page ID
-			$this->shed->text( array('name' => 'profile_id', 'label' =>'Facebook Page ID', 'value' => get_option('ik_fb_page_id'), 'description' => 'Your Facebook Username or Page ID. This can be a username (like IlluminatiKarate) or a number (like 189090822).') );
+			$this->shed->text( array('name' => 'id', 'label' =>'Facebook Page ID', 'value' => get_option('ik_fb_page_id'), 'description' => 'Your Facebook Username or Page ID. This can be a username (like IlluminatiKarate) or a number (like 189090822).') );	
 
-			// Generate button
-			echo '<th scope="row"><label>&nbsp;</label></th><td><p class="submit"><input id="generate" type="submit" value="Generate My Shortcode" class="button-primary"></p></td>';
+			//feed themes array
+			$ikfb_themes = array(
+				'style' => 'Default Theme',
+				'dark_style' => 'Dark Theme',
+				'light_style' => 'Light Theme',
+				'blue_style' => 'Blue Theme',
+				'no_style' => 'No Theme',
+			);
+
+			if(is_valid_key(get_option('ik_fb_pro_key'))){
+				$ikfb_themes['cobalt_style'] = 'Cobalt Theme';
+				$ikfb_themes['green_gray_style'] = 'Green Gray Theme';
+				$ikfb_themes['halloween_style'] = 'Halloween Theme';
+				$ikfb_themes['indigo_style'] = 'Indigo Theme';
+				$ikfb_themes['orange_style'] = 'Orange Theme';			
+			}
 			
+			$desc = 'Select which theme you want to use.  If \'No Theme\' is selected, only your own theme\'s CSS, and any Custom CSS you\'ve added, will be used.  The settings below will override the defaults set in your selected theme.';
+			if (!is_valid_key(get_option('ik_fb_pro_key'))) {
+				$desc .= '<br /><br /><a href="http://goldplugins.com/our-plugins/wp-social-pro/upgrade-to-wp-social-pro/?utm_source=plugin&utm_campaign=unlock_more_themes">Tip: Upgrade to WP Social Pro to unlock more themes!</a>';
+			}
+			
+			// NOTE: disabled until we can support themes from the shortcode
+			//feed themes dropdown menu
+			//$this->shed->select( array('name' => 'colorscheme', 'options' => $ikfb_themes, 'label' =>'Feed Theme', 'value' => get_option('ik_fb_feed_theme'), 'description' => $desc) );
+			
+			// Use Thumbnails (radio)
+			$radio_options = array(
+				'1' => 'Use \'Thumbnail Size\' for images',
+				'0' => 'Use the sizes specified below (Feed Image Width and Feed Image Height)',
+			);				
+			$this->shed->radio( array('name' => 'use_thumb', 'value' => get_option('ik_fb_use_thumb'), 'options' => $radio_options, 'label' =>'Use Image Thumbnails', 'description' => 'If you choose to specify your sizes, make sure to complete the 2 fields below (Feed Image Width and Feed Image Height).') );
+			
+			//feed image width
+			$this->shed->text( array('name' => 'feed_image_width', 'label' =>'Feed Image Width', 'value' => get_option('ik_fb_feed_image_width'), 'description' => 'The desired width of images in the feed. (Note: this field will be ignored if you select "Use \'Thumbnail Size\' above")') );	
+			
+			//feed image height
+			$this->shed->text( array('name' => 'feed_image_height', 'label' =>'Feed Image Height', 'value' => get_option('ik_fb_feed_image_height'), 'description' => 'The desired height of images in the feed. (Note: this field will be ignored if you select "Use \'Thumbnail Size\' above")') );	
+			
+			
+			// Show Only Events (checkbox)
+			$checked = (get_option('ik_fb_show_only_events') == '1');
+			$this->shed->checkbox( array('name' => 'show_only_events', 'label' =>'Show Only Events', 'value' => 1, 'checked' => $checked, 'description' => 'If checked, only Events will be shown in your Feed.', 'inline_label' => 'Only Show Events In My Feed') ); 
+			
+			// Link Photo To Feed Item (checkbox)
+			$checked = (get_option('ik_fb_link_photo_to_feed_item') == '1');
+			$this->shed->checkbox( array('name' => 'link_photo_to_feed_item', 'label' =>'Link Photo to Feed Item', 'value' => 1, 'checked' => $checked, 'description' => 'If checked, the Photos in the Feed will link to the same location that the Read More text does.  If unchecked, the Photos in the Feed will link to the Full Sized version of themselves.', 'inline_label' => 'Link Photos to \'Read More\'') ); 
+
+			// Limit the total number of posts in the feed (number)
+			$this->shed->text( array('name' => 'num_posts', 'label' =>'Number of Feed Items', 'value' => get_option('ik_fb_feed_limit'), 'description' => 'The default number of items displayed is 25 - set higher numbers to display more.  If set, the feed will be limited to this number of items.  This can be overridden via the shortcode.') );
+
+			// Feed Item Message Character limit (number)
+			$this->shed->text( array('name' => 'character_limit', 'label' =>'Feed Item Message Character Limit', 'value' => get_option('ik_fb_character_limit'), 'description' => 'If set, the feed item will be limited to this number of characters.  If a feed item is shortened, a Read More link will be displayed.') );
+
+			// Feed Item Description Character Limit (number)
+			$this->shed->text( array('name' => 'description_character_limit', 'label' =>'Feed Item Description Character Limit', 'value' => get_option('ik_fb_description_character_limit'), 'description' => 'If set, the feed item will be limited to this number of characters.  If a feed item is shortened, a Read More link will be displayed.') );
+		
+			// Hide Images in Feed (checkbox)
+			$radio_options = array(
+				'1' => 'Hide All Images In My Feed',
+				'0' => 'Allow Images In My Feed',
+			);				
+			$this->shed->radio( array('name' => 'hide_feed_images', 'value' => get_option('ik_fb_hide_feed_images'), 'options' => $radio_options, 'label' =>'Hide Feed Images', 'description' => "Whether or not to allow images in your feed") );
+			
+
+			// Show the Like Button (checkbox)
+			$radio_options = array(
+				'1' => 'Show A Like Button Above My Feed',
+				'0' => 'No Like Button',
+			);				
+			$this->shed->radio( array('name' => 'show_like_button', 'value' => get_option('ik_fb_show_like_button'), 'options' => $radio_options, 'label' =>'Show Like Button', 'description' => "If selected, a Like Button and number of people who like your page will be displayed above the Feed.") );
+
+			// Show Profile Photo (checkbox)
+			$radio_options = array(
+				'1' => 'Show Profile Picture',
+				'0' => 'No Profile Picture',
+			);				
+			$this->shed->radio( array('name' => 'show_profile_picture', 'value' => get_option('ik_fb_show_profile_picture'), 'options' => $radio_options, 'label' =>'Show Profile Picture', 'description' => "If selected, your Profile Picture will be shown next to the Title of the feed.") );
+
+			// Show Page Title (checkbox)
+			$radio_options = array(
+				'1' => 'Show Page Title Picture',
+				'0' => 'Do Not Show Page Title',
+			);				
+			$this->shed->radio( array('name' => 'show_page_title', 'value' => get_option('ik_fb_show_page_title'), 'options' => $radio_options, 'label' =>'Show Page Title', 'description' => "If selected, your Title of your page will be shown above the feed.") );
+
+			// Show 'Posted By' text (checkbox)
+			$radio_options = array(
+				'1' => 'Show \'Posted by Author_Name\' with each post in your feed',
+				'0' => 'Do not show the author\'s name with each post',
+			);				
+			$this->shed->radio( array('name' => 'show_posted_by', 'value' => get_option('ik_fb_show_posted_by'), 'options' => $radio_options, 'label' =>'Show \'Posted By\' Text', 'description' => "If selected, the text 'Posted By Author_Name' will be displayed in the feed.") );
+
+			// Show Posted Date (checkbox)
+			$radio_options = array(
+				'1' => 'Show the date posted for each item in the feed',
+				'0' => 'Do not show the date posted',
+			);				
+			$this->shed->radio( array('name' => 'show_date', 'value' => get_option('ik_fb_show_date'), 'options' => $radio_options, 'label' =>'Show Post Date', 'description' => "If selected,  the date of the post will be displayed in the Feed.") );
+
+			// Disable "Human Timing" (checkbox)
+			$radio_options = array(
+				'1' => 'Use \'Human Timing\' (Example: "posted 2 hours ago")',
+				'0' => 'Use \'Literal Timing\' (Example: "posted at 12:35 pm")',
+			);				
+			$this->shed->radio( array('name' => 'use_human_timing', 'value' => get_option('ik_fb_use_human_timing'), 'options' => $radio_options, 'label' =>'Use \'Human Timing\'', 'description' => 'Choose whether to use the more user-friendly "Human Timing" for your posts, or the standard "Literal Times"') );
+
+			// Date Format (text)
+			$this->shed->text( array('name' => 'date_format', 'label' =>'Date Format', 'value' => get_option('ik_fb_date_format'), 'description' => 'The format string to be used for the Post Date.  This follows the standard used for PHP strfrtime().  Warning: this is an advanced feature - do not change this value if you do not know what you are doing! The default setting is %B %d') );
+			
+			if(!is_valid_key(get_option('ik_fb_pro_key'))){
+				echo '<tr valign="top"><th colspan="2"><p><strong>These settings require WP Social Pro, the Pro version of IK Facebook. </strong><a href="http://goldplugins.com/our-plugins/wp-social-pro/upgrade-to-wp-social-pro/">' . __('Upgrade to WP Social Pro now') . '</a>' . __(' to instantly unlock these features and more.') . '</p></th></tr>';
+			}
+			
+			// Use Custom HTML (radio)
+			$radio_options = array(
+				'1' => 'Show avatars',
+				'0' => 'Do not show avatars',
+			);				
+			$this->shed->radio( array('name' => 'show_avatars', 'value' => get_option('ik_fb_show_avatars'), 'options' => $radio_options, 'label' =>'Show Avatars', 'description' => "Whether or not to show the avatar of the author for each post in the feed", 'disabled' => !$is_pro) );
+			
+			
+			// Show Comment Count (radio)
+			$radio_options = array(
+				'1' => 'Show comment counts',
+				'0' => 'Do not show comment counts',
+			);				
+			$this->shed->radio( array('name' => 'show_reply_counts', 'value' => get_option('ik_fb_show_reply_counts'), 'options' => $radio_options, 'label' =>'Show Comment Counts', 'description' => "Whether or not to show the comment count for each post in the feed", 'disabled' => !$is_pro) );
+
+			// Show Comments (radio)
+			$radio_options = array(
+				'1' => 'Show comments',
+				'0' => 'Do not show comments',
+			);				
+			$this->shed->radio( array('name' => 'show_replies', 'value' => get_option('ik_fb_show_replies'), 'options' => $radio_options, 'label' =>'Show Comments', 'description' => "Whether or not to show comments in your feed", 'disabled' => !$is_pro) );
+
+			// Show Likes (radio)			
+			$radio_options = array(
+				'1' => 'Show the number of likes on each post',
+				'0' => 'Do not show the number of likes on each post',
+			);				
+			$this->shed->radio( array('name' => 'show_likes', 'value' => get_option('ik_fb_show_likes'), 'options' => $radio_options, 'label' =>'Show Like Counts', 'description' => "Whether or not to show the number of likes for each post in the feed", 'disabled' => !$is_pro) );
+			
+			
+			// Only Show Page Owner's Posts (checkbox)
+			$radio_options = array(
+				'1' => 'Only show posts made by the page owner',
+				'0' => 'Show posts by all users (default)',
+			);				
+			$this->shed->radio( array('name' => 'only_show_page_owner', 'value' => get_option('ik_fb_only_show_page_owner'), 'options' => $radio_options, 'label' =>'Only Show Page Owner\'s Posts', 'description' => "Only show posts made by the page owner. This is a good choice if you don't want random posts appearing in your feed.", 'disabled' => !$is_pro) );
+
+
+
+			
+			// Reverse Event Feed Order (checkbox)
+			$checked = (get_option('ik_fb_reverse_events') == '1');
+			$this->shed->checkbox( array('name' => 'reverse_events', 'label' =>'Reverse Event Feed Order', 'value' => 1, 'checked' => $checked, 'description' => 'If checked, the order of the events feed will be reversed.', 'inline_label' => 'Reverse the order of the events feed', 'disabled' => !$is_pro) );
+		
+			// Start Date Format (text)
+			$value = get_option('ik_fb_start_date_format', 'l, F jS, Y h:i:s a');
+			$this->shed->text( array('name' => 'start_date_format', 'label' =>'Start Date Format', 'value' => $value, 'description' => 'The format string to be used for the Event Start Date.  This follows the standard used for PHP date.  Warning: this is an advanced feature - do not change this value if you do not know what you are doing! The default setting is l, F jS, Y h:i:s a', 'disabled' => !$is_pro) );
+
+			// End Date Format (text)
+			$value = get_option('ik_fb_end_date_format', 'l, F jS, Y h:i:s a');
+			$this->shed->text( array('name' => 'end_date_format', 'label' =>'End Date Format', 'value' => $value, 'description' => 'The format string to be used for the Event End Date.  This follows the standard used for PHP date.  Warning: this is an advanced feature - do not change this value if you do not know what you are doing! The default setting is l, F jS, Y h:i:s a', 'disabled' => !$is_pro) );
+
+			// Event Range - Start Date (text / datepicker)
+			$this->shed->text( array('name' => 'event_range_start_date', 'label' =>'Event Range Start Date', 'value' => get_option('ik_fb_event_range_start_date'), 'description' => 'The Start Date of Events you want shown.  Events that start before this date will not be shown in the feed - even if their End Date is after this date.', 'class' => 'datepicker', 'disabled' => !$is_pro) );
+		
+			// Event Range - End Date (text / datepicker)
+			$this->shed->text( array('name' => 'event_range_end_date', 'label' =>'Event Range End Date', 'value' => get_option('ik_fb_event_range_end_date'), 'description' => 'The End Date of Events you want shown.  Events that end after this date will not be shown in the feed - even if their Start Date is before this date.', 'class' => 'datepicker', 'disabled' => !$is_pro) );
+						
 			// shortcode output
-			$this->shed->textarea( array('name' => 'shortcode', 'label' =>'Your Shortcode') );
+			//$this->shed->textarea( array('name' => 'sc_gen_output', 'label' =>'Your Shortcode') );
 			echo '</tbody>';
 		echo '</table>';
-		echo '<form>';
+
+		// Generate button
+		echo '<p class="submit"><input id="generate" type="submit" value="Generate My Shortcode" class="button-primary"></p>';
+		
+		?>
+			<div id="sc_gen_output_wrapper">
+				<label for="sc_gen_output">Here is your Shortcode!</label>
+				<p class="description">Copy and paste this shortcode into any page or post to display your Facebook Feed!</p>
+				<textarea cols="80" rows="4" id="sc_gen_output"></textarea>
+			</div>
+		<?
 		echo '</form>';
-		echo '</div>';
 	}
 	
 	/*

@@ -6,7 +6,9 @@ global $ik_fb;
 include('ik_social_pro_options.php');
 
 class ikSocialPro
-{	
+{
+	var $feed_options;
+	
 	function __construct(){		
 		//some init yang
 		add_action( 'admin_init', array($this, 'ikfb_pro_admin_init') );
@@ -21,7 +23,7 @@ class ikSocialPro
 	//returns true if current item is written by the page owner
 	function is_page_owner($item,$page_data){
 		//only hide items if the option is toggled
-		if(get_option('ik_fb_only_show_page_owner') && is_valid_key(get_option('ik_fb_pro_key'))){
+		if($this->feed_options->get_option('ik_fb_only_show_page_owner') && is_valid_key($this->feed_options->get_option('ik_fb_pro_key'))){
 			if($item->from->id == $page_data->id){
 				return true;
 			}
@@ -35,10 +37,10 @@ class ikSocialPro
 	function pro_user_avatars($content = "", $item = array()){
 		global $ik_fb;
 		
-		if(is_valid_key(get_option('ik_fb_pro_key')) && get_option('ik_fb_show_avatars')){	
+		if(is_valid_key($this->feed_options->get_option('ik_fb_pro_key')) && $this->feed_options->get_option('ik_fb_show_avatars')){	
 			if(!isset($ik_fb->authToken)){
-				$app_id = get_option('ik_fb_app_id');
-				$app_secret = get_option('ik_fb_secret_key');
+				$app_id = $this->feed_options->get_option('ik_fb_app_id');
+				$app_secret = $this->feed_options->get_option('ik_fb_secret_key');
 		
 				$ik_fb->authToken = $ik_fb->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
 			}	
@@ -55,12 +57,12 @@ class ikSocialPro
 	
 		$comment_output = "";
 
-		if(is_valid_key(get_option('ik_fb_pro_key'))){	
+		if(is_valid_key($this->feed_options->get_option('ik_fb_pro_key'))){	
 		
-			if(get_option('ik_fb_show_reply_counts')){	
+			if($this->feed_options->get_option('ik_fb_show_reply_counts')){	
 				if(!isset($ik_fb->authToken)){
-					$app_id = get_option('ik_fb_app_id');
-					$app_secret = get_option('ik_fb_secret_key');
+					$app_id = $this->feed_options->get_option('ik_fb_app_id');
+					$app_secret = $this->feed_options->get_option('ik_fb_secret_key');
 			
 					$ik_fb->authToken = $ik_fb->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
 				}		
@@ -86,7 +88,7 @@ class ikSocialPro
 				}
 			}
 
-			if(get_option('ik_fb_show_replies')){	
+			if($this->feed_options->get_option('ik_fb_show_replies')){	
 				$has_comments = false;
 				
 				if(isset($item->comments)){
@@ -99,10 +101,10 @@ class ikSocialPro
 							if(isset($comment->message)){
 								$comment_list .= '<li class="ikfb_comment">';
 								//show avatars, if enabled
-								if(get_option('ik_fb_show_avatars')){
+								if($this->feed_options->get_option('ik_fb_show_avatars')){
 									if(!isset($ik_fb->authToken)){
-										$app_id = get_option('ik_fb_app_id');
-										$app_secret = get_option('ik_fb_secret_key');
+										$app_id = $this->feed_options->get_option('ik_fb_app_id');
+										$app_secret = $this->feed_options->get_option('ik_fb_secret_key');
 								
 										$ik_fb->authToken = $ik_fb->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
 									}	
@@ -115,7 +117,7 @@ class ikSocialPro
 								$comment_list .= nl2br(htmlentities($comment->message),true) . '</p>';
 								
 								//output date, if option to display it is enabled
-								if(get_option('ik_fb_show_date')){
+								if($this->feed_options->get_option('ik_fb_show_date')){
 									if(strtotime($comment->created_time) >= strtotime('-1 day')){
 										$date = $ik_fb->humanTiming(strtotime($comment->created_time)). " ago";
 									}else{
@@ -128,7 +130,7 @@ class ikSocialPro
 								}	
 								
 								//ouput number of likes, if option to show them are enabled
-								if(get_option('ik_fb_show_likes')){	
+								if($this->feed_options->get_option('ik_fb_show_likes')){	
 									if($comment->like_count > 0){
 										$like_string = "person likes";
 										if($comment->like_count > 1){
@@ -164,12 +166,11 @@ class ikSocialPro
 		global $ik_fb;
 		
 		$likes = "";
-		
-		if(get_option('ik_fb_show_likes')){		
+		if($this->feed_options->get_option('ik_fb_show_likes')){
 		
 			if(!isset($ik_fb->authToken)){
-				$app_id = get_option('ik_fb_app_id');
-				$app_secret = get_option('ik_fb_secret_key');
+				$app_id = $this->feed_options->get_option('ik_fb_app_id');
+				$app_secret = $this->feed_options->get_option('ik_fb_secret_key');
 		
 				$ik_fb->authToken = $ik_fb->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
 			}		

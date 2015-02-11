@@ -710,3 +710,39 @@ input.gp_code_to_copy {
 	color: gray;
 	text-decoration: none;
 }
+
+
+/* Shortcode generator */
+#gold_plugins_shortcode_generator .disabled {
+    opacity: 0.5;
+}
+#gold_plugins_shortcode_generator .sc_gen_control_group {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+}
+#gold_plugins_shortcode_generator .sc_gen_control_group label {
+    display: block;
+}
+#gold_plugins_shortcode_generator .inline-select-wrapper {
+    display: inline-block;
+}
+#gold_plugins_shortcode_generator #sc_gen_output_wrapper {
+    display: none;
+}
+#gold_plugins_shortcode_generator #sc_gen_output {
+    min-height: 50px;
+    min-width: 800px;
+}
+#gold_plugins_shortcode_generator #sc_gen_output_wrapper label {
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-top: 20px;
+}
+#gold_plugins_shortcode_generator #sc_gen_output_wrapper p.description {
+    margin-bottom: 15px;
+}
+#gold_plugins_shortcode_generator .upgrade_notice {
+    margin-left: -10px;
+}

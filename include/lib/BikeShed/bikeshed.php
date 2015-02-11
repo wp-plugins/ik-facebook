@@ -276,9 +276,10 @@
 			if (!is_array($options)) {
 				$options = array('name' => $options);
 			}
-			$defaults = array( 'name' 	=> '',
-							   'id'		=> '',
-							   'label'	=> '',
+			$defaults = array( 'name' 		=> '',
+							   'id'			=> '',
+							   'label'		=> '',
+							   'disabled'	=> false,
 						);
 			$options = array_merge($defaults, $options);
 			

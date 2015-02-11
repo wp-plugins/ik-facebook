@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Gold Plugins
-Version: 2.9.3
+Version: 2.9.4
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -30,6 +30,7 @@ include('include/lib/CachedCurl.php');
 include('include/lib/lib.php');
 include('include/lib/ik_social_pro.php');
 include('include/lib/BikeShed/bikeshed.php');
+include('include/lib/ik_fb_feed_options.php');
 
 //use this to track if css/powered by have been output
 global $ikfb_footer_css_output;
@@ -40,10 +41,14 @@ class ikFacebook
 	var $authToken;
 	var $textdomain = "iksocialpro";
 	var $notifications;
+	var $feed_options;
 	
 	function __construct(){
+		global $ik_social_pro;
 		//setup notifications
 		$this->notifications = new ikNotify();
+		$this->feed_options = new IK_FB_Feed_Options();
+		$ik_social_pro->feed_options = $this->feed_options;
 		
 		//create shortcodes
 		add_shortcode('ik_fb_feed', array($this, 'ik_fb_output_feed_shortcode'));
@@ -65,6 +70,11 @@ class ikFacebook
 		add_action( 'admin_init', array($this, 'ikfb_admin_init') );
 		
 		$this->options = new ikFacebookOptions($this);	
+		
+		//add our custom links for Settings and Support to various places on the Plugins page
+		$plugin = plugin_basename(__FILE__);
+		add_filter( "plugin_action_links_{$plugin}", array($this, 'add_settings_link_to_plugin_action_links') );
+		add_filter( 'plugin_row_meta', array($this, 'add_custom_links_to_plugin_description'), 10, 2 );	
 	}
 	
     function ikfb_admin_init() {
@@ -113,7 +123,7 @@ class ikFacebook
 			'ik_facebook_gallery_style' => 'include/css/gallery.css',
 		);
 		
-		if(is_valid_key(get_option('ik_fb_pro_key'))){
+		if(is_valid_key($this->feed_options->get_option('ik_fb_pro_key'))){
 			$ikfb_themes['ik_facebook_cobalt_style'] = 'include/css/cobalt_style.css';
 			$ikfb_themes['ik_facebook_green_gray_style'] = 'include/css/green_gray_style.css';
 			$ikfb_themes['ik_facebook_halloween_style'] = 'include/css/halloween_style.css';
@@ -125,7 +135,7 @@ class ikFacebook
 			wp_register_style( $name, plugins_url($path, __FILE__) );
 		}
 		
-		wp_enqueue_style( 'ik_facebook_' . get_option('ik_fb_feed_theme'));
+		wp_enqueue_style( 'ik_facebook_' . $this->feed_options->get_option('ik_fb_feed_theme'));
 		wp_enqueue_style( 'ik_facebook_gallery_style' );
 	}
 
@@ -137,7 +147,7 @@ class ikFacebook
 		if($ikfb_footer_css_output){
 			return;
 		} else {
-			echo '<!--IKFB CSS--> <style type="text/css" media="screen">' . get_option('ik_fb_custom_css') . "</style>";
+			echo '<!--IKFB CSS--> <style type="text/css" media="screen">' . $this->feed_options->get_option('ik_fb_custom_css') . "</style>";
 			$ikfb_footer_css_output = true;
 		}
 	}
@@ -174,7 +184,7 @@ class ikFacebook
 						);
 		$fonts = array();		
 		foreach ($option_keys as $option_key) {
-			$option_value = get_option($option_key);
+			$option_value = $this->feed_options->get_option($option_key);
 			if (strpos($option_value, 'google:') !== FALSE) {
 				$option_value = str_replace('google:', '', $option_value);
 				
@@ -203,25 +213,58 @@ class ikFacebook
 	
 	function ik_fb_output_feed_shortcode($atts){			
 		//load shortcode attributes into an array
-		extract( shortcode_atts( array(
+		$merged_atts = shortcode_atts( array(
 			'colorscheme' => 'light',
-			'width' => get_option('ik_fb_feed_image_width'),
-			'height' => get_option('ik_fb_feed_image_height'),
-			'use_thumb' => !get_option('ik_fb_fix_feed_image_width') && !get_option('ik_fb_fix_feed_image_height'),
+			'width' => '', /* old, should no longer appear */
+			'height' => '', /* old, should no longer appear */
+			'feed_image_width' => $this->feed_options->get_option('ik_fb_feed_image_width'),
+			'feed_image_height' => $this->feed_options->get_option('ik_fb_feed_image_height'),
+			'use_thumb' => !$this->feed_options->get_option('ik_fb_fix_feed_image_width') && !$this->feed_options->get_option('ik_fb_fix_feed_image_height'),
 			'num_posts' => null,
 			'id' => false,
 			'show_errors' => false,
-			'show_only_events' => get_option('ik_fb_show_only_events'),
-			'ik_fb_header_bg_color' => strlen(get_option('ik_fb_header_bg_color')) > 2 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_header_bg_color') : '',
-			'ik_fb_window_bg_color' => strlen(get_option('ik_fb_window_bg_color')) > 2 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_window_bg_color') : ''
-			
-		), $atts ) );
+			'show_only_events' => $this->feed_options->get_option('ik_fb_show_only_events'),
+			'header_bg_color' => strlen($this->feed_options->get_option('ik_fb_header_bg_color')) > 2 && !$this->feed_options->get_option('ik_fb_use_custom_html') ? $this->feed_options->get_option('ik_fb_header_bg_color') : '',
+			'window_bg_color' => strlen($this->feed_options->get_option('ik_fb_window_bg_color')) > 2 && !$this->feed_options->get_option('ik_fb_use_custom_html') ? $this->feed_options->get_option('ik_fb_window_bg_color') : '',
+			'character_limit' => '',
+			'description_character_limit' => '',
+			'hide_feed_images' => '',
+			'show_like_button' => '',
+			'show_profile_picture' => '',
+			'show_page_title' => '',
+			'show_posted_by' => '',
+			'show_date' => '',
+			'use_human_timing' => '',
+			'date_format' => '',
+			'show_avatars' => '',
+			'show_reply_counts' => '',
+			'show_replies' => '',
+			'show_likes' => '',
+			'only_show_page_owner' => '',
+			'reverse_events' => '',
+			'start_date_format' => '',
+			'end_date_format' => '',
+			'event_range_start_date' => '',
+			'event_range_end_date' => '',
+		), $atts );
+		
+		extract( $merged_atts );
+		$this->feed_options->load($merged_atts);
 				
 		// Initialize the feed options
 		$show_only_events = ($show_only_events) ? 1 : 0;		
 		$content_type = ($show_only_events) ? "events" : "";
 		
-		return $this->ik_fb_output_feed($colorscheme, $use_thumb, $width, false, $height, $num_posts, $id, $show_errors, $show_only_events, $content_type, $ik_fb_header_bg_color, $ik_fb_window_bg_color);
+		/* Previously, width and height referred to feed_image_width and feed_image_height, respectively.
+		 * Check for those attributes here, to maintain compatibility */
+		if (!empty($width)) {
+			$feed_image_width = $width;
+		}		
+		if (!empty($height)) {
+			$feed_image_height = $height;
+		}
+
+		return $this->ik_fb_output_feed($colorscheme, $use_thumb, $feed_image_width, false, $feed_image_height, $num_posts, $id, $show_errors, $show_only_events, $content_type, $header_bg_color, $window_bg_color);
 	}
 	
 	function ik_fb_output_gallery_shortcode($atts){			
@@ -278,7 +321,7 @@ class ikFacebook
 			
 		//see if a limit is set in the options, if one wasn't passed via shortcode
 		if(!$num_photos){
-			$limit = get_option('ik_fb_photo_feed_limit');
+			$limit = $this->feed_options->get_option('ik_fb_photo_feed_limit');
 	
 		} else {
 			$limit = $num_photos;
@@ -339,11 +382,11 @@ class ikFacebook
 	public function ik_fb_output_single_event($colorscheme = "light", $use_thumb = true, $width = "", $is_sidebar_widget = false, $height = "", $num_posts = null, $id = false, $show_errors = false) {
 				
 		// Initialize the feed options
-		$show_only_events = get_option('ik_fb_show_only_events');
+		$show_only_events = $this->feed_options->get_option('ik_fb_show_only_events');
 		$show_only_events = ($show_only_events) ? 1 : 0;		
 		$content_type = ($show_only_events) ? "events" : "";		
-		$ik_fb_header_bg_color = strlen(get_option('ik_fb_header_bg_color')) > 2 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_header_bg_color') : '';
-		$ik_fb_window_bg_color = strlen(get_option('ik_fb_window_bg_color')) > 2 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_window_bg_color') : '';		
+		$ik_fb_header_bg_color = strlen($this->feed_options->get_option('ik_fb_header_bg_color')) > 2 && !$this->feed_options->get_option('ik_fb_use_custom_html') ? $this->feed_options->get_option('ik_fb_header_bg_color') : '';
+		$ik_fb_window_bg_color = strlen($this->feed_options->get_option('ik_fb_window_bg_color')) > 2 && !$this->feed_options->get_option('ik_fb_use_custom_html') ? $this->feed_options->get_option('ik_fb_window_bg_color') : '';		
 		
 		// pass through to the ik_fb_output_feed function, with the last param ($is_event) set to true
 		return $this->ik_fb_output_feed($colorscheme, $use_thumb, $width, $is_sidebar_widget, $height, $num_posts, $id, $show_errors, true, $content_type, $ik_fb_header_bg_color, $ik_fb_window_bg_color);
@@ -404,28 +447,28 @@ class ikFacebook
 		//use different heigh/width styling options, if this is the sidebar widget
 		if($is_sidebar_widget) {
 			// This is the sidebar widget, so load the sidebar feed settings
-			$ik_fb_feed_height = strlen(get_option('ik_fb_sidebar_feed_window_height')) > 0 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_sidebar_feed_window_height') : '';
-			$ik_fb_feed_width = strlen(get_option('ik_fb_sidebar_feed_window_width')) > 0 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_sidebar_feed_window_width') : '';
+			$ik_fb_feed_height = strlen($this->feed_options->get_option('ik_fb_sidebar_feed_window_height')) > 0 && !$this->feed_options->get_option('ik_fb_use_custom_html') ? $this->feed_options->get_option('ik_fb_sidebar_feed_window_height') : '';
+			$ik_fb_feed_width = strlen($this->feed_options->get_option('ik_fb_sidebar_feed_window_width')) > 0 && !$this->feed_options->get_option('ik_fb_use_custom_html') ? $this->feed_options->get_option('ik_fb_sidebar_feed_window_width') : '';
 				
 			if($ik_fb_feed_width == "OTHER"){
-				$ik_fb_feed_width = str_replace("px", "", get_option('other_ik_fb_sidebar_feed_window_width')) . "px";
+				$ik_fb_feed_width = str_replace("px", "", $this->feed_options->get_option('other_ik_fb_sidebar_feed_window_width')) . "px";
 			}			
 			
 			if($ik_fb_feed_height == "OTHER"){
-				$ik_fb_feed_height = str_replace("px", "", get_option('other_ik_fb_sidebar_feed_window_height')) . "px";
+				$ik_fb_feed_height = str_replace("px", "", $this->feed_options->get_option('other_ik_fb_sidebar_feed_window_height')) . "px";
 			}
 		}
 		else {
 			// this is the normal (non-widget) feed, so load the normal settings
-			$ik_fb_feed_height = strlen(get_option('ik_fb_feed_window_height')) > 0 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_feed_window_height') : '';
-			$ik_fb_feed_width = strlen(get_option('ik_fb_feed_window_width')) > 0 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_feed_window_width') : '';
+			$ik_fb_feed_height = strlen($this->feed_options->get_option('ik_fb_feed_window_height')) > 0 && !$this->feed_options->get_option('ik_fb_use_custom_html') ? $this->feed_options->get_option('ik_fb_feed_window_height') : '';
+			$ik_fb_feed_width = strlen($this->feed_options->get_option('ik_fb_feed_window_width')) > 0 && !$this->feed_options->get_option('ik_fb_use_custom_html') ? $this->feed_options->get_option('ik_fb_feed_window_width') : '';
 				
 			if($ik_fb_feed_width == "OTHER"){
-				$ik_fb_feed_width = str_replace("px", "", get_option('other_ik_fb_feed_window_width')) . "px";
+				$ik_fb_feed_width = str_replace("px", "", $this->feed_options->get_option('other_ik_fb_feed_window_width')) . "px";
 			}
 			
 			if($ik_fb_feed_height == "OTHER"){
-				$ik_fb_feed_height = str_replace("px", "", get_option('other_ik_fb_feed_window_height')) . "px";
+				$ik_fb_feed_height = str_replace("px", "", $this->feed_options->get_option('other_ik_fb_feed_window_height')) . "px";
 			}		
 		}
 		return array($ik_fb_feed_width, $ik_fb_feed_height);		
@@ -462,10 +505,10 @@ class ikFacebook
 		$custom_styling_3 .= '"';	
 		
 		// if the user has specified custom feed HTML, use that. Else, use our default HTML
-		$use_custom_html = strlen(get_option('ik_fb_feed_html')) > 2 && get_option('ik_fb_use_custom_html');
+		$use_custom_html = strlen($this->feed_options->get_option('ik_fb_feed_html')) > 2 && $this->feed_options->get_option('ik_fb_use_custom_html');
 		if ($use_custom_html) {
 			// use custom HTML as specified in the options panel
-			$template_html = get_option('ik_fb_feed_html');
+			$template_html = $this->feed_options->get_option('ik_fb_feed_html');
 		} else {
 			// use default HTML
 			$template_html = '<div id="ik_fb_widget" {custom_styling_1} ><div id="ik_fb_widget_top" {custom_styling_3} ><div class="ik_fb_profile_picture">{ikfb:image}{ikfb:link}</div>{ikfb:like_button}</div><ul class="ik_fb_feed_window" {custom_styling_2} >{ikfb:feed}</ul></div>';
@@ -486,7 +529,7 @@ class ikFacebook
 	
 	public function get_profile_photo_html($page_data)
 	{
-		if(get_option('ik_fb_show_profile_picture')){
+		if($this->feed_options->get_option('ik_fb_show_profile_picture')){
 			//use the username if available, otherwise fallback to page ID
 			if(isset($page_data->username)){
 				$replace = '<img src="//graph.facebook.com/'.$page_data->username.'/picture" alt="profile picture"/>';
@@ -504,7 +547,7 @@ class ikFacebook
 	public function get_profile_title_html($page_data)
 	{
 		$url = $this->get_profile_link($page_data);
-		if(get_option('ik_fb_show_page_title'))
+		if($this->feed_options->get_option('ik_fb_show_page_title'))
 		{
 			// return a link to the profile, with the text inside wrapped in span.ik_fb_name
 			return '<a target="_blank" href="' . $url . '"><span class="ik_fb_name">' . $page_data->name . '</span></a>';	
@@ -519,7 +562,7 @@ class ikFacebook
 		if(!$is_event){
 			// This is a normal feed! (not an event)
 			// only show like button if enabled in settings
-			if(get_option('ik_fb_show_like_button')){
+			if($this->feed_options->get_option('ik_fb_show_like_button')){
 				return $this->ik_fb_like_button($the_link, "45", $colorscheme);
 			} else {
 				return '';
@@ -580,13 +623,12 @@ class ikFacebook
 	//passed a FB Feed Item, builds the appropriate HTML
 	function buildFeedLineItem($item, $use_thumb, $width, $page_data, $height, $the_link = false, $page_id = null){
 		global $ik_social_pro;
-		
 		// load feed item template
 		$default_feed_item_html = '<li class="ik_fb_feed_item">{ikfb:feed_item}</li>';		
-		$feed_item_html = strlen(get_option('ik_fb_feed_item_html')) > 2 && get_option('ik_fb_use_custom_html') ? get_option('ik_fb_feed_item_html') : $default_feed_item_html;
+		$feed_item_html = strlen($this->feed_options->get_option('ik_fb_feed_item_html')) > 2 && $this->feed_options->get_option('ik_fb_use_custom_html') ? $this->feed_options->get_option('ik_fb_feed_item_html') : $default_feed_item_html;
 				
 		// Format the line item as either an Event or as a Normal Item (which could be a text post, photo, whatever)
-		if((isset($item->link) && strpos($item->link,'http://www.facebook.com/events/') !== false) || get_option('ik_fb_show_only_events')) {			
+		if((isset($item->link) && strpos($item->link,'http://www.facebook.com/events/') !== false) || $this->feed_options->get_option('ik_fb_show_only_events')) {			
 			// Output this line item as an event
 			$line_item_html = $this->build_event_feed_line_item_html($item);
 		}
@@ -614,7 +656,7 @@ class ikFacebook
 			$event_id = $event_id[4];
 		}
 		
-		if(get_option('ik_fb_show_only_events')){
+		if($this->feed_options->get_option('ik_fb_show_only_events')){
 			$event_id = $item->id;
 		}
 		
@@ -626,14 +668,14 @@ class ikFacebook
 			$event_data = $this->fetchUrl("https://graph.facebook.com/{$event_id}?summary=1&{$this->authToken}", true);//the event data
 			
 			//add avatar for pro users
-			if(is_valid_key(get_option('ik_fb_pro_key'))){		
+			if(is_valid_key($this->feed_options->get_option('ik_fb_pro_key'))){		
 				$line_item = $ik_social_pro->pro_user_avatars($line_item, $item) . " ";
 			}
 			
 			//load event image source
 			//acceptable parameters for type are: small, normal, large, square
 			//default is small
-			$event_image_size = get_option('ik_fb_event_image_size', 'small');
+			$event_image_size = $this->feed_options->get_option('ik_fb_event_image_size', 'small');
 			$event_image = "http://graph.facebook.com/" . $event_id . "/picture?type={$event_image_size}";
 			
 			if(isset($event_data->name)){
@@ -647,9 +689,9 @@ class ikFacebook
 				$start_time_format = 'l, F jS, Y h:i:s a';
 				$end_time_format = 'l, F jS, Y h:i:s a';
 				
-				if(is_valid_key(get_option('ik_fb_pro_key'))){
-					$start_time_format = get_option('ik_fb_start_date_format', 'l, F jS, Y h:i:s a');
-					$end_time_format = get_option('ik_fb_end_date_format', 'l, F jS, Y h:i:s a');
+				if(is_valid_key($this->feed_options->get_option('ik_fb_pro_key'))){
+					$start_time_format = $this->feed_options->get_option('ik_fb_start_date_format', 'l, F jS, Y h:i:s a');
+					$end_time_format = $this->feed_options->get_option('ik_fb_end_date_format', 'l, F jS, Y h:i:s a');
 				}
 				
 				//TBD: Allow user control over date formatting
@@ -712,10 +754,10 @@ class ikFacebook
 		$default_description_html = '<p class="ik_fb_facebook_description">{ikfb:feed_item:description}</p>';		
 		$default_caption_html = '<p class="ik_fb_facebook_link">{ikfb:feed_item:link}</p>';	
 		
-		$message_html = strlen(get_option('ik_fb_message_html')) > 2 && get_option('ik_fb_use_custom_html') ? get_option('ik_fb_message_html') : $default_message_html;
-		$image_html = strlen(get_option('ik_fb_image_html')) > 2 && get_option('ik_fb_use_custom_html') ? get_option('ik_fb_image_html') : $default_image_html;
-		$description_html = strlen(get_option('ik_fb_description_html')) > 2 && get_option('ik_fb_use_custom_html') ? get_option('ik_fb_description_html') : $default_description_html;
-		$caption_html = strlen(get_option('ik_fb_caption_html')) > 2 && get_option('ik_fb_use_custom_html') ? get_option('ik_fb_caption_html') : $default_caption_html;
+		$message_html = strlen($this->feed_options->get_option('ik_fb_message_html')) > 2 && $this->feed_options->get_option('ik_fb_use_custom_html') ? $this->feed_options->get_option('ik_fb_message_html') : $default_message_html;
+		$image_html = strlen($this->feed_options->get_option('ik_fb_image_html')) > 2 && $this->feed_options->get_option('ik_fb_use_custom_html') ? $this->feed_options->get_option('ik_fb_image_html') : $default_image_html;
+		$description_html = strlen($this->feed_options->get_option('ik_fb_description_html')) > 2 && $this->feed_options->get_option('ik_fb_use_custom_html') ? $this->feed_options->get_option('ik_fb_description_html') : $default_description_html;
+		$caption_html = strlen($this->feed_options->get_option('ik_fb_caption_html')) > 2 && $this->feed_options->get_option('ik_fb_use_custom_html') ? $this->feed_options->get_option('ik_fb_caption_html') : $default_caption_html;
 			
 		// capture the post's date (if one is set)
 		$date = isset($item->created_time) ? $item->created_time : "";		
@@ -736,7 +778,7 @@ class ikFacebook
 		}			
 		
 		//if set, show the picture and it's content before you show the message
-		if(get_option('ik_fb_show_picture_before_message')){
+		if($this->feed_options->get_option('ik_fb_show_picture_before_message')){
 			$line_item .= $picture_output;
 			$line_item .= $message_output;
 		} else {
@@ -765,12 +807,12 @@ class ikFacebook
 			$line_item .= $this->get_feed_item_post_date_html($date);
 		
 			//add likes, if pro and enabled
-			if(is_valid_key(get_option('ik_fb_pro_key'))){
+			if(is_valid_key($this->feed_options->get_option('ik_fb_pro_key'))){
 				$line_item .= $ik_social_pro->pro_likes($item, $the_link);
 			}
 			
 			//add comments, if pro and enabled
-			if(is_valid_key(get_option('ik_fb_pro_key'))){
+			if(is_valid_key($this->feed_options->get_option('ik_fb_pro_key'))){
 				$line_item .= $ik_social_pro->pro_comments($item, $the_link);
 			}	
 		} 			
@@ -799,7 +841,7 @@ class ikFacebook
 				$end_link = '</a>';				
 			
 				// add custom link styling from pro options
-				if(!get_option('ik_fb_use_custom_html')){
+				if(!$this->feed_options->get_option('ik_fb_use_custom_html')){
 					$start_link = $this->ikfb_link_styling($item->link);
 				}	
 				
@@ -814,7 +856,7 @@ class ikFacebook
 	public function get_feed_item_posted_by_html($item)
 	{
 		$posted_by_text = '';
-		if(get_option('ik_fb_show_posted_by'))
+		if($this->feed_options->get_option('ik_fb_show_posted_by'))
 		{
 			if(isset($item->from)){ //output the author of the item
 				if(isset($item->from->name)){
@@ -825,7 +867,7 @@ class ikFacebook
 					$posted_by_text = '<p class="ikfb_item_author">' . __('Posted By ', $this->textdomain) . $from_text . '</p>';
 		
 					//add custom posted by styling from pro options
-					if(!get_option('ik_fb_use_custom_html')){		
+					if(!$this->feed_options->get_option('ik_fb_use_custom_html')){		
 						$posted_by_text = $this->ikfb_posted_by_styling($posted_by_text);
 					}			
 				}
@@ -837,13 +879,13 @@ class ikFacebook
 	//output Posted By date, if option to display it is enabled
 	//TBD: Allow user control over date formatting
 	public function get_feed_item_post_date_html($date) {
-		if(get_option('ik_fb_show_date')){
+		if($this->feed_options->get_option('ik_fb_show_date')){
 			setlocale(LC_TIME, WPLANG);
-			$ik_fb_use_human_timing = get_option('ik_fb_use_human_timing');
+			$ik_fb_use_human_timing = $this->feed_options->get_option('ik_fb_use_human_timing');
 			if(strtotime($date) >= strtotime('-1 day') && !$ik_fb_use_human_timing){
 				$date = $this->humanTiming(strtotime($date)). __(' ago', $this->textdomain);
 			}else{
-				$ik_fb_date_format = get_option('ik_fb_date_format');
+				$ik_fb_date_format = $this->feed_options->get_option('ik_fb_date_format');
 				$ik_fb_date_format = strlen($ik_fb_date_format) > 2 ? $ik_fb_date_format : "%B %d";
 				$date = strftime($ik_fb_date_format, strtotime($date));
 			}
@@ -852,7 +894,7 @@ class ikFacebook
 				$date = '<p class="date">' . $date . '</p>';
 				
 				//add custom date styling from  options
-				if(!get_option('ik_fb_use_custom_html')){		
+				if(!$this->feed_options->get_option('ik_fb_use_custom_html')){		
 					$date = $this->ikfb_date_styling($date);
 				}
 			}
@@ -899,24 +941,20 @@ class ikFacebook
 			$photo_source = $item->picture;
 		}
 		
-		if(get_option('ik_fb_link_photo_to_feed_item')){
+		if($this->feed_options->get_option('ik_fb_link_photo_to_feed_item')){
 			$item_id = explode("_",$item->id);
 			$photo_link = "https://www.facebook.com/permalink.php?id=".urlencode($page_id)."&story_fbid=".urlencode($item_id[1]);
 		}
-		
+
 		//output the images
 		//if set, load the custom image width from the options page
-		if(!$use_thumb){								
-			//if using custom width, output fullsized image
-			$width = get_option('ik_fb_feed_image_width') ? $width : '';
-			$height = get_option('ik_fb_feed_image_height') ? $height : '';	
-			
+		if(!$use_thumb){			
 			if($width == "OTHER"){
-				$width = get_option('other_ik_fb_feed_image_width');
+				$width = $this->feed_options->get_option('other_ik_fb_feed_image_width');
 			}
 			
 			if($height == "OTHER"){
-				$height = get_option('other_ik_fb_feed_image_height');
+				$height = $this->feed_options->get_option('other_ik_fb_feed_image_height');
 			}
 			
 			//source: tim morozzo
@@ -928,7 +966,7 @@ class ikFacebook
 				$title = __('Click for fullsize photo', $this->textdomain);
 			}
 			
-			$limit = get_option('ik_fb_description_character_limit');
+			$limit = $this->feed_options->get_option('ik_fb_description_character_limit');
 			
 			if(is_numeric($limit)){
 				if(strlen($title) > $limit){
@@ -954,7 +992,7 @@ class ikFacebook
 			$replace = '<a href="'.$photo_link.'" title="'.htmlspecialchars($title, ENT_QUOTES).'" target="_blank"><img '.$width.' '.$height.' src="'.$photo_source.'" alt="'.htmlspecialchars($title, ENT_QUOTES).'"/></a>';
 			
 			//if set, hide feed images	
-			if(get_option('ik_fb_hide_feed_images')){
+			if($this->feed_options->get_option('ik_fb_hide_feed_images')){
 				$replace = '';
 			}
 				
@@ -976,7 +1014,7 @@ class ikFacebook
 
 			
 			//if set, hide feed images
-			if(get_option('ik_fb_hide_feed_images')){
+			if($this->feed_options->get_option('ik_fb_hide_feed_images')){
 				$replace = '';
 			}
 					
@@ -988,7 +1026,7 @@ class ikFacebook
 			$replace = $item->description;	
 
 			//if a character limit is set, here is the logic to handle that
-			$limit = get_option('ik_fb_description_character_limit');
+			$limit = $this->feed_options->get_option('ik_fb_description_character_limit');
 			if(is_numeric($limit)){
 				//only perform changes on posts longer than the character limit
 				if(strlen($replace) > $limit){
@@ -1006,7 +1044,7 @@ class ikFacebook
 			}					
 		
 			//add custom image styling from pro options
-			if(!get_option('ik_fb_use_custom_html')){		
+			if(!$this->feed_options->get_option('ik_fb_use_custom_html')){		
 				$description_html = $this->ikfb_description_styling($description_html);
 			}	
 			
@@ -1021,14 +1059,14 @@ class ikFacebook
 		$shortened = false;		
 	
 		//add avatar for pro users
-		if(is_valid_key(get_option('ik_fb_pro_key'))){		
+		if(is_valid_key($this->feed_options->get_option('ik_fb_pro_key'))){		
 			$replace = $ik_social_pro->pro_user_avatars($replace, $item) . " ";
 		}
 		
 		$replace = $replace . nl2br(make_clickable(htmlspecialchars($item->message)));
 		
 		//if a character limit is set, here is the logic to handle that
-		$limit = get_option('ik_fb_character_limit');
+		$limit = $this->feed_options->get_option('ik_fb_character_limit');
 		if(is_numeric($limit)){
 			//only perform changes on posts longer than the character limit
 			if(strlen($replace) > $limit){
@@ -1046,7 +1084,7 @@ class ikFacebook
 		}
 		
 		//add custom message styling from pro options
-		if(!get_option('ik_fb_use_custom_html')){		
+		if(!$this->feed_options->get_option('ik_fb_use_custom_html')){		
 			$message_html = $this->ikfb_message_styling($message_html);
 		}		
 		
@@ -1083,14 +1121,14 @@ class ikFacebook
 		//use this to track if powered by has been output
 		global $ikfb_footer_poweredby_output;
 				
-		if(get_option('ik_fb_powered_by')){			
+		if($this->feed_options->get_option('ik_fb_powered_by')){			
 			if($ikfb_footer_poweredby_output){
 				return;
 			} else {			
 				$content = '<a href="https://illuminatikarate.com/ik-facebook-plugin/" target="_blank" id="ikfb_powered_by">'.__('Powered By IK Facebook Plugin', $this->textdomain).'</a>';			
 				
 				//add custom powered by styling from pro options
-				if(!get_option('ik_fb_use_custom_html')){		
+				if(!$this->feed_options->get_option('ik_fb_use_custom_html')){		
 					$content = $this->ikfb_powered_by_styling($content);
 				}		
 				
@@ -1117,8 +1155,8 @@ class ikFacebook
 	//loads app id and secret key from settings
 	//generates an authtoken via the graph api and sets it
 	function generateAccessToken(){
-		$app_id = get_option('ik_fb_app_id');
-		$app_secret = get_option('ik_fb_secret_key');
+		$app_id = $this->feed_options->get_option('ik_fb_app_id');
+		$app_secret = $this->feed_options->get_option('ik_fb_secret_key');
 			
 		$access_token = $this->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
 		
@@ -1130,7 +1168,7 @@ class ikFacebook
 		$retData = array();
 	
 		if(!$id){
-			$profile_id = get_option('ik_fb_page_id'); //id of the facebook page
+			$profile_id = $this->feed_options->get_option('ik_fb_page_id'); //id of the facebook page
 		} else {
 			$profile_id = $id;
 		}
@@ -1142,7 +1180,7 @@ class ikFacebook
 			
 			//see if a limit is set in the options, if one wasn't passed via shortcode
 			if(!$num_posts){
-				$limit = get_option('ik_fb_feed_limit');
+				$limit = $this->feed_options->get_option('ik_fb_feed_limit');
 			} else {
 				$limit = $num_posts;
 			}
@@ -1166,16 +1204,16 @@ class ikFacebook
 				
 				//load the event start date from options
 				//if the event start date isn't set in the options, use now as the start date
-				$event_start_date = get_option('ik_fb_event_range_start_date', $now);		
+				$event_start_date = $this->feed_options->get_option('ik_fb_event_range_start_date', $now);		
 
 				//load the event end date from options
 				//if the event end date isn't set in the options, use now + 1 year as the end date				
-				$event_end_date = get_option('ik_fb_event_range_end_date', $end_date);
+				$event_end_date = $this->feed_options->get_option('ik_fb_event_range_end_date', $end_date);
 						
 				$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/events?summary=1&limit={$fb_post_limit}&since={$event_start_date}&until={$event_end_date}&{$this->authToken}", true);//the feed data
 			} else {
 				//if showing only page owner posts
-				if(get_option('ik_fb_only_show_page_owner') && is_valid_key(get_option('ik_fb_pro_key'))){
+				if($this->feed_options->get_option('ik_fb_only_show_page_owner') && is_valid_key($this->feed_options->get_option('ik_fb_pro_key'))){
 					//only load page owner's posts
 					//RWG: 1.21.15 -- reduced this from 250 to 50 due to various issues with the API timing out
 					$fb_post_limit = 50; // there seems to be a bug with the Graph API, where we need to limit to 100 here (instead of the published limit of 250)
@@ -1191,7 +1229,7 @@ class ikFacebook
 				$retData['feed'] = $this->trim_feed($feed->data, $limit);
 
 				//reverse the order of the events feed, if the option is checked.
-				if(get_option('ik_fb_reverse_events', 0) && $content_type == "events" && is_valid_key(get_option('ik_fb_pro_key'))){
+				if($this->feed_options->get_option('ik_fb_reverse_events', 0) && $content_type == "events" && is_valid_key($this->feed_options->get_option('ik_fb_pro_key'))){
 					$retData['feed'] = array_reverse($retData['feed']);
 				}
 			//in this case, something didn't load correctly.  lets try and see what it is...
@@ -1266,7 +1304,7 @@ class ikFacebook
 		/* 
 		 * Font Family
 		 */
-		$option_val = get_option($prefix . 'font_family', '');
+		$option_val = $this->feed_options->get_option($prefix . 'font_family', '');
 		if (!empty($option_val)) {
 			// strip off 'google:' prefix if needed
 			$option_val = str_replace('google:', '', $option_val);
@@ -1280,7 +1318,7 @@ class ikFacebook
 		/* 
 		 * Font Size
 		 */
-		$option_val = get_option($prefix . 'font_size', '');
+		$option_val = $this->feed_options->get_option($prefix . 'font_size', '');
 		if (!empty($option_val)) {
 			// append 'px' if needed
 			if ( is_numeric($option_val) ) {
@@ -1292,7 +1330,7 @@ class ikFacebook
 		/* 
 		 * Font Color
 		 */
-		$option_val = get_option($prefix . 'font_color', '');
+		$option_val = $this->feed_options->get_option($prefix . 'font_color', '');
 		if (!empty($option_val)) {
 			$output .= sprintf($css_rule_template, 'color', $option_val);
 		}
@@ -1301,7 +1339,7 @@ class ikFacebook
 		 * Font Style - add font-style and font-weight rules
 		 * NOTE: in this special case, we are adding 2 rules!
 		 */
-		$option_val = get_option($prefix . 'font_style', '');
+		$option_val = $this->feed_options->get_option($prefix . 'font_style', '');
 
 		// Convert the value to 2 CSS rules, font-style and font-weight
 		// NOTE: we lowercase the value before comparison, for simplification
@@ -1419,6 +1457,34 @@ class ikFacebook
 		$style_attr = sprintf(' style="%s"', $css);		
 		$tag = 'id="ikfb_powered_by"';
 		return $this->replace_ikfb_merge_tag($tag, $style_attr, $content);
+	}
+
+	//add an inline link to the settings page, before the "deactivate" link
+	function add_settings_link_to_plugin_action_links($links) { 
+	  $settings_link = '<a href="admin.php?page=ikfb_configuration_options">Settings</a>';
+	  array_unshift($links, $settings_link); 
+	  return $links; 
+	}
+
+	// add inline links to our plugin's description area on the Plugins page
+	function add_custom_links_to_plugin_description($links, $file) { 
+
+		/** Get the plugin file name for reference */
+		$plugin_file = plugin_basename( __FILE__ );
+	 
+		/** Check if $plugin_file matches the passed $file name */
+		if ( $file == $plugin_file )
+		{		
+			$new_links['settings_link'] = '<a href="admin.php?page=ikfb_configuration_options">Settings</a>';
+			$new_links['support_link'] = '<a href="http://goldplugins.com/contact/?utm-source=plugin_menu&utm_campaign=support&utm_banner=ikfb_settings_links" target="_blank">Get Support</a>';
+				
+			if(!is_valid_key()){
+				$new_links['upgrade_to_pro'] = '<a href="http://goldplugins.com/our-plugins/wp-social-pro/upgrade-to-wp-social-pro/?utm_source=plugin_menu&utm_campaign=upgrade" target="_blank">Upgrade to Pro</a>';
+			}
+			
+			$links = array_merge( $links, $new_links);
+		}
+		return $links; 
 	}
 }//end ikFacebook
 
