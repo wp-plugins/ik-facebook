@@ -3,8 +3,8 @@ Contributors: richardgabriel, ghuger
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V7HR8DP4EJSYN
 Tags: facebook, facebook feed, facebook embed, facebook feed widget, facebook feed embed, like button widget, facebook events
 Requires at least: 3.0.1
-Tested up to: 4.1
-Stable tag: 2.9.4
+Tested up to: 4.1.1
+Stable tag: 2.9.5
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -164,6 +164,10 @@ In this case, the Facebook Album ID is '539627829386059'.
 5. This is the Facebook Feed Widget and the Facebook Like Button Widget of the IK Facebook Plugin.  The options on this widget allow you to override the settings you have selected on your Settings panel.
 
 == Changelog ==
+
+= 2.9.5 =
+* Fix: address 400 error generated when a Google Font wasn't selected in the Typography options.
+* Update compatibility to WP 4.1.1
 
 = 2.9.4 =
 * Feature: Adds shortcode generator.
@@ -557,5 +561,5 @@ In this case, the Facebook Album ID is '539627829386059'.
 
 == Upgrade Notice ==
 
-= 2.9.4 =
-* Upgrade Available!
+= 2.9.5 =
+* Update Available!

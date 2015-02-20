@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Gold Plugins
-Version: 2.9.4
+Version: 2.9.5
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -167,8 +167,12 @@ class ikFacebook
 		$font_list = $this->list_required_google_fonts();
 		$font_list_encoded = array_map('urlencode', $this->list_required_google_fonts());
 		$font_str = implode('|', $font_list_encoded);
-		wp_register_style( 'ik_facebook_webfonts', 'http://fonts.googleapis.com/css?family=' . $font_str);
-		wp_enqueue_style( 'ik_facebook_webfonts' );
+		
+		//don't register this unless a font is set to register
+		if(strlen($font_str)>2){
+			wp_register_style( 'ik_facebook_webfonts', 'http://fonts.googleapis.com/css?family=' . $font_str);
+			wp_enqueue_style( 'ik_facebook_webfonts' );
+		}
 	}
 	
 	function list_required_google_fonts()
@@ -188,8 +192,9 @@ class ikFacebook
 			if (strpos($option_value, 'google:') !== FALSE) {
 				$option_value = str_replace('google:', '', $option_value);
 				
+				//only add the font to the array if it was in fact a google font
+				$fonts[$option_value] = $option_value;				
 			}
-			$fonts[$option_value] = $option_value;
 		}		
 		return $fonts;
 	}
