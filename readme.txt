@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, facebook feed, facebook embed, facebook feed widget, facebook feed embed, like button widget, facebook events
 Requires at least: 3.0.1
 Tested up to: 4.1.1
-Stable tag: 2.9.5
+Stable tag: 2.9.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -38,9 +38,11 @@ _"Looks great, easy to use. Better than any of the other Facebook feed plugins I
 * Custom Facebook Feed Widget allows user to override Site Wide Options
 * Ability to Pass Page ID Via Shortcode and Widget Allows Multiple Facebook Feeds on One Page!
 
-= Outstanding Support =
+= Upgrade To WP Social PRO For Advanced Features and Email Support =
 
-We pride ourselves on taking customer support seriously. In fact, [send us an email](http://goldplugins.com/contact/ "Send Us an Email") now if you have any questions at all. You’ll get a quick response directly from the developers.  Our developers have been making Facebook apps for years and are well versed in all things Facebook.
+The GoldPlugins team does not provide direct support for IK Facebook plugin on the WordPress.org forums. However, one-on-one email support is available to people who have upgraded to the premium edition, [WP Social Pro](http://goldplugins.com/our-plugins/wp-social-pro/?utm_source=wp&utm_campaign=desc_learn_more). In addition to outstanding support, WP Social Pro includes all kinds of new customization options, such as the ability to hide third party posts, use custom image sizes, and more. You should [upgrade today!](http://goldplugins.com/our-plugins/wp-social-pro/upgrade-to-wp-social-pro/?utm_source=wp&utm_campaign=desc_upgrade "Upgrade to WP Social Pro")
+
+[Upgrade To WP Social Pro](http://goldplugins.com/our-plugins/wp-social-pro/upgrade-to-wp-social-pro/?utm_source=wp&utm_campaign=desc_upgrade2)
 
 = User Friendly Features =
 The IK Facebook Plugin includes options to set the Title of the custom Facebook Feed widget, whether or not to show the Like Button above the custom Facebook Feed widget, and whether or not to show the Profile Picture.  The IK Facebook Plugin supports both the Light and Dark color schemes for the Like Button widget and has multiple color schemes for the custom Facebook Feed widget.  The IK Facebook Plugin allows you to pass the ID of the Facebook page via the shortcode - allowing you to display the feeds from multiple accounts on one page!  Many plugins require you to know CSS to style your custom Facebook Feed widget - ours gives you full control over the output of your custom Facebook Feed, with Themes, Colorpickers, Options, and more!
@@ -164,6 +166,9 @@ In this case, the Facebook Album ID is '539627829386059'.
 5. This is the Facebook Feed Widget and the Facebook Like Button Widget of the IK Facebook Plugin.  The options on this widget allow you to override the settings you have selected on your Settings panel.
 
 == Changelog ==
+
+= 2.9.6 =
+* Fix: address issue with undefined constant WP_LANG
 
 = 2.9.5 =
 * Fix: address 400 error generated when a Google Font wasn't selected in the Typography options.
@@ -561,5 +566,5 @@ In this case, the Facebook Album ID is '539627829386059'.
 
 == Upgrade Notice ==
 
-= 2.9.5 =
+= 2.9.6 =
 * Update Available!

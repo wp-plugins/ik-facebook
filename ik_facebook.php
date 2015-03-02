@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Gold Plugins
-Version: 2.9.5
+Version: 2.9.6
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -885,7 +885,11 @@ class ikFacebook
 	//TBD: Allow user control over date formatting
 	public function get_feed_item_post_date_html($date) {
 		if($this->feed_options->get_option('ik_fb_show_date')){
-			setlocale(LC_TIME, WPLANG);
+			//only set locale if WPLANG is defined
+			if(defined(WPLANG)){
+				setlocale(LC_TIME, WPLANG);
+			}
+			
 			$ik_fb_use_human_timing = $this->feed_options->get_option('ik_fb_use_human_timing');
 			if(strtotime($date) >= strtotime('-1 day') && !$ik_fb_use_human_timing){
 				$date = $this->humanTiming(strtotime($date)). __(' ago', $this->textdomain);
