@@ -1,4 +1,4 @@
-<h3>Pro Registration</h3>			
+<h3>WP Social Pro Registration</h3>			
 <?php if(is_valid_key()): ?>
 <p class="plugin_is_registered">&#x2713; WP Social Pro is registered and activated. Thank you!</p>
 <?php else: ?>

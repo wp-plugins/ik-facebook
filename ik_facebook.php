@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Gold Plugins
-Version: 2.9.6
+Version: 2.10
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -417,8 +417,7 @@ class ikFacebook
 		// If there were no items and show_errors is OFF, we'll need to hide the feed
 		 $hide_the_feed = !$show_errors && !(count($feed) > 0);
 		
-		/** Start building the feed HTML now **/
-		
+		/** Start building the feed HTML now **/		
 		// start with a template which contains the merge tag '{ik:feed}'
 		$output = $this->build_feed_template($ik_fb_feed_width, $ik_fb_feed_height, $ik_fb_window_bg_color, $ik_fb_header_bg_color, $hide_the_feed);
 
@@ -754,11 +753,13 @@ class ikFacebook
 	{
 		global $ik_social_pro;
 		
+		$default_story_html = '<p class="ik_fb_item_story">{ikfb:feed_item:story}</p>';
 		$default_message_html = '<p>{ikfb:feed_item:message}</p>';
 		$default_image_html = '<p class="ik_fb_facebook_image">{ikfb:feed_item:image}</p>';		
 		$default_description_html = '<p class="ik_fb_facebook_description">{ikfb:feed_item:description}</p>';		
 		$default_caption_html = '<p class="ik_fb_facebook_link">{ikfb:feed_item:link}</p>';	
 		
+		$story_html = $default_story_html;//TBD: allow customization
 		$message_html = strlen($this->feed_options->get_option('ik_fb_message_html')) > 2 && $this->feed_options->get_option('ik_fb_use_custom_html') ? $this->feed_options->get_option('ik_fb_message_html') : $default_message_html;
 		$image_html = strlen($this->feed_options->get_option('ik_fb_image_html')) > 2 && $this->feed_options->get_option('ik_fb_use_custom_html') ? $this->feed_options->get_option('ik_fb_image_html') : $default_image_html;
 		$description_html = strlen($this->feed_options->get_option('ik_fb_description_html')) > 2 && $this->feed_options->get_option('ik_fb_use_custom_html') ? $this->feed_options->get_option('ik_fb_description_html') : $default_description_html;
@@ -775,6 +776,24 @@ class ikFacebook
 		//output the item message
 		if(isset($item->message)){		
 			list($message_output, $message_truncated) = $this->ikfb_build_message($item,$replace,$message_html);
+		}
+		
+		//output the item story
+		if(isset($item->story)){
+			//parse story
+			$story = nl2br(make_clickable(htmlspecialchars($item->story)));
+			
+			//add custom story styling from pro options
+			//building story html
+			if(!$this->feed_options->get_option('ik_fb_use_custom_html')){		
+				$story_html = $this->ikfb_story_styling($story_html);
+			}		
+			
+			//build story output
+			$story_output = str_replace('{ikfb:feed_item:story}', $story, $story_html);		
+			
+			//attach the story to the front of the message
+			$message_output = $story_output . $message_output;
 		}
 
 		//output the item photo
@@ -1095,7 +1114,7 @@ class ikFacebook
 		//add custom message styling from pro options
 		if(!$this->feed_options->get_option('ik_fb_use_custom_html')){		
 			$message_html = $this->ikfb_message_styling($message_html);
-		}		
+		}	
 		
 		$output = str_replace('{ikfb:feed_item:message}', $replace, $message_html);			
 		
@@ -1229,7 +1248,7 @@ class ikFacebook
 					$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/posts?limit={$fb_post_limit}&{$this->authToken}", true);//the feed data
 				} else {
 					//if showing everything on the feed (3rd party and page owner)
-					$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/feed?summary=1&limit={$fb_post_limit}&{$this->authToken}", true);//the feed data				
+					$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/feed?summary=1&limit={$fb_post_limit}&{$this->authToken}", true);//the feed data							
 				}
 			}
 
@@ -1285,8 +1304,11 @@ class ikFacebook
 	function feed_item_is_valid($item)
 	{
 		// throw out anything that's a "story" (i.e., "John Doe liked a photo")
-		if (isset($item->story)) {
-			return false;
+		// only do this if option is set to hide them
+		if(!get_option('ik_fb_show_stories',1)){
+			if (isset($item->story)) {
+				return false;
+			}
 		}
 		
 		//  TODO: add other validation rules based on the user's settings (i.e., "Hide Photos" or "Show Only Events")
@@ -1421,6 +1443,14 @@ class ikFacebook
 		$css = sprintf(' style="%s"', $this->build_typography_css('ik_fb_'));
 		$tag = '{ikfb:feed_item:message}';
 		return $this->replace_ikfb_merge_tag($tag, $css, $message_html);
+	}
+	
+	//inserts any selected custom styling options into the feed's message html
+	//load custom style options from Pro Plugin, if available
+	function ikfb_story_styling($story_html = ""){
+		$css = sprintf(' style="%s"', $this->build_typography_css('ik_fb_story_'));
+		$tag = '{ikfb:feed_item:story}';
+		return $this->replace_ikfb_merge_tag($tag, $css, $story_html);
 	}
 	
 	//inserts any selected custom styling options into the feed's link

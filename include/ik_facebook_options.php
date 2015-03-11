@@ -131,6 +131,10 @@ class ikFacebookOptions
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_font_size' );
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_font_family' );
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_font_style' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_story_font_color' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_story_font_size' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_story_font_family' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_story_font_style' );
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_sidebar_feed_window_height' );
 		register_setting( 'ik-fb-style-settings-group', 'ik_fb_sidebar_feed_window_width' );
 		register_setting( 'ik-fb-style-settings-group', 'other_ik_fb_feed_window_width' );
@@ -147,6 +151,7 @@ class ikFacebookOptions
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_show_profile_picture' );
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_show_page_title' );
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_show_posted_by' );
+		register_setting( 'ik-fb-display-settings-group', 'ik_fb_show_stories' );
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_show_date' );
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_date_format' );
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_use_human_timing' );
@@ -247,7 +252,6 @@ class ikFacebookOptions
 	{
 		$this->start_settings_page(true);
 		settings_fields( 'ik-fb-config-settings-group' );
-		include('registration_options.php');		
 		?>
 			<h3><?php _e("Facebook API Settings");?></h3>
 			<p><?php _e("These options tell the plugin how to access your Facebook Page.");?></p>
@@ -277,6 +281,7 @@ class ikFacebookOptions
 			
 			</table>
 		<?php		
+		include('registration_options.php');		
 		$this->end_settings_page();		
 	}
 	
@@ -418,6 +423,16 @@ class ikFacebookOptions
 
 				<?php
 					$values = array(
+								'font_size' => get_option('ik_fb_story_font_size'),
+								'font_family' => get_option('ik_fb_story_font_family'),
+								'font_style' => get_option('ik_fb_story_font_style'),
+								'font_color' => get_option('ik_fb_story_font_color'),
+							);
+					$this->shed->typography( array('name' => 'ik_fb_story_*', 'label' =>'Story Font', 'description' => 'Choose a font size, family, style, and color.', 'google_fonts' => true, 'default_color' => '#878787', 'values' => $values) );
+				?>
+
+				<?php
+					$values = array(
 								'font_size' => get_option('ik_fb_link_font_size'),
 								'font_family' => get_option('ik_fb_link_font_family'),
 								'font_style' => get_option('ik_fb_link_font_style'),
@@ -514,6 +529,10 @@ class ikFacebookOptions
 				// Show 'Posted By' text (checkbox)
 				$checked = (get_option('ik_fb_show_posted_by') == '1');
 				$this->shed->checkbox( array('name' => 'ik_fb_show_posted_by', 'label' =>'Show Posted By', 'value' => 1, 'checked' => $checked, 'description' => 'If checked, the text Posted By PosterName will be displayed in the feed.', 'inline_label' => 'Show \'Posted by PosterName\' for each item') );
+
+				// Show 'Stories' text (checkbox)
+				$checked = (get_option('ik_fb_show_stories',1) == '1');
+				$this->shed->checkbox( array('name' => 'ik_fb_show_stories', 'label' =>'Show Stories', 'value' => 1, 'checked' => $checked, 'description' => 'If checked, the Story text will be displayed in the feed.', 'inline_label' => 'Show \'Story\' for each item') );
 
 				// Show Posted Date (checkbox)
 				$checked = (get_option('ik_fb_show_date') == '1');
@@ -994,6 +1013,7 @@ class ikFacebookOptions
 							"It's easy to use, it works, and with excellent support from it's developers - there is no reason to use any other plugin."
 							<br /><span class="author">&dash; Jake Wheat, Author &amp; Artist</span>
 						</p>
+						<input type="hidden" id="gold_plugins_already_subscribed" name="gold_plugins_already_subscribed" value="<?php echo get_user_setting ('_gp_ml_has_subscribed', '0'); ?>" />
 					</form>
 				</div>
 				<p class="u_to_p"><a href="http://goldplugins.com/our-plugins/wp-social-pro/upgrade-to-wp-social-pro/#buy_now"><?php _e("Upgrade to WP Social Pro now</a> to remove banners like this one.", $this->textdomain); ?></p>
