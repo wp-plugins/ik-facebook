@@ -51,21 +51,57 @@ class ikFacebookOptions
 		// TODO: Any reason not to change this to ik-facebook or something? see note on http://codex.wordpress.org/Function_Reference/add_submenu_page:
 		// 		 "For $menu_slug please don't use __FILE__ it makes for an ugly URL, and is a minor security nuisance. "
 		// $top_level_menu_slug = __FILE__;
-		$top_level_menu_slug = 'ikfb_configuration_options';
+		$this->top_level_menu_slug = 'ikfb_configuration_options';
 		
 		//create new top-level menu
-		add_menu_page($page_title, $title, 'administrator', $top_level_menu_slug, array($this, 'configuration_options_page'));
+		$this->hook_suffix = add_menu_page($page_title, $title, 'administrator', $this->top_level_menu_slug, array($this, 'configuration_options_page'));
 
 		//create sub menus for each tab
-		add_submenu_page( $top_level_menu_slug, 'Basic Configuration', 'Basic Configuration', 'manage_options', $top_level_menu_slug, array($this, 'configuration_options_page') ); 
-		add_submenu_page( $top_level_menu_slug, 'Style Options', 'Style Options', 'manage_options', 'ikfb_style_options', array($this, 'style_options_page') ); 
-		add_submenu_page( $top_level_menu_slug, 'Display Options', 'Display Options', 'manage_options', 'ikfb_display_options', array($this, 'display_options_page') ); 
-		add_submenu_page( $top_level_menu_slug, 'Pro Options', 'Pro Options', 'manage_options', 'ikfb_pro_options', array($this, 'pro_options_page') ); 
-		add_submenu_page( $top_level_menu_slug, 'Shortcode Generator', 'Shortcode Generator', 'manage_options', 'ikfb_shortcode_generator', array($this, 'shortcode_generator_page') ); 
-		add_submenu_page( $top_level_menu_slug, 'Plugin Status &amp; Help', 'Plugin Status &amp; Help', 'manage_options', 'ikfb_plugin_status', array($this, 'plugin_status_page') ); 
+		add_submenu_page( $this->top_level_menu_slug, 'Basic Configuration', 'Basic Configuration', 'manage_options', $this->top_level_menu_slug, array($this, 'configuration_options_page') ); 
+		add_submenu_page( $this->top_level_menu_slug, 'Style Options', 'Style Options', 'manage_options', 'ikfb_style_options', array($this, 'style_options_page') ); 
+		add_submenu_page( $this->top_level_menu_slug, 'Display Options', 'Display Options', 'manage_options', 'ikfb_display_options', array($this, 'display_options_page') ); 
+		add_submenu_page( $this->top_level_menu_slug, 'Pro Options', 'Pro Options', 'manage_options', 'ikfb_pro_options', array($this, 'pro_options_page') ); 
+		add_submenu_page( $this->top_level_menu_slug, 'Shortcode Generator', 'Shortcode Generator', 'manage_options', 'ikfb_shortcode_generator', array($this, 'shortcode_generator_page') ); 
+		add_submenu_page( $this->top_level_menu_slug, 'Plugin Status &amp; Help', 'Plugin Status &amp; Help', 'manage_options', 'ikfb_plugin_status', array($this, 'plugin_status_page') );
 
 		//call register settings function
 		add_action( 'admin_init', array($this, 'register_settings'));	
+
+		if ( get_option('ik_fb_app_id', '') == '' ) {
+			add_action( 'admin_init', array($this, 'register_admin_notices'));
+		}
+	}
+	
+	/**
+	 * If the user hasn't entered their Facebook App ID, show a notice
+	 */
+	function register_admin_notices() {
+		add_action( 'admin_notices', array( $this, 'display_admin_notices' ) );
+	}
+	
+	/**
+	 * Function to output an admin notice when the plugin has not 
+	 * been configured yet
+	 */
+	function display_admin_notices() {
+		$screen = get_current_screen();
+		if ( $screen->id == $this->hook_suffix ) { //$this->hook_suffix
+			$fb_url = 'https://developers.facebook.com/apps';
+			$tutorial_url = 'http://goldplugins.com/documentation/wp-social-pro-documentation/how-to-get-an-app-id-and-secret-key-from-facebook/?utm_source=ikfb_settings&utm_campaign=enter_app_id_and_secret';
+			
+?>
+		<div id='ikfb-warning' class='updated fade'>
+			<p><strong><?php _e( 'Please enter your Facebook App ID and Secret Key. ', 'ik_facebook' ); ?></strong>
+			<?php _e( 'This is required for the plugin to be able to access your Facebook page and display your latest posts.');?></p>
+			<p><?php printf( __( 'To get your App ID and Secret Key from Facebook, please visit the <a href="%1$s">Facebook Developer portal</a>.'), $fb_url ); ?></p>
+			<p><?php printf( __( 'As this process can be somewhat confusing for new users, we have created a <a href="%1$s">video tutorial for you to follow</a>, which explains the process in detail</a>.' ), $tutorial_url ); ?></p>
+		</div>
+<?php
+		} else {
+?>
+		<div id='ikfb-warning' class='updated fade'><p><strong><?php _e( 'IK Facebook is almost ready. ', 'ik_facebook' ); ?></strong><?php printf( __( 'You must <a href="%1$s">configure IK Facebook</a> for it to work.' ), menu_page_url($this->top_level_menu_slug , false ) ); ?></p></div>
+<?php
+		}
 	}
 		
 	//function to produce tabs on admin screen
@@ -206,11 +242,6 @@ class ikFacebookOptions
 			<?php endif; ?>
 			
 				<?php echo $before_title; ?>
-				<?php if ( get_option('ik_fb_app_id', '') == '' ): ?>
-				<div class="app_id_callout">
-					<p><?php _e("<strong>Important:</strong> You'll need to <a href=\"http://goldplugins.com/documentation/wp-social-pro-documentation/how-to-get-an-app-id-and-secret-key-from-facebook/\">create a free Facebook app</a> so that your plugin can access your feed. Don't worry - it only takes 2 minutes, and we've even got <a href=\"http://goldplugins.com/documentation/wp-social-pro-documentation/how-to-get-an-app-id-and-secret-key-from-facebook/\">a video tutorial</a>.");?></p>
-				</div>
-				<?php endif; ?>
 				
 				<h2><?php echo $title; ?></h2>		
 				
@@ -222,10 +253,6 @@ class ikFacebookOptions
 				<div id="message" class="updated fade"><p><?php echo $message; ?></p></div>
 				<?php endif; ?>	
 	
-				<?php if(!is_valid_key()): ?>	
-				<p class="plugin_is_not_registered">&#x2718; Your plugin is not registered and activated. You will not be able to use the PRO features until you upgrade. <a class="button" href="http://goldplugins.com/our-plugins/wp-social-pro/upgrade-to-wp-social-pro/?utm_source=api_key_reminder" target="_blank">Click here to upgrade now!</a></p>
-				<?php endif; ?>	
-
 				<?php if($wrap_with_form): ?>
 				<form method="post" action="options.php" class="options_form">
 				<?php endif; ?>
@@ -254,7 +281,7 @@ class ikFacebookOptions
 		settings_fields( 'ik-fb-config-settings-group' );
 		?>
 			<h3><?php _e("Facebook API Settings");?></h3>
-			<p><?php _e("These options tell the plugin how to access your Facebook Page.");?></p>
+			<p><?php _e("These options tell the plugin how to access your Facebook Page. They are required for the plugin to work.");?></p>
 			<?php 
 			$needs_app_id = (get_option('ik_fb_app_id', '') == '');
 			$needs_secret = (get_option('ik_fb_secret_key', '') == '');
@@ -570,6 +597,9 @@ class ikFacebookOptions
 	 */
 	function shortcode_generator_page()
 	{
+		// start the settings page, outputting a notice about the Graph API if needed
+		$this->start_settings_page(false, false);
+			
 		$is_pro = is_valid_key(get_option('ik_fb_pro_key'));
 		
 		wp_enqueue_script( 'gp_shortcode_generator');
@@ -768,8 +798,9 @@ class ikFacebookOptions
 				<p class="description">Copy and paste this shortcode into any page or post to display your Facebook Feed!</p>
 				<textarea cols="80" rows="4" id="sc_gen_output"></textarea>
 			</div>
-		<?
+		<?php
 		echo '</form>';
+		$this->end_settings_page(false);
 	}
 	
 	/*
@@ -790,37 +821,27 @@ class ikFacebookOptions
 		$this->start_settings_page(false, false, $graph_api_warning);
 			
 		// output the Status Widget with the results of our diagnostics
-		echo '<h3>';
+		echo '<h2>';
 		_e('Plugin Status');
-		echo'</h3>';
+		echo'</h2>';
 		echo '<p>';
 		_e('We\'re running some quick tests, to help you troubleshoot any issues you might be running into while setting up your Facebook feed.');
 		echo '</p>';
 		$this->output_status_box($diagnostics_results);
-				
-		// show some example shortcodes				
-		_e("<h3>Example Shortcodes</h3>");
-		_e('<p>To output the custom Facebook Feed, place the following shortcode in the body of any page or post:</p>');
-		_e('<p><input class="gp_code_to_copy" type="text" value="[ik_fb_feed]" /></p>');
-		_e('<p>To further customize the feed via the shortcode, available attributes include: <code>colorscheme="light" use_thumb="true" width="250" num_posts="5" id="123456789"</code>.</p>');
-		_e('<p><em>Valid choices for "colorscheme" are "light" and "dark". If "use_thumb" is set to true, the value of "width" will be ignored.  If "use_thumb" or "width" are not set, the values from the Options page will be used.  If id is not set, the shortcode will use the Page ID from your Settings page.</em></p>');
-		_e('<p>To output the Like Button, place the following shortcode in the body of any page or post:</p>');
-		_e('<p><input class="gp_code_to_copy" type="text" value=\'[ik_fb_like_button url="http://www.facebook.com"]\' /></p>');
-		_e('Valid attributes include: <code>url="" height="" colorscheme="light"</code>.</p>');
-		_e('<p><em>Valid options for colorscheme are "light" and "dark".  Valid values for height are integers.  URL must be a valid website URL.</em></p>');
-		_e('<p>To output a Photo Gallery, place the following shortcode in the body of any page or post:</p>');
-		_e('<p><input class="gp_code_to_copy" type="text" value=\'[ik_fb_gallery id="539627829386059" num_photos="25" size="130x73" title="Hello World!"]\' /></p>');
-		_e('<p><em>If no size is passed, it will default to 320 x 180.  Size options are 2048x1152, 960x540, 720x405, 600x337, 480x270, 320x180, and 130x73.  If num_photos is not passed, the Gallery will default to the amount set on the Dashboard - if no amount is set there, it will display up to 25 photos.  The ID number is found by looking at the URL of the link to the Album on Facebook - you can read more on our FAQs <a href="http://goldplugins.com/documentation/wp-social-pro-documentation/frequently-asked-questions/">here</a>.</em></p>');
+			
 
 		// output the current configuration settings (e.g., Page ID, API Key, and Secret)
-		_e("<h3>Configuration Settings</h3>");
+		_e("<h2>Configuration Settings</h2>");
 		_e("<p>If you need to contact us for help, please be sure to include these settings in your message, as well as a functional description of how you have the feed implemented on your site.</p>");
 		echo "<table><tbody>";
 		_e("<tr><td align='right'>Page ID:</td><td>" . get_option("ik_fb_page_id") . "</td></tr>");
 		_e("<tr><td align='right'>App ID:</td><td>" . get_option("ik_fb_app_id") . "</td></tr>");
 		_e("<tr><td align='right'>Secret Key:</td><td>" . get_option("ik_fb_secret_key") . "</td></tr>");
 		echo "</tbody></table>";
-				
+					
+		// show some example shortcodes				
+		$this->output_example_shortcodes();
+		
 		// show a message about where they can get help from a human
 		_e("<h3>Get Help From A Human</h3>");
 		_e("<p>Still having trouble? Sometimes talking to another person is the best way to get moving again.</p>");
@@ -837,6 +858,96 @@ class ikFacebookOptions
 		
 		
 		$this->end_settings_page(false);		
+	}
+	
+	function output_example_shortcodes()
+	{
+?>
+		<div id="ikfb_example_shortcodes">
+<?php		
+		echo '<h2>' . __("Example Shortcodes") . '</h2>';
+?>
+		<ul class="gp_inline_menu">
+			<li><strong><?php _e('Jump to:'); ?></strong></li>
+			<li><a href="#fb_feed_shortcodes"><?php _e('Facebook Feed Shortcodes'); ?></a></li>
+			<li><a href="#fb_like_button_shortcodes"><?php _e('Like Button Shortcodes'); ?></a></li>
+			<li><a href="#fb_photo_gallery_shortcodes"><?php _e('Photo Gallery Shortcodes'); ?></a></li>
+		</ul>	
+<?php
+		// show some example shortcodes				
+		$shortcode_generator_url = menu_page_url( 'ikfb_shortcode_generator', false );
+		$s_msg = sprintf('The example shortcodes below are meant to show off some of the attributes you can pass to the shortcodes. For advanced styling, check out the <a href="%s">shortcode generator.</a>', $shortcode_generator_url);
+		echo '<p>' . __($s_msg) . '</p>';
+		echo '<p>' . __('Tip: try mixing and matching the attributes in these examples! These are only suggestions meant ot get you thinking, not an exhaustive list of what the plugin can do.') . '</p>';
+		
+		_e('<h3 id="fb_feed_shortcodes">Facebook Feed Shortcodes</h3>');
+		echo '<p>' . __('To output a custom feed of your own posts, place the following shortcode in the body of any page or post:') . '</p>';
+		echo '<textarea class="gp_code_to_copy">[ik_fb_feed]</textarea>';
+		echo '<p>' . __('To show a feed from another page, for example NatGeo\'s page, use the id attribute:') . '</p>';
+		echo '<textarea class="gp_code_to_copy">[ik_fb_feed id="NatGeo"]</textarea>';
+		echo '<p>' . __('This shortcode will output a feed that\'s 500px wide and 300px tall:') . '</p>';
+		echo '<textarea class="gp_code_to_copy">[ik_fb_feed width="500" height="300"]</textarea>';
+		echo '<p>' . __('This shortcode will output a feed using the light color scheme:') . '</p>';
+		echo '<textarea class="gp_code_to_copy">[ik_fb_feed colorscheme="light"]</textarea>';
+		echo '<p>' . __('This shortcode will output a feed using the dark color scheme (the default is light):') . '</p>';
+		echo '<textarea class="gp_code_to_copy">[ik_fb_feed colorscheme="dark"]</textarea>';
+		echo '<p>' . __('This shortcode will output a feed which includes your Facebook Profile Picture:') . '</p>';
+		echo '<textarea class="gp_code_to_copy">[ik_fb_feed use_thumb="true"]</textarea>';
+		echo '<p>' . __('This shortcode will output a feed <em>without</em> your Facebook Profile Picture:') . '</p>';
+		echo '<textarea class="gp_code_to_copy">[ik_fb_feed use_thumb="false"]</textarea>';
+		echo '<p>' . __('This shortcode will output only your most recent post:') . '</p>';
+		echo '<textarea class="gp_code_to_copy">[ik_fb_feed num_posts="1"]</textarea>';
+		echo '<p>' . __('This shortcode will output your 5 most recent posts: ') . '</p>';
+		echo '<textarea class="gp_code_to_copy">[ik_fb_feed num_posts="5"]</textarea>';
+		echo '<p>' . __('<em>Tip: you can change 5 to any number you wish, up to 100, and your feed will always show that many posts.</em>') . '</p>';		
+		//_e('<p>To further customize the feed via the shortcode, available attributes include: <code>colorscheme="light" use_thumb="true" width="250" num_posts="5" id="123456789"</code>.</p>');
+		//_e('<p><em>Valid choices for "colorscheme" are "light" and "dark". If "use_thumb" is set to true, the value of "width" will be ignored.  If "use_thumb" or "width" are not set, the values from the Options page will be used.  If id is not set, the shortcode will use the Page ID from your Settings page.</em></p>');
+		echo '<br />';
+
+		_e('<h3 id="fb_like_button_shortcodes">Like Button Shortcodes</h3>');
+		echo '<p>' . __('To output a Like Button for your website, place the following shortcode in the body of any page or post:') . '</p>';
+		echo '<textarea class="gp_code_to_copy">[ik_fb_like_button]</textarea>';
+		echo '<p>' . __('To output a Like Button for a specific page on your website, place the following shortcode in the body of any page or post:') . '</p>';
+		echo '<textarea class="gp_code_to_copy">[ik_fb_like_button url="http://www.YourWebsite.com/example"]</textarea>';
+		echo '<p>' . __('To output a Like Button using the light color scheme, place the following shortcode in the body of any page or post:') . '</p>';
+		echo '<textarea class="gp_code_to_copy">[ik_fb_like_button url="http://www.YourWebsite.com/example" colorscheme="light"]</textarea>';
+		echo '<p>' . __('To output a Like Button using the dark color scheme, place the following shortcode in the body of any page or post:') . '</p>';
+		echo '<textarea class="gp_code_to_copy">[ik_fb_like_button url="http://www.YourWebsite.com/example" colorscheme="dark"]</textarea>';
+		echo '<p>' . __('Valid attributes include: <code>url="" height="" colorscheme="light"</code>.') . '</p>';
+		echo '<p>' . __('<em>Valid options for colorscheme are "light" and "dark".  Valid values for height are integers.  URL must be a valid website URL.</em>') . '</p>';
+
+
+		_e('<h3 id="fb_photo_gallery_shortcodes">Photo Gallery Shortcodes</h3>');
+		$s_important = __('Important');
+		$s_main_msg = __('The id attribute is always required for photo galleries. It corresponds to your photo gallery\'s ID on Facebook. You can find it by visiting the photo gallery on Facebook, and then examining the URL.');
+		$s_more_info = __('More Information');
+		$faq_url = 'http://goldplugins.com/documentation/wp-social-pro-documentation/frequently-asked-questions/#easy-faq-815';
+		//'Important</strong>: The id attribute is always required for photo galleries. It corresponds to your photo gallery\'s ID on Facebook. You can find it by visiting the photo gallery on Facebook, and then examining the URL. More info <a href="%s"></p>';
+		printf('<p><strong>%s:</strong> %s [<a href="%s">%s</a>]', $s_important, $s_main_msg, $faq_url, $s_more_info);
+		echo '<p>' . __('To output a Photo Gallery, place the following shortcode in the body of any page or post:') . '</p>';
+		echo '<textarea class="gp_code_to_copy">[ik_fb_gallery id="539627829386059"]</textarea>';
+		echo '<p>' . __('To output a Photo Gallery limited to 25 items, place the following shortcode in the body of any page or post:') . '</p>';
+		echo '<textarea class="gp_code_to_copy">[ik_fb_gallery id="539627829386059" num_photos="25"]</textarea>';
+		echo '<p>' . __('To output a Photo Gallery with thumbnails that are 130px wide and 73px tall, place the following shortcode in the body of any page or post:') . '</p>';
+		echo '<textarea class="gp_code_to_copy">[ik_fb_gallery id="539627829386059" size="130x73"]</textarea>';
+		echo '<p>' . __('To output a Photo Gallery with thumbnails that are 320px wide and 180px tall, place the following shortcode in the body of any page or post:') . '</p>';
+		echo '<textarea class="gp_code_to_copy">[ik_fb_gallery id="539627829386059" size="320x180"]</textarea>';
+		echo '<p>' . __('To output a Photo Gallery with thumbnails that are 480px wide and 270px tall, place the following shortcode in the body of any page or post:') . '</p>';
+		echo '<textarea class="gp_code_to_copy">[ik_fb_gallery id="539627829386059" size="480x270"]</textarea>';
+		echo '<p>' . __('To output a Photo Gallery with thumbnails that are 600px wide and 337px tall, place the following shortcode in the body of any page or post:') . '</p>';
+		echo '<textarea class="gp_code_to_copy">[ik_fb_gallery id="539627829386059" size="600x337"]</textarea>';
+		echo '<p>' . __('To output a Photo Gallery with thumbnails that are 720px wide and 405px tall, place the following shortcode in the body of any page or post:') . '</p>';
+		echo '<textarea class="gp_code_to_copy">[ik_fb_gallery id="539627829386059" size="720x405"]</textarea>';
+		echo '<p>' . __('To output a Photo Gallery with thumbnails that are 960px wide and 540px tall, place the following shortcode in the body of any page or post:') . '</p>';
+		echo '<textarea class="gp_code_to_copy">[ik_fb_gallery id="539627829386059" size="960x540"]</textarea>';
+		echo '<p>' . __('To output a Photo Gallery with thumbnails that are 2048px wide and 1152px tall, place the following shortcode in the body of any page or post:') . '</p>';
+		echo '<textarea class="gp_code_to_copy">[ik_fb_gallery id="539627829386059" size="2048x1152"]</textarea>';
+		echo '<p>' . __('<em>If no size is passed, it will default to 320 x 180.  Size options are 2048x1152, 960x540, 720x405, 600x337, 480x270, 320x180, and 130x73.  If num_photos is not passed, the Gallery will default to the amount set on the Dashboard - if no amount is set there, it will display up to 25 photos.  The ID number is found by looking at the URL of the link to the Album on Facebook - you can read more on our FAQs <a href="http://goldplugins.com/documentation/wp-social-pro-documentation/frequently-asked-questions/">here</a>.</em>') . '</p>';
+
+?>
+		</div>
+<?php		
+		
 	}
 	
 	function run_diagnostics()

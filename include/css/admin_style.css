@@ -3,6 +3,13 @@ input.gp_code_to_copy {
     width: 100%;
 }
 
+textarea.gp_code_to_copy {
+    padding: 10px 12px;
+	height: 42px;
+	overflow: hidden;
+    width: 100%;
+}
+
 .ikfb_settings form > h3 {
     border-bottom: 1px solid #ccc;
     font-size: 24px;
@@ -24,9 +31,9 @@ input.gp_code_to_copy {
 
 
 .ikfb_settings .app_id_callout {
-	background-color: pink;
-	border: 1px solid red;
-	box-shadow: -1px 1px 0px red;
+	background-color: white;
+	border: 1px solid green;
+	box-shadow: -1px 1px 0px lightgreen;
 	padding: 5px 15px 5px;
 	margin: 20px 0;
 }
@@ -384,9 +391,9 @@ input.gp_code_to_copy {
 	padding-top: 10px;
 }
 .gold_plugins_settings .app_id_callout {
-	background-color: pink;
-	border: 1px solid red;
-	box-shadow: -1px 1px 0px red;
+	background-color: white;
+	border: 1px solid green;
+	box-shadow: -1px 1px 0px lightgreen;
 	padding: 5px 15px 5px;
 	margin: 20px 0;
 }
@@ -745,4 +752,36 @@ input.gp_code_to_copy {
 }
 #gold_plugins_shortcode_generator .upgrade_notice {
     margin-left: -10px;
+}
+
+/* 4.15.15 */
+#wpcontent {
+    height: auto;
+}
+
+.ikfb_settings legend {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.ikfb_settings fieldset {
+    border: 1px solid #999;
+    margin: 20px;
+    padding: 20px;
+}
+
+#ui-datepicker-div {
+	display: none;
+}
+
+/* account for top bar covering the headings when jumping to anchors */
+#ikfb_example_shortcodes h3 {
+	padding-top: 50px;
+	margin-top: -30px;
+}
+
+/* Inline menus (e.g., above Example Shortcodes section */
+.gp_inline_menu > li {
+    display: inline-block;
+    margin-right: 10px;
 }

@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, facebook feed, facebook embed, facebook feed widget, facebook feed embed, like button widget, facebook events
 Requires at least: 3.0.1
 Tested up to: 4.1.1
-Stable tag: 2.10
+Stable tag: 2.11
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -13,8 +13,6 @@ IK Facebook is an easy-to-use plugin for adding a Custom Facebook Feed of any Pu
 == Description ==
 
 The IK Facebook Plugin is an **easy-to-use** plugin that allows users to add a **custom Facebook Feed widget** to the sidebar, as a widget, or to embed the custom Facebook Feed widget into a Page or Post using the shortcode, of any Public Facebook Page.  The IK Facebook Plugin also allows you to insert a Facebook Like Button widget into the Page, Post, or theme.  The IK Facebook Plugin allows you to add Facebook Events, Photos, and Galleries to your website, too!
-
-_"This plugin has ticked all the boxes for me - responsive and displays images and super fast replies to my support question - thanks"_
 
 
 _"I searched forever for a simple plugin to display a public Facebook page pictures on my site. This plugin worked perfectly, and even better is the great support. Thanks so much Richard."_
@@ -25,16 +23,16 @@ _"Looks great, easy to use. Better than any of the other Facebook feed plugins I
 
 = The IK Facebook Plugin is a great plugin for many uses, including: =
 
-* Powering your blog with your Facebook Feed - avoid the need to maintain content in multiple locations!
+* Powering your blog with your Facebook Feed!
 * Embed a Custom Facebook Feed Widget in your Sidebar or Footer
 * Styling a Custom Facebook Feed, without the need for CSS!
 * Custom HTML Options allow Facebook Feed Shortcode and Facebook Feed Widget to be displayed any way you like!
 * Adding a Facebook Like Button to your website, anywhere!
 * Showing Facebook Comments in your Custom Facebook Feed!
-* Adding a Facebook-powered Photo Gallery to your website!
+* Adding a Facebook Photo Gallery to your website!
 * Show multiple different custom Facebook Feeds!
-* Display Facebook Events in your Feed!
-* Use a Facebook Event instead of a Page - Widget will output a customized Feed from the Facebook Event's Wall!
+* Display Upcoming Facebook Events on your website!
+* Use a Facebook Event instead of a Page - output a customized Feed from the Facebook Event's Wall!
 * Custom Facebook Feed Widget allows user to override Site Wide Options
 * Ability to Pass Page ID Via Shortcode and Widget Allows Multiple Facebook Feeds on One Page!
 
@@ -49,7 +47,7 @@ The IK Facebook Plugin includes options to set the Title of the custom Facebook 
 
 = Professional Development =
 
-The IK Facebook Plugin is a free version of [WP Social Pro](http://http://goldplugins.com/our-plugins/wp-social-pro/ "WP Social Pro") - WP Social Pro is a professionally developed WordPress plugin that integrates your Facebook Feed into your WordPress website as a custom widget.  The IK Facebook Plugin receives regular updates with new features and tweaks to the custom Facebook Feed.  With the IK Facebook Plugin, you can easily add **Search Engine Optimization friendly** content to your website -- no iframe means the content exists on your site and is crawlable by search engines like Google!  Our Professional Developers are currently working on things like Multi Lingual Translations, Transient API Caching, and coming up with new unique ways to integrate Facebook into your website.
+The IK Facebook Plugin is a free version of [WP Social Pro](http://http://goldplugins.com/our-plugins/wp-social-pro/ "WP Social Pro") - WP Social Pro is a professionally developed WordPress plugin that integrates your Facebook Feed into your WordPress website as a custom widget.  The IK Facebook Plugin receives regular updates with new features and tweaks to the custom Facebook Feed.  With the IK Facebook Plugin, you can easily add **Search Engine Optimization friendly** content to your website -- no iframe means the content exists on your site and is crawlable by search engines like Google!  Our Professional Developers are currently working on things like Multi Lingual Translations, Facebook Event and Facebook Photo Gallery updates, and coming up with new unique ways to integrate Facebook into your website.
 
 = Powerful Customization =
 
@@ -66,6 +64,15 @@ This section describes how to install the plugin and get it working.
 1. Upload the contents of `/ik-facebook/` to the `/wp-content/plugins/` directory
 2. Activate the IK Facebook Plugin through the 'Plugins' menu in WordPress
 3. [Click here](http://iksocialpro.com/installation-usage-instructions/configuration-options-and-instructions/ "Configuration Options and Instructions") for information on how to configure the plugin.
+
+= How To Get an App ID and Secret Key From Facebook =
+
+Watch this video to learn how to get an App ID and Secret Key for your Facebook Feed:
+https://www.youtube.com/watch?v=JGY9mQkRxK0
+
+You can also read our step-by-step tutorial on the process [here](http://goldplugins.com/documentation/wp-social-pro-documentation/how-to-get-an-app-id-and-secret-key-from-facebook/ "How To Get An App ID and Secret Key From Facebook")
+
+Once you have your App ID and Secret Key, you will need to place them in the appropriate fields on the Settings page, for our plugin to work.
 
 = Outputting the Facebook Event Feed =
 * This is no different than outputting a normal Page Feed!  Just follow the instructions below and our plugin will detect what type of feed is being displayed.
@@ -167,8 +174,14 @@ In this case, the Facebook Album ID is '539627829386059'.
 
 == Changelog ==
 
+= 2.11 =
+* Update: allows setting of date range window for displaying Posts and Events
+* Update: compatible with Graph API v2.3
+* Update: Adds many more example shortcodes and improves setup process
+* Fix: various minor fixes.
+
 = 2.10 =
-* * Update: Adds Support For Multi-Photo Posts, Facebook Stories, Shared Posts, and More!
+* Update: Adds Support For Multi-Photo Posts, Facebook Stories, Shared Posts, and More!
 
 = 2.9.6 =
 * Fix: address issue with undefined constant WP_LANG
@@ -569,5 +582,6 @@ In this case, the Facebook Album ID is '539627829386059'.
 
 == Upgrade Notice ==
 
-= 2.10 =
-* Update Available: Adds Support For Multi-Photo Posts, Facebook Stories, and More!
+= 2.11 =
+* Update available: Compatible with Graph API v2.3; allows setting of date range window for displaying Posts and Events; Adds many more example shortcodes and improves setup process
+

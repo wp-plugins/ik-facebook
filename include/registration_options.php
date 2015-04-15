@@ -2,6 +2,7 @@
 <?php if(is_valid_key()): ?>
 <p class="plugin_is_registered">&#x2713; WP Social Pro is registered and activated. Thank you!</p>
 <?php else: ?>
+<p class="plugin_is_not_registered">&#x2718; Pro features not available. Upgrade to WP Social Pro to unlock all features. <a class="button" href="http://goldplugins.com/our-plugins/wp-social-pro/upgrade-to-wp-social-pro/?utm_source=api_key_reminder" target="_blank">Click here to upgrade now!</a></p>
 <p>Enter your Email Address and API Key here to activate additional features such as Custom HTML, Unbranded Admin Screens, Comments, Avatars, and more!</p>
 <p><a class="button" href="http://goldplugins.com/our-plugins/wp-social-pro/upgrade-to-wp-social-pro/?utm_source=plugin&utm_campaign=api_key_reminder_2">Get An API Key</a></p>
 <?php endif; ?>

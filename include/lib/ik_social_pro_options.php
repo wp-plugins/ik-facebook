@@ -19,6 +19,9 @@ class ikSocialProOptions
 		register_setting( 'ik-fb-pro-event-settings-group', 'ik_fb_event_image_size' );
 		register_setting( 'ik-fb-pro-event-settings-group', 'ik_fb_event_range_start_date' );
 		register_setting( 'ik-fb-pro-event-settings-group', 'ik_fb_event_range_end_date' );
+		register_setting( 'ik-fb-pro-event-settings-group', 'ik_fb_range_or_manual' );
+		register_setting( 'ik-fb-pro-event-settings-group', 'ik_fb_event_range_past_days' );	
+		register_setting( 'ik-fb-pro-event-settings-group', 'ik_fb_event_range_future_days' );			
 		
 		register_setting( 'ik-fb-html-settings-group', 'ik_fb_feed_item_html' );
 		register_setting( 'ik-fb-html-settings-group', 'ik_fb_message_html' );
@@ -192,38 +195,84 @@ class ikSocialProOptions
 			
 			<h3><?php _e('Event Options');?></h3>
 			<?php echo $this->pro_upgrade_link(); ?>
-			<table class="form-table">	
-			<?php			
-				// Reverse Event Feed Order (checkbox)
-				$checked = (get_option('ik_fb_reverse_events') == '1');
-				$this->shed->checkbox( array('name' => 'ik_fb_reverse_events', 'label' =>'Reverse Event Feed Order', 'value' => 1, 'checked' => $checked, 'description' => 'If checked, the order of the events feed will be reversed.', 'inline_label' => 'Reverse the order of the events feed', 'disabled' => !$is_pro) );
-			
-				// Start Date Format (text)
-				$value = get_option('ik_fb_start_date_format', 'l, F jS, Y h:i:s a');
-				$this->shed->text( array('name' => 'ik_fb_start_date_format', 'label' =>'Start Date Format', 'value' => $value, 'description' => 'The format string to be used for the Event Start Date.  This follows the standard used for PHP date.  Warning: this is an advanced feature - do not change this value if you do not know what you are doing! The default setting is l, F jS, Y h:i:s a', 'disabled' => !$is_pro) );
+			<fieldset>
+				<legend>Event Feed Order:</legend>	
+				<table class="form-table">	
+				<?php			
+					// Reverse Event Feed Order (checkbox)
+					$checked = (get_option('ik_fb_reverse_events') == '1');
+					$this->shed->checkbox( array('name' => 'ik_fb_reverse_events', 'label' =>'Reverse Event Feed Order', 'value' => 1, 'checked' => $checked, 'description' => 'If checked, the order of the events feed will be reversed.', 'inline_label' => 'Reverse the order of the events feed', 'disabled' => !$is_pro) );
+				?>
+				</table>
+			</fieldset>
+			<fieldset>
+				<legend>Event Date Format:</legend>	
+				<table class="form-table">	
+				<?php
+					// Start Date Format (text)
+					$value = get_option('ik_fb_start_date_format', 'l, F jS, Y h:i:s a');
+					$this->shed->text( array('name' => 'ik_fb_start_date_format', 'label' =>'Start Date Format', 'value' => $value, 'description' => 'The format string to be used for the Event Start Date.  This follows the standard used for PHP date.  Warning: this is an advanced feature - do not change this value if you do not know what you are doing! The default setting is l, F jS, Y h:i:s a', 'disabled' => !$is_pro) );
 
-				// End Date Format (text)
-				$value = get_option('ik_fb_end_date_format', 'l, F jS, Y h:i:s a');
-				$this->shed->text( array('name' => 'ik_fb_end_date_format', 'label' =>'End Date Format', 'value' => $value, 'description' => 'The format string to be used for the Event End Date.  This follows the standard used for PHP date.  Warning: this is an advanced feature - do not change this value if you do not know what you are doing! The default setting is l, F jS, Y h:i:s a', 'disabled' => !$is_pro) );
-
-				// Event Range - Start Date (text / datepicker)
-				$this->shed->text( array('name' => 'ik_fb_event_range_start_date', 'label' =>'Event Range Start Date', 'value' => get_option('ik_fb_event_range_start_date'), 'description' => 'The Start Date of Events you want shown.  Events that start before this date will not be shown in the feed - even if their End Date is after this date.', 'class' => 'datepicker', 'disabled' => !$is_pro) );
-			
-				// Event Range - End Date (text / datepicker)
-				$this->shed->text( array('name' => 'ik_fb_event_range_end_date', 'label' =>'Event Range End Date', 'value' => get_option('ik_fb_event_range_end_date'), 'description' => 'The End Date of Events you want shown.  Events that end after this date will not be shown in the feed - even if their Start Date is before this date.', 'class' => 'datepicker', 'disabled' => !$is_pro) );
-			
-			?>
-			<?php
-				$ikfb_event_image_sizes = array(
-					'normal' => 'Normal',
-					'small' => 'Small',
-					'large' => 'Large',
-					'square' => 'Square'
-				);			
-				$this->shed->select( array('name' => 'ik_fb_event_image_size', 'options' => $ikfb_event_image_sizes, 'label' =>'Event Feed Image Size', 'value' => get_option('ik_fb_event_image_size'), 'description' => 'Select which size of image to display with Events in your Feed.', 'disabled' => !$is_pro) );
-			?>
-			</table>	
-			
+					// End Date Format (text)
+					$value = get_option('ik_fb_end_date_format', 'l, F jS, Y h:i:s a');
+					$this->shed->text( array('name' => 'ik_fb_end_date_format', 'label' =>'End Date Format', 'value' => $value, 'description' => 'The format string to be used for the Event End Date.  This follows the standard used for PHP date.  Warning: this is an advanced feature - do not change this value if you do not know what you are doing! The default setting is l, F jS, Y h:i:s a', 'disabled' => !$is_pro) );
+				?>			
+				</table>
+			</fieldset>
+			<fieldset>	
+				<legend>Floating or Manual Range:</legend>	
+				<table class="form-table">	
+				<?php
+					// Use Event Date Range Window option or Use Event Start Date and Event End Date options
+					// Depending on selection, we will either calculate the Date Range using the Window selected, or will use the manually selected dates in the Event Start Date and Event End Date options
+					$radio_options = array(
+						'event-date-range-window' => 'Floating Date Range',
+						'event-start-end-date-options' => 'Manual Event Start and End Date Options',
+					);				
+					$this->shed->radio( array('name' => 'ik_fb_range_or_manual', 'value' => get_option('ik_fb_range_or_manual','event-start-end-date-options'), 'options' => $radio_options, 'label' =>'Use Floating or Manual Selection', 'description' => "Depending on selection, we will either calculate the Date Range using the time frame selected, or will will use the manually selected dates in the Event Start Date and Event End Date options.") );
+				?>
+				</table>
+			</fieldset>
+			</fieldset>			
+			<fieldset>
+				<legend>Floating Date Range:</legend>	
+				<table class="form-table">	
+				<?php
+					// Floating Event Range - Days Into Future
+					$this->shed->text( array('name' => 'ik_fb_event_range_future_days', 'label' =>'Days Into Future', 'value' => get_option('ik_fb_event_range_future_days',365), 'description' => 'How many days into the future to look for Upcoming Events. Defaults to 365 days.') );
+					
+					// Floating Event Range - Days Into Past
+					$this->shed->text( array('name' => 'ik_fb_event_range_past_days', 'label' =>'Days Into Past', 'value' => get_option('ik_fb_event_range_past_days',14), 'description' => 'How many days into the past to show Old Events. Defaults to 14 days.') );
+				?>
+				</table>
+			</fieldset>
+			<fieldset>
+				<legend>Manual Date Range:</legend>	
+				<table class="form-table">	
+				<?php
+					// Event Range - Start Date (text / datepicker)
+					$this->shed->text( array('name' => 'ik_fb_event_range_start_date', 'label' =>'Event Range Start Date', 'value' => get_option('ik_fb_event_range_start_date'), 'description' => 'The Start Date of Events you want shown.  Events that start before this date will not be shown in the feed - even if their End Date is after this date.', 'class' => 'datepicker', 'disabled' => !$is_pro) );
+				
+					// Event Range - End Date (text / datepicker)
+					$this->shed->text( array('name' => 'ik_fb_event_range_end_date', 'label' =>'Event Range End Date', 'value' => get_option('ik_fb_event_range_end_date'), 'description' => 'The End Date of Events you want shown.  Events that end after this date will not be shown in the feed - even if their Start Date is before this date.', 'class' => 'datepicker', 'disabled' => !$is_pro) );
+				
+				?>
+				</table>
+			</fieldset>
+			<fieldset>
+				<legend>Event Image Size:</legend>	
+				<table class="form-table">	
+				<?php
+					$ikfb_event_image_sizes = array(
+						'normal' => 'Normal',
+						'small' => 'Small',
+						'large' => 'Large',
+						'square' => 'Square'
+					);			
+					$this->shed->select( array('name' => 'ik_fb_event_image_size', 'options' => $ikfb_event_image_sizes, 'label' =>'Event Feed Image Size', 'value' => get_option('ik_fb_event_image_size'), 'description' => 'Select which size of image to display with Events in your Feed.', 'disabled' => !$is_pro) );
+				?>
+				</table>
+			</fieldset>			
 			<?php if(!is_valid_key(get_option('ik_fb_pro_key'))): ?></div><?php endif; ?>
 			
 			<?php break;?>

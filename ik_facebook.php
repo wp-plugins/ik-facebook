@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Gold Plugins
-Version: 2.10
+Version: 2.11
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -551,7 +551,7 @@ class ikFacebook
 	public function get_profile_title_html($page_data)
 	{
 		$url = $this->get_profile_link($page_data);
-		if($this->feed_options->get_option('ik_fb_show_page_title'))
+		if($this->feed_options->get_option('ik_fb_show_page_title') && isset($page_data->name))
 		{
 			// return a link to the profile, with the text inside wrapped in span.ik_fb_name
 			return '<a target="_blank" href="' . $url . '"><span class="ik_fb_name">' . $page_data->name . '</span></a>';	
@@ -1230,13 +1230,26 @@ class ikFacebook
 				$now = time();
 				$end_date = $now + 31557600;
 				
-				//load the event start date from options
-				//if the event start date isn't set in the options, use now as the start date
-				$event_start_date = $this->feed_options->get_option('ik_fb_event_range_start_date', $now);		
+				//check to see if we are using the manually selected event dates
+				//or the automatically generated dates from the floating event dates
+				$manual = get_option('ik_fb_range_or_manual','event-start-end-date-options') == 'event-date-range-window' ? false : true;
+				
+				if($manual){
+					//if using manually selected options
+					//load the event start date from options
+					//if the event start date isn't set in the options, use now as the start date
+					$event_start_date = $this->feed_options->get_option('ik_fb_event_range_start_date', $now);		
 
-				//load the event end date from options
-				//if the event end date isn't set in the options, use now + 1 year as the end date				
-				$event_end_date = $this->feed_options->get_option('ik_fb_event_range_end_date', $end_date);
+					//load the event end date from options
+					//if the event end date isn't set in the options, use now + 1 year as the end date				
+					$event_end_date = $this->feed_options->get_option('ik_fb_event_range_end_date', $end_date);
+				} else {
+					//if using automatically generated options
+					$days_into_past = $this->feed_options->get_option('ik_fb_event_range_past_days', 1209600); //1209600 is 14 days in seconds
+					$days_into_future = $this->feed_options->get_option('ik_fb_event_range_future_days', 31536000); //31536000 is 365 days in seconds
+					$event_start_date = $now - ($days_into_past * 86400);		
+					$event_end_date = $now + ($days_into_future * 86400);					
+				}				
 						
 				$feed = $this->fetchUrl("https://graph.facebook.com/{$profile_id}/events?summary=1&limit={$fb_post_limit}&since={$event_start_date}&until={$event_end_date}&{$this->authToken}", true);//the feed data
 			} else {
@@ -1515,7 +1528,7 @@ class ikFacebook
 		if ( $file == $plugin_file )
 		{		
 			$new_links['settings_link'] = '<a href="admin.php?page=ikfb_configuration_options">Settings</a>';
-			$new_links['support_link'] = '<a href="http://goldplugins.com/contact/?utm-source=plugin_menu&utm_campaign=support&utm_banner=ikfb_settings_links" target="_blank">Get Support</a>';
+			$new_links['support_link'] = '<a href="http://goldplugins.com/contact/?utm-source=plugin_menu&utm_campaign=support&utm_banner=ikfb_settings_links" target="_blank">Pro Support</a>';
 				
 			if(!is_valid_key()){
 				$new_links['upgrade_to_pro'] = '<a href="http://goldplugins.com/our-plugins/wp-social-pro/upgrade-to-wp-social-pro/?utm_source=plugin_menu&utm_campaign=upgrade" target="_blank">Upgrade to Pro</a>';

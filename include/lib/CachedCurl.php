@@ -24,14 +24,14 @@ along with The IK Facebook Plugin.  If not, see <http://www.gnu.org/licenses/>.
 			$this->cache_time = $cache_time;
 		}
 				
-		function load_url($url, $post_fields = false, $headers = false)
+		function load_url($url, $post_fields = false, $headers = false, $destroy = false)
 		{
 			$cache_key = strlen($url) . md5($url);
 			
 			// check for a cached result
 			$result = get_transient($cache_key);
 			
-			if ($result === false) {	
+			if ($result === false || $destroy) {	
 				$args = array('timeout' => 10);
 				$result = wp_remote_get($url, $args);
 				
@@ -50,6 +50,12 @@ along with The IK Facebook Plugin.  If not, see <http://www.gnu.org/licenses/>.
 			} else {
 				return $result;
 			}
+		}
+		
+		//running this function will flush all of ikfb's cached data
+		//TBD: figure out a common way to target the transients we've created and destory them all when this function is called
+		//TBD: when someone triggers flush_cache, we will reload the entire feed with $destroy set to true -- this will load out of curl instead of the cache and recache the data
+		function flush_cache(){
 		}
 	}
 ?>

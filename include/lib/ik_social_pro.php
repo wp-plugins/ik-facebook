@@ -37,7 +37,8 @@ class ikSocialPro
 	function pro_user_avatars($content = "", $item = array()){
 		global $ik_fb;
 		
-		if(is_valid_key($this->feed_options->get_option('ik_fb_pro_key')) && $this->feed_options->get_option('ik_fb_show_avatars')){	
+		
+		if(is_valid_key($this->feed_options->get_option('ik_fb_pro_key')) && $this->feed_options->get_option('ik_fb_show_avatars') && isset($item->from->id)){	
 			if(!isset($ik_fb->authToken)){
 				$app_id = $this->feed_options->get_option('ik_fb_app_id');
 				$app_secret = $this->feed_options->get_option('ik_fb_secret_key');

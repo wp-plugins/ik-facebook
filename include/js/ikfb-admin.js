@@ -1,5 +1,5 @@
 var gold_plugins_init_selectable_code_boxes = function () {
-	jQuery('input.gp_code_to_copy').bind('click', function () {
+	jQuery('.gp_code_to_copy').bind('click', function () {
 		jQuery(this).select();
 	});
 };
