@@ -1,6 +1,7 @@
 <?php
 // turning off namespace until WordPress bumps its requirements up to PHP 5.3
 // namespace GoldPlugins;
+if (!class_exists('GoldPlugins_BikeShed')):
 
 	class GoldPlugins_BikeShed
 	{
@@ -396,3 +397,4 @@
 		}
 	
 	}
+endif;// class_exists('GoldPlugins_BikeShed')

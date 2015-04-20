@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Gold Plugins
-Version: 2.11
+Version: 2.11.1
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -699,6 +699,12 @@ class ikFacebook
 				}
 				
 				//TBD: Allow user control over date formatting
+				
+				//only set locale if WPLANG is defined
+				if(defined(WPLANG)){
+					setlocale(LC_TIME, WPLANG);
+				}
+				
 				$time_object = new DateTime($start_time);
 				$start_time = $time_object->format($start_time_format);	
 				
