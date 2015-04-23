@@ -529,6 +529,21 @@ textarea.gp_code_to_copy {
 	font-size: 21px;
 	margin-bottom: 14px;
 }
+/* gray style - testing for ikfb */
+.gold_plugins_settings .topper_gray {
+	background-color: gray;
+	padding: 10px 20px 15px;
+}
+.gold_plugins_settings .topper_gray h3 {
+	margin-bottom: 21px;
+}
+.gold_plugins_settings .topper h4 {
+	font-size: 16px;
+    margin-bottom: 15px;
+}
+.gold_plugins_settings .topper .pitch_how_to_save {
+	font-style: italic;
+}
 .gold_plugins_settings #mc_embed_signup form {display:block; position:relative; text-align:left; padding:10px 0 10px 3%}
 .gold_plugins_settings #mc_embed_signup h2 {font-weight:bold; padding:0; margin:15px 0; font-size:1.4em;}
 .gold_plugins_settings #mc_embed_signup input {-webkit-appearance:none;}
@@ -682,6 +697,9 @@ textarea.gp_code_to_copy {
 .gold_plugins_settings .smallBlueButton:active {
 	position: relative;
 	top: 1px;
+}
+#mc-show-coupon-codes {
+	padding-top: 20px;
 }
 #mc-show-coupon-codes .upgrade_link {
 	background: none repeat scroll 0 0 #f7f7f7;

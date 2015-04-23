@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Gold Plugins
-Version: 2.11.1
+Version: 2.12
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -27,6 +27,7 @@ include('include/widgets/ik_facebook_feed_widget.php');
 include('include/widgets/ik_facebook_like_button_widget.php');
 include('include/ik_facebook_options.php');
 include('include/lib/CachedCurl.php');
+include('include/lib/GP_CacheBox.php');
 include('include/lib/lib.php');
 include('include/lib/ik_social_pro.php');
 include('include/lib/BikeShed/bikeshed.php');
@@ -48,6 +49,7 @@ class ikFacebook
 		//setup notifications
 		$this->notifications = new ikNotify();
 		$this->feed_options = new IK_FB_Feed_Options();
+		$this->cache = new GP_CacheBox();
 		$ik_social_pro->feed_options = $this->feed_options;
 		
 		//create shortcodes
@@ -87,8 +89,8 @@ class ikFacebook
 		wp_enqueue_script( 'ik_fb_pro_options', plugins_url('include/js/js.js', __FILE__), array( 'farbtastic', 'jquery' ) );
 		
 		wp_enqueue_script(
-			'gp-admin',
-			plugins_url('include/js/gp-admin.js', __FILE__),
+			'gp-admin_v2',
+			plugins_url('include/js/gp-admin_v2.js', __FILE__),
 			array( 'jquery' ),
 			false,
 			true
@@ -216,7 +218,7 @@ class ikFacebook
 		return $this->ik_fb_like_button($url,$height,$colorscheme);
 	}
 	
-	function ik_fb_output_feed_shortcode($atts){			
+	function ik_fb_output_feed_shortcode($atts){
 		//load shortcode attributes into an array
 		$merged_atts = shortcode_atts( array(
 			'colorscheme' => 'light',
@@ -408,37 +410,66 @@ class ikFacebook
 		
 		// Load the profile's feed items from the Graph API
 		// TODO: if page_data is not set, this indicates an error with the API reponse. We should handle it.
-		$api_response = $this->loadFacebook($id, $num_posts, $content_type);				
-		$feed = isset($api_response['feed']) ? $api_response['feed'] : array();		
-		$page_data = isset($api_response['page_data']) ? $api_response['page_data'] : false;		
+
+		// try to load the feed and the page data out of the cache
+		$feed = $this->cache->get_key('ik_fb_feed', false, false);
+		$page_data = $this->cache->get_key('ik_fb_page_data', false, false);
+		
+		// if feed and/or page data is not in the cache, reload it now
+		if ($feed === FALSE || $page_data === FALSE) {
+			$api_response = $this->loadFacebook($id, $num_posts, $content_type);
+			$feed = isset($api_response['feed']) ? $api_response['feed'] : array();
+			$page_data = isset($api_response['page_data']) ? $api_response['page_data'] : false;
+			$one_day = 60*60*24; // one day in seconds (expiration time for the cache)
+			
+			if (!empty($feed)) {
+				$this->cache->set_key('ik_fb_feed', $feed, $one_day);
+			}
+			if (!empty($page_data)) {
+				$this->cache->set_key('ik_fb_page_data', $page_data, $one_day);
+			}
+		}
+		
+		// setup the cache for the rest of the items
+		$first_item_id = $feed[0]->id;
+		$options_hash = $this->feed_options->get_option_hash();
+		$mixer = $first_item_id . $options_hash;
+		
+		//$feed = isset($api_response['feed']) ? $api_response['feed'] : array();		
 		$the_link = $this->get_profile_link($page_data); // save a permalink to the Facebook profile. We'll need it in several places.
 		$is_event = isset($page_data->start_time);
 
 		// If there were no items and show_errors is OFF, we'll need to hide the feed
-		 $hide_the_feed = !$show_errors && !(count($feed) > 0);
-		
-		/** Start building the feed HTML now **/		
-		// start with a template which contains the merge tag '{ik:feed}'
-		$output = $this->build_feed_template($ik_fb_feed_width, $ik_fb_feed_height, $ik_fb_window_bg_color, $ik_fb_header_bg_color, $hide_the_feed);
+		$hide_the_feed = !$show_errors && !(count($feed) > 0);
+		 
+		$output = $this->cache->get_key('ik_fb_feed_output', FALSE, $mixer);
+		if ($output === FALSE || strlen($output) < 10)
+		{
+			/** Start building the feed HTML now **/		
+			// start with a template which contains the merge tag '{ik:feed}'
+			$output = $this->build_feed_template($ik_fb_feed_width, $ik_fb_feed_height, $ik_fb_window_bg_color, $ik_fb_header_bg_color, $hide_the_feed);
 
-		// {ikfb:image} merge tag - adds the profile photo HTML (can be disabled with options, in which case we'd be merging in a blank string)
-		$image_html = $this->get_profile_photo_html($page_data); 
-		$output = str_replace('{ikfb:image}', $image_html, $output);
+			// {ikfb:image} merge tag - adds the profile photo HTML (can be disabled with options, in which case we'd be merging in a blank string)
+			$image_html = $this->get_profile_photo_html($page_data); 
+			$output = str_replace('{ikfb:image}', $image_html, $output);
 
-		// {ikfb:link} merge tag - adds the profile title to the top of the feed (which is linked to the profile on Facebook)
-		// NOTE: this is controlled by the "title" setting in the options, and can be disabled (meaning we would merge in a blank string)
-		$title_html = $this->get_profile_title_html($page_data);
-		$output = str_replace('{ikfb:link}', $title_html, $output);
+			// {ikfb:link} merge tag - adds the profile title to the top of the feed (which is linked to the profile on Facebook)
+			// NOTE: this is controlled by the "title" setting in the options, and can be disabled (meaning we would merge in a blank string)
+			$title_html = $this->get_profile_title_html($page_data);
+			$output = str_replace('{ikfb:link}', $title_html, $output);
 
-		// {ikfb:like_button} merge tag - adds the Like button (for the profile itself, not the individual feed items)
-		// NOTE: events cannot have like buttons, so they'll get a string with the event's Start/End Times and location instead
-		$like_button_html = $this->get_feed_like_button_html($page_data, $is_event, $the_link, $colorscheme);
-		$output = str_replace('{ikfb:like_button}', $like_button_html, $output);	
+			// {ikfb:like_button} merge tag - adds the Like button (for the profile itself, not the individual feed items)
+			// NOTE: events cannot have like buttons, so they'll get a string with the event's Start/End Times and location instead
+			$like_button_html = $this->get_feed_like_button_html($page_data, $is_event, $the_link, $colorscheme);
+			$output = str_replace('{ikfb:like_button}', $like_button_html, $output);	
 
-		// {ikfb:feed} merge tag - adds the actual line items
-		// NOTE: this can be an error message, if the feed is empty and $show_errors = true
-		$feed_items_html = $this->get_feed_items_html($feed, $page_data, $use_thumb, $width, $height, $the_link, $show_errors);
-		$output = str_replace('{ikfb:feed}', $feed_items_html, $output);	
+			// {ikfb:feed} merge tag - adds the actual line items
+			// NOTE: this can be an error message, if the feed is empty and $show_errors = true
+			$feed_items_html = $this->get_feed_items_html($feed, $page_data, $use_thumb, $width, $height, $the_link, $show_errors);
+			$output = str_replace('{ikfb:feed}', $feed_items_html, $output);
+			
+			$this->cache->set_key('ik_fb_feed_output', $output, 0, $mixer);
+		}
 
 		// All done! Return the HTML we've built.
 		// TODO: add a hookable filter on $output

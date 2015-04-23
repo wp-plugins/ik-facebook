@@ -230,8 +230,8 @@ class ikFacebookOptions
 		?>
 			<script type="text/javascript">
 				jQuery(function () {
-					if (typeof(gold_plugins_init_mailchimp_form) == 'function') {
-						gold_plugins_init_mailchimp_form();
+					if (typeof(gold_plugins_init_coupon_box) == 'function') {
+						gold_plugins_init_coupon_box();
 					}
 				});
 			</script>
@@ -1102,20 +1102,27 @@ class ikFacebookOptions
 ?>
 			<!-- Begin MailChimp Signup Form -->
 			<div id="signup_wrapper">
-				<div class="topper">
+				<div class="topper topper_gray">
 					<h3>Save 20% on WP Social Pro!</h3>
-					<p class="pitch">Submit your name and email and we’ll send you a coupon for 20% off your upgrade to the Pro version.</p>
+					<p class="pitch" style="font-size: 15px">WP Social Pro is the Pro Edition of IK Facebook. It adds tons of new customization options including custom HTML support, showing/hiding comments and avatars, and support for Events.</p>
+					<p class="pitch" style="font-size: 15px">When you upgrade, the new features will instantly become available to you inside this plugin - no additional downloads are required.</p>
+					<h4>
+					<h4>How To Save 20% on Your Upgrade:</h4>
+					<p class="pitch pitch_how_to_save">Simply submit your name and email below, and we’ll send you a coupon for 20% off your upgrade to WP Social Pro.</p>
 				</div>
 				<div id="mc_embed_signup">
-					<form action="http://illuminatikarate.us2.list-manage1.com/subscribe/post?u=403e206455845b3b4bd0c08dc&amp;id=3e22ddb309" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-						<label for="mce-EMAIL">Your Name:</label>
-						<input type="email" value="<?php echo (!empty($current_user->display_name) ? $current_user->display_name : ''); ?>" name="NAME" class="email" id="mce-EMAIL" placeholder="Your Name" required>
-						<label for="mce-EMAIL">Your Email:</label>
-						<input type="email" value="<?php echo (!empty($current_user->user_email) ? $current_user->user_email : ''); ?>" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Your Email" required>
-						<!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-						<div style="position: absolute; left: -5000px;"><input type="text" name="b_403e206455845b3b4bd0c08dc_6ad78db648" tabindex="-1" value=""></div>
-						<div class="clear"><input type="submit" value="Send Me The Coupon Now!" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+					<form action="http://goldplugins.com/atm/atm.php?u=403e206455845b3b4bd0c08dc&amp;id=a70177def0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+						<div class="fields_wrapper">
+							<label for="mce-EMAIL">Your Name:</label>
+							<input type="email" value="<?php echo (!empty($current_user->display_name) ? $current_user->display_name : ''); ?>" name="NAME" class="email" id="mce-EMAIL" placeholder="Your Name" required>
+							<label for="mce-EMAIL">Your Email:</label>
+							<input type="email" value="<?php echo (!empty($current_user->user_email) ? $current_user->user_email : ''); ?>" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Your Email" required>
+							<!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+							<div style="position: absolute; left: -5000px;"><input type="text" name="b_403e206455845b3b4bd0c08dc_6ad78db648" tabindex="-1" value=""></div>
+						</div>
+						<div class="clear"><input type="submit" value="Send Me The Coupon Now!" name="subscribe" id="mc-embedded-subscribe" class="smallBlueButton"></div>
 						<p class="secure"><img src="<?php echo plugins_url( 'img/lock.png', __FILE__ ); ?>" alt="Lock" width="16px" height="16px" />We respect your privacy.</p>
+						<input type="hidden" name="PRODUCT" value="WP Social Pro" />
 						<input type="hidden" id="mc-upgrade-plugin-name" value="WP Social Pro" />
 						<input type="hidden" id="mc-upgrade-link-per" value="http://goldplugins.com/purchase/wp-social-pro/single?promo=newsub20" />
 						<input type="hidden" id="mc-upgrade-link-biz" value="http://goldplugins.com/purchase/wp-social-pro/business?promo=newsub20" />
@@ -1124,7 +1131,6 @@ class ikFacebookOptions
 							"It's easy to use, it works, and with excellent support from it's developers - there is no reason to use any other plugin."
 							<br /><span class="author">&dash; Jake Wheat, Author &amp; Artist</span>
 						</p>
-						<input type="hidden" id="gold_plugins_already_subscribed" name="gold_plugins_already_subscribed" value="<?php echo get_user_setting ('_gp_ml_has_subscribed', '0'); ?>" />
 					</form>
 				</div>
 				<p class="u_to_p"><a href="http://goldplugins.com/our-plugins/wp-social-pro/upgrade-to-wp-social-pro/#buy_now"><?php _e("Upgrade to WP Social Pro now</a> to remove banners like this one.", $this->textdomain); ?></p>

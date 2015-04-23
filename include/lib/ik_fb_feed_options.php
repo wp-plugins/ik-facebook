@@ -69,4 +69,10 @@ class IK_FB_Feed_Options
 	{
 		$this->cache = array();
 	}
+	
+	function get_option_hash()
+	{
+		$v = array_merge($this->defaults, $this->options);
+		return md5(serialize($v));
+	}
 }
