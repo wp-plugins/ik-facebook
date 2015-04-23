@@ -26,10 +26,10 @@ _"Looks great, easy to use. Better than any of the other Facebook feed plugins I
 * Powering your blog with your Facebook Feed!
 * Embed a Custom Facebook Feed Widget in your Sidebar or Footer
 * Styling a Custom Facebook Feed, without the need for CSS!
-* Custom HTML Options allow Facebook Feed Shortcode and Facebook Feed Widget to be displayed any way you like!
-* Adding a Facebook Like Button to your website, anywhere!
-* Showing Facebook Comments in your Custom Facebook Feed!
-* Adding a Facebook Photo Gallery to your website!
+* Custom HTML Options allow Facebook Feed to be displayed any way you like!
+* Adding a Facebook Like Button to your website!
+* Showing Facebook Comments in your Feed!
+* Adding a Facebook Photo Gallery!
 * Show multiple different custom Facebook Feeds!
 * Display Upcoming Facebook Events on your website!
 * Use a Facebook Event instead of a Page - output a customized Feed from the Facebook Event's Wall!
@@ -47,7 +47,7 @@ The IK Facebook Plugin includes options to set the Title of the custom Facebook 
 
 = Professional Development =
 
-The IK Facebook Plugin is a free version of [WP Social Pro](http://http://goldplugins.com/our-plugins/wp-social-pro/ "WP Social Pro") - WP Social Pro is a professionally developed WordPress plugin that integrates your Facebook Feed into your WordPress website as a custom widget.  The IK Facebook Plugin receives regular updates with new features and tweaks to the custom Facebook Feed.  With the IK Facebook Plugin, you can easily add **Search Engine Optimization friendly** content to your website -- no iframe means the content exists on your site and is crawlable by search engines like Google!  Our Professional Developers are currently working on things like Multi Lingual Translations, Facebook Event and Facebook Photo Gallery updates, and coming up with new unique ways to integrate Facebook into your website.
+The IK Facebook Plugin is a free version of [WP Social Pro](http://http://goldplugins.com/our-plugins/wp-social-pro/ "WP Social Pro") - WP Social Pro is a professionally developed WordPress plugin that integrates your Facebook Feed into your WordPress website as a custom widget.  The IK Facebook Plugin receives regular updates.  With the IK Facebook Plugin, you can easily add **Search Engine Optimization friendly** content to your website -- the content exists on your site and is crawlable by search engines like Google!
 
 = Powerful Customization =
 
@@ -55,7 +55,7 @@ The IK Facebook Plugin includes the option to set your own custom CSS for stylin
 
 = More Than Just A Custom Facebook Feed - Events and Photo Galleries, too! =
 
-The IK Facebook Plugin intends to support all types Facebook content - not just standard Feeds.  Currently, we have support for Facebook Events and Facebook Photo Galleries.
+The IK Facebook Plugin intends to support all types Facebook content - not just standard Feeds.  Currently, we have support for Facebook Events and Facebook Photo Galleries.  Show your Upcoming Facebook Events on your Website, and power your Photo Galleries with Facebook!
 
 == Installation ==
 
