@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Gold Plugins
-Version: 2.12
+Version: 2.12.1
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -412,21 +412,21 @@ class ikFacebook
 		// TODO: if page_data is not set, this indicates an error with the API reponse. We should handle it.
 
 		// try to load the feed and the page data out of the cache
-		$feed = $this->cache->get_key('ik_fb_feed', false, false);
-		$page_data = $this->cache->get_key('ik_fb_page_data', false, false);
+		$feed = $this->cache->get_key('ik_fb_feed', false, $id);
+		$page_data = $this->cache->get_key('ik_fb_page_data', false, $id);
 		
 		// if feed and/or page data is not in the cache, reload it now
 		if ($feed === FALSE || $page_data === FALSE) {
 			$api_response = $this->loadFacebook($id, $num_posts, $content_type);
 			$feed = isset($api_response['feed']) ? $api_response['feed'] : array();
 			$page_data = isset($api_response['page_data']) ? $api_response['page_data'] : false;
-			$one_day = 60*60*24; // one day in seconds (expiration time for the cache)
+			$fifteen_minutes = 900; // 15 mins in seconds (expiration time for the cache)
 			
 			if (!empty($feed)) {
-				$this->cache->set_key('ik_fb_feed', $feed, $one_day);
+				$this->cache->set_key('ik_fb_feed', $feed, $fifteen_minutes, $id);
 			}
 			if (!empty($page_data)) {
-				$this->cache->set_key('ik_fb_page_data', $page_data, $one_day);
+				$this->cache->set_key('ik_fb_page_data', $page_data, $fifteen_minutes, $id);
 			}
 		}
 		
@@ -1128,25 +1128,27 @@ class ikFacebook
 			$replace = $ik_social_pro->pro_user_avatars($replace, $item) . " ";
 		}
 		
-		$replace = $replace . nl2br(make_clickable(htmlspecialchars($item->message)));
+		$message = nl2br(make_clickable(htmlspecialchars($item->message)));
 		
 		//if a character limit is set, here is the logic to handle that
 		$limit = $this->feed_options->get_option('ik_fb_character_limit');
 		if(is_numeric($limit)){
 			//only perform changes on posts longer than the character limit
-			if(strlen($replace) > $limit){
+			if(strlen($message) > $limit){
 				//remove characters beyond limit
 				//use mb_substr, if available, for 2 byte character support
 				if(function_exists('mb_substr')){
-						$replace = mb_substr($replace, 0, $limit);
+						$message = mb_substr($message, 0, $limit);
 				} else {
-					$replace = substr($replace, 0, $limit);
+					$message = substr($message, 0, $limit);
 				}
-				$replace .= __('... ', $this->textdomain);
+				$message .= __('... ', $this->textdomain);
 				
 				$shortened = true;
 			}
 		}
+		
+		$replace = $replace . nl2br(make_clickable(htmlspecialchars($item->message)));
 		
 		//add custom message styling from pro options
 		if(!$this->feed_options->get_option('ik_fb_use_custom_html')){		

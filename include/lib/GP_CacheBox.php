@@ -35,10 +35,10 @@ if (!class_exists('GP_CacheBox')):
 		{
 			$key = $this->generate_key($key, $mixer);
 			$val = get_site_transient($key);
-			$val = unserialize(base64_decode($val));							
 			if (!isset($val) || $val === FALSE) {
 				return $default;
 			} else {
+				$val = unserialize(base64_decode($val));
 				return $val;
 			}
 		}

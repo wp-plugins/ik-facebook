@@ -114,8 +114,8 @@ class ikSocialPro
 									
 									$comment_list .= $comment_avatar;
 								}
-								$comment_list .= '<p class="ikfb_comment_message"><span class="ikfb_comment_author">' . $comment->from->name . ' says:</span> ';
-								$comment_list .= nl2br(htmlentities($comment->message),true) . '</p>';
+								$comment_list .= isset($comment->from->name) ? '<p class="ikfb_comment_message"><span class="ikfb_comment_author">' . $comment->from->name . ' says:</span> ' : '';
+								$comment_list .= nl2br($comment->message,true) . '</p>';
 								
 								//output date, if option to display it is enabled
 								if($this->feed_options->get_option('ik_fb_show_date')){
