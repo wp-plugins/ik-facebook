@@ -55,32 +55,72 @@ class ikFacebookFeedWidget extends WP_Widget
 	}
 
 	function widget($args, $instance){
-		extract($args, EXTR_SKIP);
-
-		echo $before_widget;
-		$title = empty($instance['title']) ? ' ' : apply_filters('widget_title', $instance['title']);
-		$colorscheme = empty($instance['colorscheme']) ? 'light' : $instance['colorscheme'];
-		$page_id = empty($instance['page_id']) ? get_option('ikfb_page_id') : $instance['page_id'];
-		$use_thumbs = empty($instance['use_thumbs']) ? false : $instance['use_thumbs'];
-		$num_posts = empty($instance['num_posts']) ? get_option('ikfb_num_posts') : $instance['num_posts'];
-		$height = empty($instance['height']) ? get_option('ikfb_feed_window_height') : $instance['height'];
-		$width = empty($instance['width']) ? get_option('ik_fb_feed_image_width') : $instance['width'];
-		
-		// Initialize the feed options
-		$show_only_events = get_option('ik_fb_show_only_events');
-		$show_only_events = ($show_only_events) ? 1 : 0;		
-		$content_type = ($show_only_events) ? "events" : "";		
-		$ik_fb_header_bg_color = strlen(get_option('ik_fb_header_bg_color')) > 2 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_header_bg_color') : '';
-		$ik_fb_window_bg_color = strlen(get_option('ik_fb_window_bg_color')) > 2 && !get_option('ik_fb_use_custom_html') ? get_option('ik_fb_window_bg_color') : '';
-
-		if (!empty($title))
-			echo $before_title . $title . $after_title;;
-
 		if (!isset($ik_fb)){
 			$ik_fb = new ikFacebook();
 		}
+		
+		extract($args, EXTR_SKIP);
 
-		echo $ik_fb->ik_fb_output_feed($colorscheme,$use_thumbs,$width,true,$height,$num_posts,$page_id,false,$show_only_events,$content_type,$ik_fb_header_bg_color,$ik_fb_window_bg_color);
+		echo $before_widget;
+
+		$ik_fb->feed_options = new IK_FB_Feed_Options();
+		
+		extract($attributes = array(
+			'colorscheme' => 'light',
+			'width' => '', /* old, should no longer appear */
+			'height' => '', /* old, should no longer appear */
+			'feed_image_width' => $ik_fb->feed_options->get_option('ik_fb_feed_image_width'),
+			'feed_image_height' => $ik_fb->feed_options->get_option('ik_fb_feed_image_height'),
+			'use_thumb' => !$ik_fb->feed_options->get_option('ik_fb_fix_feed_image_width') && !$ik_fb->feed_options->get_option('ik_fb_fix_feed_image_height'),
+			'num_posts' => null,
+			'id' => false,
+			'show_errors' => false,
+			'show_only_events' => $ik_fb->feed_options->get_option('ik_fb_show_only_events'),
+			'header_bg_color' => strlen($ik_fb->feed_options->get_option('ik_fb_header_bg_color')) > 2 && !$ik_fb->feed_options->get_option('ik_fb_use_custom_html') ? $ik_fb->feed_options->get_option('ik_fb_header_bg_color') : '',
+			'window_bg_color' => strlen($ik_fb->feed_options->get_option('ik_fb_window_bg_color')) > 2 && !$ik_fb->feed_options->get_option('ik_fb_use_custom_html') ? $ik_fb->feed_options->get_option('ik_fb_window_bg_color') : '',
+			'character_limit' => '',
+			'description_character_limit' => '',
+			'hide_feed_images' => '',
+			'show_like_button' => '',
+			'show_profile_picture' => '',
+			'show_page_title' => '',
+			'show_posted_by' => '',
+			'show_date' => '',
+			'use_human_timing' => '',
+			'date_format' => '',
+			'show_avatars' => '',
+			'show_reply_counts' => '',
+			'show_replies' => '',
+			'show_likes' => '',
+			'only_show_page_owner' => '',
+			'reverse_events' => '',
+			'start_date_format' => '',
+			'end_date_format' => '',
+			'event_range_start_date' => '',
+			'event_range_end_date' => '',
+		));
+		
+		$ik_fb->feed_options->load($attributes);
+		
+		$title = empty($instance['title']) ? ' ' : apply_filters('widget_title', $instance['title']);
+		$colorscheme = empty($instance['colorscheme']) ? 'light' : $instance['colorscheme'];
+		$id = empty($instance['page_id']) ? $ik_fb->feed_options->get_option('ikfb_page_id') : $instance['page_id'];
+		$use_thumb = empty($instance['use_thumbs']) ? false : $instance['use_thumbs'];
+		$num_posts = empty($instance['num_posts']) ? $ik_fb->feed_options->get_option('ikfb_num_posts') : $instance['num_posts'];
+		$feed_image_height = empty($instance['height']) ? $ik_fb->feed_options->get_option('ikfb_feed_window_height') : $instance['height'];
+		$feed_image_width = empty($instance['width']) ? $ik_fb->feed_options->get_option('ik_fb_feed_image_width') : $instance['width'];
+		
+		// Initialize the feed options
+		$show_only_events = $ik_fb->feed_options->get_option('ik_fb_show_only_events');
+		$show_only_events = ($show_only_events) ? 1 : 0;		
+		$content_type = ($show_only_events) ? "events" : "";		
+		$ik_fb_header_bg_color = strlen($ik_fb->feed_options->get_option('ik_fb_header_bg_color')) > 2 && !$ik_fb->feed_options->get_option('ik_fb_use_custom_html') ? $ik_fb->feed_options->get_option('ik_fb_header_bg_color') : '';
+		$ik_fb_window_bg_color = strlen($ik_fb->feed_options->get_option('ik_fb_window_bg_color')) > 2 && !$ik_fb->feed_options->get_option('ik_fb_use_custom_html') ? $ik_fb->feed_options->get_option('ik_fb_window_bg_color') : '';
+		
+		if (!empty($title)){
+			echo $before_title . $title . $after_title;
+		}
+		echo $ik_fb->ik_fb_output_feed($colorscheme, $use_thumb, $feed_image_width, true, $feed_image_height, $num_posts, $id, false, $show_only_events, $content_type, $header_bg_color, $window_bg_color);
 
 		echo $after_widget;
 	} 
