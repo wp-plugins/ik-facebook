@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Gold Plugins
-Version: 2.12.4
+Version: 2.12.5
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -410,12 +410,15 @@ class ikFacebook
 		// NOTE: the plugin uses different settings for the sidebar feed vs the normal (in-page) feed
 		list($ik_fb_feed_width, $ik_fb_feed_height) = $this->get_feed_width_and_height($is_sidebar_widget);
 		
+		$options_hash = $this->feed_options->get_option_hash();
+		$options_mixer = $this->feed_options->get_option('ik_fb_pro_options_mixer');
+		
 		// Load the profile's feed items from the Graph API
 		// TODO: if page_data is not set, this indicates an error with the API reponse. We should handle it.
 
 		// try to load the feed and the page data out of the cache
-		$feed = $this->cache->get_key('ik_fb_feed', false, $id);
-		$page_data = $this->cache->get_key('ik_fb_page_data', false, $id);
+		$feed = $this->cache->get_key('ik_fb_feed', false, $id . $options_hash . $options_mixer);
+		$page_data = $this->cache->get_key('ik_fb_page_data', false, $id . $options_hash . $options_mixer);
 		
 		// if feed and/or page data is not in the cache, reload it now
 		if ($feed === FALSE || $page_data === FALSE) {
@@ -434,8 +437,7 @@ class ikFacebook
 		
 		// setup the cache for the rest of the items
 		$first_item_id = $feed[0]->id;
-		$options_hash = $this->feed_options->get_option_hash();
-		$options_mixer = $this->feed_options->get_option('ik_fb_pro_options_mixer');
+		
 		$mixer = md5($first_item_id . $options_hash . $options_mixer);
 		
 		//$feed = isset($api_response['feed']) ? $api_response['feed'] : array();		
