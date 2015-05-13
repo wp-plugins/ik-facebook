@@ -36,8 +36,7 @@ class ikSocialPro
 	//inserts avatars into the message content, if option is enabled
 	function pro_user_avatars($content = "", $item = array()){
 		global $ik_fb;
-		
-		
+				
 		if(is_valid_key($this->feed_options->get_option('ik_fb_pro_key')) && $this->feed_options->get_option('ik_fb_show_avatars') && isset($item->from->id)){	
 			if(!isset($ik_fb->authToken)){
 				$app_id = $this->feed_options->get_option('ik_fb_app_id');
@@ -46,7 +45,9 @@ class ikSocialPro
 				$ik_fb->authToken = $ik_fb->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
 			}	
 			
-			$content .= '<img src="https://graph.facebook.com/' . $item->from->id .'/picture?' . $ik_fb->authToken . '" class="ikfb_user_avatar" alt="avatar"/>';
+			$picture = $ik_fb->fetchUrl("https://graph.facebook.com/{$item->from->id}/picture?{$ik_fb->authToken}&redirect=0", true);
+			
+			$content .= "<img src=\"{$picture->data->url}\" class=\"ikfb_user_avatar\" alt=\"avatar\"/>";
 		}
 		
 		return $content;
@@ -109,8 +110,10 @@ class ikSocialPro
 								
 										$ik_fb->authToken = $ik_fb->fetchUrl("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}");
 									}	
+			
+									$picture = $ik_fb->fetchUrl("https://graph.facebook.com/{$comment->from->id}/picture?{$ik_fb->authToken}&redirect=0", true);
 									
-									$comment_avatar = '<img src="https://graph.facebook.com/' . $comment->from->id .'/picture?' . $ik_fb->authToken . '" class="ikfb_user_comment_avatar" alt="avatar"/>';									
+									$comment_avatar = "<img src=\"{$picture->data->url}\" class=\"ikfb_user_comment_avatar\" alt=\"avatar\"/>";
 									
 									$comment_list .= $comment_avatar;
 								}

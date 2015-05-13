@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Gold Plugins
-Version: 2.12.3
+Version: 2.12.4
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -435,7 +435,8 @@ class ikFacebook
 		// setup the cache for the rest of the items
 		$first_item_id = $feed[0]->id;
 		$options_hash = $this->feed_options->get_option_hash();
-		$mixer = $first_item_id . $options_hash;
+		$options_mixer = $this->feed_options->get_option('ik_fb_pro_options_mixer');
+		$mixer = md5($first_item_id . $options_hash . $options_mixer);
 		
 		//$feed = isset($api_response['feed']) ? $api_response['feed'] : array();		
 		$the_link = $this->get_profile_link($page_data); // save a permalink to the Facebook profile. We'll need it in several places.
@@ -566,12 +567,15 @@ class ikFacebook
 	
 	public function get_profile_photo_html($page_data)
 	{
+		
 		if($this->feed_options->get_option('ik_fb_show_profile_picture')){
 			//use the username if available, otherwise fallback to page ID
 			if(isset($page_data->username)){
-				$replace = '<img src="//graph.facebook.com/'.$page_data->username.'/picture" alt="profile picture"/>';
+				$picture = $this->fetchUrl("https://graph.facebook.com/{$page_data->username}/picture?redirect=0", true);
+				$replace = "<img src=\"{$picture->data->url}\" alt=\"profile picture\"/>";
 			} else if(isset($page_data->id)){
-				$replace = '<img src="//graph.facebook.com/'.$page_data->id.'/picture" alt="profile picture"/>';
+				$picture = $this->fetchUrl("https://graph.facebook.com/{$page_data->id}/picture?redirect=0", true);
+				$replace = "<img src=\"{$picture->data->url}\" alt=\"profile picture\"/>";
 			} else { //bad ID has been input, lets try not to crap out
 				$replace = '';
 			}

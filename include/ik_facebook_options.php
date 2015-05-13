@@ -126,6 +126,7 @@ class ikFacebookOptions
 		register_setting( 'ik-fb-config-settings-group', 'ik_fb_pro_key' );
 		register_setting( 'ik-fb-config-settings-group', 'ik_fb_pro_url' );
 		register_setting( 'ik-fb-config-settings-group', 'ik_fb_pro_email' );
+		register_setting( 'ik-fb-config-settings-group', 'ik_fb_pro_options_mixer', array($this, 'update_options_mixer') );
 		
 		// register pro config settings		
 		register_setting( 'ik-fb-config-settings-group', 'wp_social_pro_registered_email' );
@@ -179,6 +180,7 @@ class ikFacebookOptions
 		register_setting( 'ik-fb-style-settings-group', 'other_ik_fb_feed_window_height' );
 		register_setting( 'ik-fb-style-settings-group', 'other_ik_fb_sidebar_feed_window_height' );
 		register_setting( 'ik-fb-style-settings-group', 'other_ik_fb_sidebar_feed_window_width' );
+		register_setting( 'ik-fb-style-settings-group', 'ik_fb_pro_options_mixer', array($this, 'update_options_mixer') );
 		
 		//register our display settings
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_hide_feed_images' );
@@ -198,11 +200,17 @@ class ikFacebookOptions
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_description_character_limit' );
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_caption_character_limit' );
 		register_setting( 'ik-fb-display-settings-group', 'ik_fb_link_photo_to_feed_item' );
+		register_setting( 'ik-fb-display-settings-group', 'ik_fb_pro_options_mixer', array($this, 'update_options_mixer') );
 		
 		//register any pro settings
 		if(function_exists("ik_fb_pro_register_settings")){
 			ik_fb_pro_register_settings();
 		}
+	}
+	
+	function update_options_mixer($v = '')
+	{
+		return md5(rand());
 	}
 	
 	function extract_facebook_id($input)

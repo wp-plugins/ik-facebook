@@ -342,11 +342,15 @@ if (!class_exists('GoldPlugins_BikeShed')):
 			$values['font_style'] = !empty($options['values']['font_style'])? $options['values']['font_style'] : '';
 			$values['font_color'] = !empty($options['values']['font_color'])? $options['values']['font_color'] : '';
 			
+			// we will need to propagate the "disabled" setting to all 4 inputs, so store it in a string
+			$disabled_attr = (isset($options['disabled']) && $options['disabled']) ? 'disabled="disabled"' : '';
+
 			$this->start_row($options['label']);
 ?>	
 			<div class="bikeshed bikeshed_typography">
 				<div class="select_wrapper font_size_select_wrapper">
 					<select name="<?php echo $font_size_name?>" id="<?php echo $font_size_id?>" class="font_size_select">
+						<option value="" <?php echo (empty($values['font_size']) ? ' selected="selected"' : ''); ?>>--</option>
 						<?php foreach($this->font_sizes as $font_size): ?>
 						<?php $selected = ($font_size == ($values['font_size'].'px')) ? ' selected="selected"' : ''; ?>
 						<option value="<?php echo $font_size?>" <?php echo $selected?>><?php echo $font_size?>px</option>
@@ -355,7 +359,7 @@ if (!class_exists('GoldPlugins_BikeShed')):
 				</div>
 				<div class="select_wrapper font_family_select_wrapper">
 					<select name="<?php echo $font_family_name?>" id="<?php echo $font_family_id?>" class="font_family_select">
-
+						<option value="" <?php echo (empty($values['font_family']) ? ' selected="selected"' : ''); ?>>--</option>
 						<?php if($options['google_fonts']): ?>
 						<optgroup label="Standard Fonts">
 						<?php endif; ?>
@@ -379,6 +383,7 @@ if (!class_exists('GoldPlugins_BikeShed')):
 				</div>
 				<div class="select_wrapper font_style_select_wrapper">
 					<select name="<?php echo $font_style_name?>" id="<?php echo $font_style_id?>" class="font_style_select">
+						<option value="" <?php echo (empty($values['font_style']) ? ' selected="selected"' : ''); ?>>--</option>
 						<?php foreach($this->font_styles as $style): ?>
 						<?php $selected = ($style == $values['font_style']) ? ' selected="selected"' : ''; ?>
 						<option value="<?php echo $style?>" <?php echo $selected?>><?php echo $style?></option>
@@ -386,7 +391,11 @@ if (!class_exists('GoldPlugins_BikeShed')):
 					</select>
 				</div>
 				<div class="color_picker_wrapper">
-					<input data-default-color="<?php echo $options['default_color']; ?>" type="text" name="<?php echo $font_color_name; ?>" id="<?php echo $font_color_id; ?>" class="wp-color-picker" value="<?php echo $values['font_color']; ?>" />
+					<?php if (empty($options['default_color'])): ?>
+					<input type="text" name="<?php echo $font_color_name; ?>" id="<?php echo $font_color_id; ?>" class="wp-color-picker" value="<?php echo $values['font_color']; ?>" <?php echo $disabled_attr; ?> />
+					<?php else: ?>
+					<input data-default-color="<?php echo $options['default_color']; ?>" type="text" name="<?php echo $font_color_name; ?>" id="<?php echo $font_color_id; ?>" class="wp-color-picker" value="<?php echo $values['font_color']; ?>" <?php echo $disabled_attr; ?> />
+					<?php endif; ?>
 				</div>
 				<?php if(!empty($options['description'])): ?>
 				<p class="description"><?php _e($options['description']);?></p>
