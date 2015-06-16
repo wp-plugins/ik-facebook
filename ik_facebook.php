@@ -4,7 +4,7 @@ Plugin Name: IK Facebook Plugin
 Plugin URI: http://goldplugins.com/documentation/wp-social-pro-documentation/the-ik-facebook-plugin/
 Description: IK Facebook Plugin - A Facebook Solution for WordPress
 Author: Gold Plugins
-Version: 2.12.5
+Version: 2.12.6
 Author URI: http://illuminatikarate.com
 
 This file is part of the IK Facebook Plugin.
@@ -843,7 +843,7 @@ class ikFacebook
 
 		//output the item photo
 		if(isset($item->picture)){ 		
-			list($picture_output, $photo_caption_truncated) = $this->ikfb_build_photo($item,$replace,$image_html,$description_html,$caption_html,$use_thumb,$width,$height);
+			list($picture_output, $photo_caption_truncated) = $this->ikfb_build_photo($item,$replace,$image_html,$description_html,$caption_html,$use_thumb,$width,$height, $page_id);
 		}			
 		
 		//if set, show the picture and it's content before you show the message
@@ -978,11 +978,11 @@ class ikFacebook
 		}
 	}	
 	
-	function ikfb_build_photo($item,$replace="",$image_html,$description_html,$caption_html,$use_thumb,$width,$height){
+	function ikfb_build_photo($item,$replace="",$image_html,$description_html,$caption_html,$use_thumb,$width,$height,$page_id = ''){
 		$output = '';
 		$shortened = false;
 	
-		$page_id = $item->from->id;
+		$page_id = strlen($page_id) > 2 ? $page_id : $item->from->id;
 	
 		if(!isset($this->authToken)){
 			$this->authToken = $this->generateAccessToken();

@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, facebook feed, facebook embed, facebook feed widget, facebook feed embed, like button widget, facebook events
 Requires at least: 3.0.1
 Tested up to: 4.2.2
-Stable tag: 2.12.5
+Stable tag: 2.12.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -27,6 +27,7 @@ _"Looks great, easy to use. Better than any of the other Facebook feed plugins I
 * Embed a Custom Facebook Feed Widget in your Sidebar or Footer
 * Styling a Custom Facebook Feed, without the need for CSS!
 * Custom HTML Options allow Facebook Feed to be displayed any way you like!
+* Works with Facebook Groups and Facebook Pages!
 * Adding a Facebook Like Button to your website!
 * Showing Facebook Comments in your Feed!
 * Adding a Facebook Photo Gallery!
@@ -173,6 +174,9 @@ In this case, the Facebook Album ID is '539627829386059'.
 5. This is the Facebook Feed Widget and the Facebook Like Button Widget of the IK Facebook Plugin.  The options on this widget allow you to override the settings you have selected on your Settings panel.
 
 == Changelog ==
+
+= 2.12.6 =
+* Fix: address issue with bad photo read more links in FB Groups.
 
 = 2.12.5 = 
 * Fix: Bust cache when options change
@@ -610,5 +614,5 @@ In this case, the Facebook Album ID is '539627829386059'.
 
 == Upgrade Notice ==
 
-= 2.12.5 =
-* Fixes: Bust cache when options change
+= 2.12.6 =
+* Fix: address issue with bad photo read more links in FB Groups.
